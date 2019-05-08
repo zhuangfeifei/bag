@@ -1,0 +1,44 @@
+<template>
+    <view></view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import 'wepy-async-function'
+
+@connect({
+    
+})
+    
+export default class My extends wepy.page {
+    
+    config = {
+        navigationBarTitleText: '会员中心'
+    }
+    
+    components = {
+    
+    }
+    
+    data = {
+    
+    }
+    
+    computed = {
+    
+    }
+    
+    methods = {
+    
+    }
+    
+    onLoad() {
+    
+    }
+}
+</script>
+
+<style lang='less'>
+
+</style>

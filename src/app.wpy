@@ -1,0 +1,70 @@
+<style lang="less">
+
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+import { setStore } from 'wepy-redux'
+import configStore from './store'
+
+const store = configStore()
+setStore(store)
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index/index',
+      'pages/cart/cart',
+      'pages/my/my'
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '袋鼠利购',
+      navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      list: [
+        {
+          pagePath: "pages/index/index",
+          text: "首页",
+          iconPath: "images/bottom/SY_weixuanzhong.png",
+          selectedIconPath: "images/bottom/SY_yixuanzhong.png"
+        },
+        {
+          pagePath: "pages/cart/cart",
+          text: "购物车",
+          iconPath: "images/bottom/GWC_weixuanze.png",
+          selectedIconPath: "images/bottom/GWC_yixuanzhong.png"
+        },
+        {
+          pagePath: "pages/my/my",
+          text: "会员中心",
+          iconPath: "images/bottom/HYZX_weixuanze.png",
+          selectedIconPath: "images/bottom/HYZX_yixuanzhong.png"
+        }
+      ],
+      borderStyle: "white",
+      backgroundColor: "#ffffff",
+      color: "#363636",
+      selectedColor: "#F4695F"
+    },
+  }
+
+  globalData = {
+    userInfo: null
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+  }
+
+  onLaunch() {
+    
+  }
+
+}
+</script>
