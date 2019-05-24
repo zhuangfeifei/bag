@@ -1,0 +1,324 @@
+<template>
+    <view id="orderDetail">
+
+        <view class="orderDetail_nav">
+            <image wx:if="{{orderIndex == 1}}" src="/images/my/bg_6xin.png" mode="scaleToFill" lazy-load="false" />
+            <image wx:if="{{orderIndex == 2}}" src="/images/my/bg_7xin.png" mode="scaleToFill" lazy-load="false" />
+            <image wx:if="{{orderIndex == 3}}" src="/images/my/bg_8xin.png" mode="scaleToFill" lazy-load="false" />
+            <image wx:if="{{orderIndex == 4}}" src="/images/my/bg_9xin.png" mode="scaleToFill" lazy-load="false" />
+            <view wx:if="{{orderIndex == 1}}" class="Waiting">
+                等待买家付款
+                <text> \n剩22小时16分自动关闭</text>
+            </view>
+            <view wx:if="{{orderIndex == 2}}" class="BuyerPaid">买家已付款</view>
+            <view wx:if="{{orderIndex == 3}}" class="BuyerPaid">卖家已发货</view>
+            <view wx:if="{{orderIndex == 4}}" class="BuyerPaid">买家已确认收货</view>
+        </view>
+
+        <view wx:if="{{orderIndex == 3 || orderIndex == 4}}" class="orderDetail_logistics" @tap="linkTo" data-url="./logistics">
+            <image src="/images/my/TB_wuliu.png" mode="scaleToFill" lazy-load="false" />
+            <view class="orderDetail_logistics_cont">
+                <view class="orderDetail_logistics_">【苏州市】快件已到达 无锡运转中心</view>
+                <text>2019.06.10  19:31:35</text>
+            </view>
+            <image class="more" src="/images/my/jinru.png" mode="scaleToFill" lazy-load="false" />
+        </view>
+
+        <view class="orderDetail_address">
+            <image src="/images/my/DDXQ_TB_dingwei.png" mode="scaleToFill" lazy-load="false" />
+            <view class="orderDetail_address_cont">
+                郝婷婷<text>13723456789</text>
+                <view class="orderDetail_address_">收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址</view>
+            </view>
+        </view>
+
+        <view class="orderList" wx:for="{{1}}" wx:key="{{index}}">
+            <card-item></card-item>
+            <view wx:if="{{orderIndex == 2}}" class="orderList_refund" @tap="linkTo" data-url="./refund">退款</view>
+            <view wx:if="{{orderIndex == 3}}" class="orderList_refund" @tap="linkTo" data-url="./return">退换</view>
+            <view class="orderDetail_preferential"><text>商品金额</text><text>¥400.00</text></view>
+            <view class="orderDetail_preferential"><text>选择优惠券</text><text>-￥20.00</text></view>
+            <view class="orderDetail_preferential"><text>商家活动</text><text>-￥100.00</text></view>
+            <view class="orderDetail_preferential"><text>运费</text><text>￥10.00</text></view>
+            <view class="orderDetail_preferential"><text>会员包邮</text><text>-￥10.00</text></view>
+            <view class="orderDetail_preferential note"><text>订单备注</text><text>赠送袜子</text></view>
+            <view class="orderList_combined"><text>需付款</text><text>￥280.00</text></view>
+        </view>
+
+        <view class="orderInformation">
+            <h3>订单信息</h3>
+            <view class="orderInformation_preferential"><text>积分：</text><view>付款后可获得280点积分</view></view>
+            <view class="orderInformation_preferential"><text>订单编号：</text><view><text>1234 5678 1234 5678 12</text><text class="copy" @tap="copyText" data-text="1234 5678 1234 5678 12">复制</text></view></view>
+            <view class="orderInformation_preferential"><text>创建时间：</text><view>2019.06.08  12:30:21</view></view>
+        </view>
+
+        <view class="paymentList">
+            <view wx:if="{{orderIndex == 1}}" class="payment">付款</view>
+            <view wx:if="{{orderIndex == 1}}" class="Cancel" @tap="changeCancelOrder">取消订单</view>
+            <view wx:if="{{orderIndex == 2}}" class="payment" @tap="remind">提醒发货</view>
+            <view wx:if="{{orderIndex == 3}}" class="payment">确认收货</view>
+            <view wx:if="{{orderIndex == 4}}" class="payment" @tap="linkTo" data-url="./evaluation">评价</view>
+            <view wx:if="{{orderIndex == 3}}" class="Cancel">查看物流</view>
+            <view class="Cancel">联系客服</view>
+        </view>
+
+
+        <view id="CancelOrder" wx:if="{{isCancelOrder}}" style="height:{{screenHeight}}px">
+            <view class="CancelOrders" animation="{{animationTop}}">
+                <h2>取消订单</h2>
+                <view class="changeWhyTitle">选择取消订单原因</view>
+                <view class="changeWhy" wx:for="{{cancelList}}" wx:key="{{index}}" @tap="changecancel" data-index="{{index}}">
+                    <text>{{item}}</text>
+                    <view class="changeWhyback"><image wx:if="{{index == cancelIndex}}" src="/images/my/WDDD__xuanzhonganniu.png" mode="scaleToFill" lazy-load="false" /></view>
+                </view>
+                <view class="Tip">温馨提示<text>\n订单取消后，使用的优惠券支持退回，为避免过期请尽快使用。</text></view>
+                <view class="choose"><view @tap="changeCancelOrder">暂不取消</view><view @tap="Cance">确认取消</view></view>
+            </view>
+        </view>
+
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import 'wepy-async-function'
+import card from '../../../components/card'
+
+@connect({
+    orderIndex(state){
+        return state.counter.orderIndex
+    }
+})
+    
+export default class OrderDetail extends wepy.page {
+    
+    config = {
+        navigationBarTitleText: '订单详情'
+    }
+    
+    components = {
+        'card-item': card
+    }
+    
+    data = {
+        screenHeight:603, isCancelOrder: false,
+        cancelList:['信息填写错误，重新下单','不想要了','其他原因'], cancelIndex: 0,
+        animationTop:'',isAnimation: true
+    }
+    
+    computed = {
+    
+    }
+    
+    methods = {
+        copyText: function (e) {
+            wx.setClipboardData({
+                data: e.currentTarget.dataset.text,
+                success: function (res) {
+                    wx.getClipboardData({
+                        success: function (res) {
+                            wx.showToast({
+                                title: '复制成功',icon:'none'
+                            })
+                        }
+                    })
+                }
+            })
+        },
+        changeCancelOrder(){
+            this.changeCancelOrder()
+        },
+        changecancel(e){
+            this.cancelIndex = e.currentTarget.dataset.index
+            this.$apply()
+        },
+        Cance(){
+            this.changeCancelOrder()
+            wx.showToast({
+                title: '订单取消成功',
+            })
+        },
+        remind(){
+            wx.showToast({
+                title: '已提醒卖家发货',icon:'none'
+            })
+        },
+        linkTo(e){
+            this.$navigate({url: e.currentTarget.dataset.url})
+        },
+    }
+
+    changeCancelOrder(){
+        if(this.isCancelOrder){
+            setTimeout(()=>{
+                this.isCancelOrder = !this.isCancelOrder
+                this.$apply()
+            },500)
+        }else{
+            this.isCancelOrder = !this.isCancelOrder
+        }
+        setTimeout(()=>{
+            this.animation()
+        })
+    }
+    // rpx转px
+    px(rpx) {
+        var systemInfo = wx.getSystemInfoSync()
+        return rpx / 750 * systemInfo.windowWidth
+    }
+    animation() {
+        const animationTop = wx.createAnimation({
+            duration: 1000,
+            timingFunction: 'ease',
+        })
+
+        animationTop.translateY(this.isAnimation ? this.px(-730) : this.px(730)).step({ duration: 500 })
+
+        this.animationTop = animationTop.export()
+        this.isAnimation = !this.isAnimation
+        this.$apply()
+    }
+    
+    onLoad() {
+        let screenHeight = wx.getSystemInfoSync().windowHeight
+        // console.log(screenHeight)
+        this.screenHeight = screenHeight
+        this.$apply()
+    }
+}
+</script>
+
+<style lang='less'>
+#orderDetail{
+    width: 100%; min-height: 100%; background-color: #F2F2F2; box-sizing: border-box; letter-spacing: 1.6rpx; .font; padding-bottom: 118rpx;
+    position: relative;
+}
+
+
+.font{
+    font-family:PingFang-SC-Medium; font-weight:500;
+}
+.displays{
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal !important;
+    -webkit-box-orient: vertical;
+}
+
+
+.orderDetail_nav{
+    width: 100%; height: 200rpx; position: relative;
+    image{width: 100%; height: 100%;}
+    .Waiting{
+        width: 100%; height: 100%; position: absolute; top: 0; left: 0; color: white; font-size: 30rpx; padding: 55rpx 78rpx; box-sizing: border-box;
+        text{line-height: 50rpx;}
+    }
+    .BuyerPaid{width: 100%; height: 100%; position: absolute; top: 0; left: 0; color: white; font-size: 30rpx; line-height: 200rpx; box-sizing: border-box; padding-left: 78rpx; }
+}
+
+
+.orderDetail_logistics{
+    width: 100%; height: 150rpx; background-color: white; padding: 30rpx; box-sizing: border-box;
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 20rpx;
+    image{width: 60rpx; height: 60rpx;}
+    .orderDetail_logistics_cont{
+        width: 565rpx; color: #363636;
+        text{color: #999999; font-size: 24rpx;}
+        .orderDetail_logistics_{
+            width: 100%; max-height: 60rpx; .displays; -webkit-line-clamp: 1; line-height: 31rpx; margin-top: 15rpx;
+        }
+    }
+    .more{width: 13rpx; height: 27rpx;}
+}
+
+
+.orderDetail_address{
+    width: 100%; height: 180rpx; background-color: white; padding: 30rpx; box-sizing: border-box;
+    display: flex; justify-content: space-between; align-items: center;
+    image{width: 60rpx; height: 60rpx;}
+    .orderDetail_address_cont{
+        width: 600rpx; color: #363636;
+        text{color: #999999; font-size: 24rpx; margin-left: 18rpx;}
+        .orderDetail_address_{
+            width: 100%; max-height: 60rpx; .displays; -webkit-line-clamp: 2; line-height: 31rpx; margin-top: 15rpx;
+        }
+    }
+}
+
+
+.orderList{
+    width: 100%; background-color: #FFFFFF; box-sizing: border-box;
+    padding: 20rpx 35rpx 0 32rpx; margin-top: 20rpx; position: relative;
+    .orderList_refund{
+        width: 120rpx; height: 48rpx; border-radius: 5rpx; text-align: center; line-height: 48rpx; color: white; font-size: 24rpx; background-color: #F4695F;
+        position: absolute; top: 155rpx; right: 30rpx; z-index: 5;
+    }
+    .orderDetail_preferential,.orderList_combined{
+        width: 100%; display: flex; justify-content: space-between; line-height: 60rpx; font-size: 24rpx;
+    }
+    .note{justify-content: start; text:last-child{margin-left: 40rpx; color: #999999;}}
+    .orderList_combined{
+        width: 100%; height: 101rpx; line-height: 101rpx; font-size: 24rpx; text-align: right; margin-top: 20rpx; border-top: 1px solid #F2F2F2;
+    }
+}
+
+
+.orderInformation{
+    width: 100%; height: 280rpx; background-color: white; margin-top: 20rpx; color: #999999; box-sizing: border-box; padding: 10rpx 30rpx;
+    h3{font-size: 30rpx;color: #363636; line-height: 70rpx;}
+    .orderInformation_preferential{
+        width: 100%; display: flex; justify-content: space-between; line-height: 60rpx; font-size: 24rpx;
+        view{width: 70%; .copy{color: #F4695F; float: right;}}
+    }
+}
+
+
+.paymentList{
+    width: 100%; height: 98rpx; background-color: white; position: fixed; bottom: 0; left: 0; display: flex; flex-flow: row-reverse; align-items: center;
+    padding-right: 40rpx; box-sizing: border-box; border-top: 1rpx solid #CECECE;
+    view{
+        width: 160rpx; height: 56rpx; background-color: #F4695F; color: white; text-align: center; line-height: 56rpx;
+        font-size: 24rpx; .font; border-radius: 28rpx; margin-left: 20rpx;
+    }
+    .Cancel{
+        border: 1px solid #808080; color: #808080; background-color: white;
+    }
+}
+
+
+
+
+#CancelOrder{
+    width: 100%; background: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; z-index: 11;
+    .CancelOrders{
+        width: 100%; height: 730rpx; background-color: white; position: absolute; left: 0; bottom: -730rpx; text-align: center;
+        padding: 0 32rpx; box-sizing: border-box;
+        h2{font-size: 32rpx; color: #333333; line-height: 100rpx; }
+        .changeWhy{
+            width: 100%; height: 100rpx; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #F2F2F2;
+            padding-right: 30rpx; box-sizing: border-box;
+            .changeWhyback{
+                width: 40rpx; height: 40rpx; border-radius: 50%; border: 1rpx solid #CECECE;
+                image{width: 100%; height: 100%;} 
+            }
+        }
+        .changeWhyTitle{height: 50rpx; font-size: 32rpx; color: #999999; border: 0; margin-bottom: 20rpx; text-align: left;}
+        .Tip{
+            text-align: left; font-size: 24rpx; color: #999999; margin-top: 30rpx;
+        }
+        .choose{
+            width: 100%; display: flex;justify-content: space-around;
+            position: absolute; bottom: 50rpx; left: 0;
+            view{
+                width: 230rpx; height: 56rpx; border-radius: 28rpx; background-color: #F4695F; line-height: 56rpx; color: white; 
+            }
+        }
+    }
+}
+
+
+
+</style>

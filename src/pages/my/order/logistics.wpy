@@ -1,0 +1,102 @@
+<template>
+    <view id="logistics">
+
+        <view class="logisticsDetails">
+            <view class="logisticsList {{index == 0 || index == 1 ?'logisticsListActive':''}}" wx:for="{{logisticsList}}" wx:key="{{index}}">
+                <view class="logisticsTime">
+                    <h5 wx:if="{{index > 0}}">06-08</h5><text wx:if="{{index > 0}}">\n18:54</text><view class="logisticsSolid"></view>
+                    <view wx:if="{{index == 0}}" class="logisticsClosed">收</view>
+                    <view wx:if="{{index == 1}}" class="logisticsClosed">✔</view>
+                </view>
+                <view class="logisticsStatus"><text class="{{index == 1 ?'logisticsStatusActive':''}}">{{item.status}}</text><view>{{item.cont}}</view></view>
+            </view>
+        </view>
+
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import 'wepy-async-function'
+
+@connect({
+    
+})
+    
+export default class Logistics extends wepy.page {
+    
+    config = {
+        navigationBarTitleText: '物流详情'
+    }
+    
+    components = {
+    
+    }
+    
+    data = {
+        logisticsList:[
+            { time:'', status:'', cont:'[收货地址]江苏省苏州市相城区  元和街道  华元路818号迈家众创A8408' },
+            { time:'', status:'已签收', cont:'【苏州市】已签收：本人签收，如有疑问请联系派件员陆慕片区五：12345678909。' },
+            { time:'', status:'派送中', cont:'【苏州市】江苏省苏州市陆慕营业部派件员 陆慕片区五 12345678909 正在为您派件' },
+            { time:'', status:'运输中', cont:'【江苏苏州陆慕营业部】已收入' },
+            { time:'', status:'', cont:'快件已到达【江苏苏州陆慕营业部】扫描员是陆慕五' },
+            { time:'', status:'已揽件', cont:'【天津项目客户部】的收件员【某某服装】已收件' },
+            { time:'', status:'已发货', cont:'包裹正在揽收' },
+        ]
+    }
+    
+    computed = {
+    
+    }
+    
+    methods = {
+    
+    }
+    
+    onLoad() {
+    
+    }
+}
+</script>
+
+<style lang='less'>
+#logistics{
+    width: 100%; min-height: 100%; box-sizing: border-box; padding: 20rpx 30rpx; background-color: #F2F2F2; .font;
+}
+
+
+.font{
+    font-family:PingFang-SC-Medium; font-weight:500;
+}
+
+
+.logisticsDetails{
+    width: 100%; border-radius: 10rpx; background-color: white; padding-top: 35rpx; padding-bottom: 30rpx;
+    .logisticsList{
+        width: 100%; display: flex; color: #999999;
+        .logisticsTime{
+            width: 130rpx; text-align: center; font-size: 24rpx; border-right: 1px solid #F2F2F2; position: relative; padding-bottom: 40rpx;
+            text{font-size: 20rpx; color: #999999;}
+            .logisticsSolid{
+                width: 8rpx; height: 8rpx; border-radius: 50%; background-color: #CECECE;
+                position: absolute; top: 10rpx; right: -4rpx;
+            }
+            .logisticsClosed{
+                width: 40rpx; height: 40rpx; border-radius: 50%; background:linear-gradient(78deg,rgba(253,133,122,1),rgba(233,74,64,1));
+                position: absolute; top: 0rpx; right: -20rpx; color: white; font-size: 20rpx; text-align: center; line-height: 40rpx;
+            }
+        }
+        .logisticsStatus{
+            width: 566rpx; box-sizing: border-box; padding: 0 26rpx 0 38rpx; font-size: 24rpx; padding-bottom: 40rpx;
+            text{font-size: 28rpx;}
+        }
+        .logisticsStatusActive{color: #F4695F;}
+    }
+    .logisticsListActive{ color: #363636;}
+}
+
+
+
+
+</style>

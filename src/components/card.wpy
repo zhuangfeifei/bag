@@ -1,0 +1,72 @@
+<template>
+    <view class="orderList_content" @tap="linkTo" data-url="./orderDetail">
+        <image src="/images/my/WDDD_TU_shangpintu.png" mode="scaleToFill" lazy-load="false" />
+        <view class="orderList_contents">
+            <view class="orderList_title">商品标题商品标题商品标题商品标题商品标题商品标题商品标商品标题商品标题商品标题商品标题商品标题商品标题商品标</view>
+            <view class="orderList_specifications">颜色(黑色）；尺码(大码)：尺码(大码)商品标题商品标题商品标题商品标题商品标题商品标题商品标</view>
+            <view class="orderList_price">￥200.00<text>x2</text></view>
+        </view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import 'wepy-async-function'
+
+@connect({
+    
+})
+    
+export default class Card extends wepy.component {
+    
+    data = {
+    
+    }
+    
+    computed = {
+    
+    }
+    
+    methods = {
+        linkTo(e){
+            wx.navigateTo({url: e.currentTarget.dataset.url});
+        }
+    }
+}
+</script>
+
+<style lang='less'>
+.font{
+    font-family:PingFang-SC-Medium; font-weight:500;
+}
+.displays{
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal !important;
+    -webkit-box-orient: vertical;
+}
+
+
+.orderList_content{
+    width: 100%; height: 160rpx; margin-top: 10rpx; display: flex; justify-content: space-between; align-items: center;
+    box-sizing: border-box; color: #363636; margin-bottom: 20rpx; .font;
+    image{width: 160rpx; height: 160rpx; border-radius: 10rpx;}
+    .orderList_contents{
+        width: calc(100% - 190rpx);
+        .orderList_title{
+            width: 100%; max-height: 60rpx; line-height: 31rpx; .displays; -webkit-line-clamp: 2;
+        }
+        .orderList_specifications{
+            width: 100%; height: 25rpx; line-height: 26rpx; color: #999999; font-size: 24rpx; .displays; -webkit-line-clamp: 1;
+            margin: 23rpx 0 21rpx 0;
+        }
+        .orderList_price{
+            font-size: 24rpx; 
+            text{font-size: 20rpx; color: #999999; margin-left: 28rpx;}
+        }
+    }
+}
+</style>

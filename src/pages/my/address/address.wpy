@@ -1,0 +1,131 @@
+<template>
+    <view id="address" class="{{true ? 'isAddress' : ''}}">
+
+        <view wx:if="{{true}}" class="addressList">
+            <view wx:for="{{2}}" wx:key="{{index}}" class="addressList_content">
+                <h5>王小刚<text>13488884444</text></h5>
+                <view class="addressList_address">江苏省 苏州市 工业园区  斜塘街道 莲香新村南区18号楼2单元1802</view>
+                <view class="addressList_Modify">
+                    <view @tap="change" data-index="{{index}}"><image src="{{checked[index == isDefault ? 1 : 0]}}" />设为默认地址</view>
+                    <view><text>编辑</text><text>删除</text></view>
+                </view>
+            </view>
+        </view> 
+
+        <view wx:else class="noAddress">
+            <image src="/images/my/TB_zanwudizhi.png" />
+            <text>\n还没有收货地址哦，赶快添加吧~</text>
+        </view>
+
+
+        <view class="address_btn" @tap="linkTo">添加收货地址</view>
+
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import 'wepy-async-function'
+
+@connect({
+    
+})
+    
+export default class Address extends wepy.page {
+    
+    config = {
+        navigationBarTitleText: '我的收货地址'
+    }
+    
+    components = {
+    
+    }
+    
+    data = {
+        isDefault: 0,
+        checked:['/images/my/AN_weigouxuan.png','/images/my/AN_weigouxuans.png']
+    }
+    
+    computed = {
+    
+    } 
+    
+    methods = {
+        change(e){
+            this.isDefault = e.currentTarget.dataset.index
+            this.$apply()
+        },
+        linkTo(){
+            this.$navigate({url:"./addAddress"})
+        }
+    }
+    
+    onLoad() {
+    
+    }
+}
+</script>
+
+<style lang='less'>
+#address{
+    width: 100%; min-height: 100%; background-color: #FFFFFF; box-sizing: border-box; padding: 20rpx 30rpx;
+}
+.isAddress{background-color: #F2F2F2!important;}
+
+
+.font{
+    font-family:PingFang-SC-Medium; font-weight:500;
+}
+
+.addressList{
+    width: 100%; 
+    .addressList_content{
+        width: 100%; min-height: 270rpx; background-color: white; border-radius: 10rpx; .font; padding: 44rpx 33rpx; box-sizing: border-box; margin-bottom: 20rpx;
+        h5{
+            font-size: 34rpx; color: #363636;
+            text{font-size: 28rpx; color: #666666; margin-left: 33rpx;}
+        }
+        .addressList_address{
+            width: 100%; height: 66rpx; line-height: 33rpx; color: #363636; margin-top: 10rpx;
+            display: -webkit-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            white-space: normal !important;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .addressList_Modify{
+            width: 100%; height: 40rpx; display: flex; justify-content: space-between; align-items: center; margin-top: 35rpx;
+            image{width: 30rpx; height: 30rpx; margin-right: 15rpx;}
+            view:nth-child(1){
+                height: 100%; display: flex; align-items: center;
+            }
+            view:nth-child(2){
+                height: 100%; color: #FFFFFF;
+                text:nth-child(1){background-color: #CECECE; padding: 5rpx 28rpx; border-radius: 5rpx;}
+                text:nth-child(2){background-color: #F4695F; padding: 5rpx 28rpx; border-radius: 5rpx; margin-left: 17rpx;}
+            }
+        }
+    }
+}
+
+
+.noAddress{
+    width: 100%; padding-top: 180rpx; text-align: center; margin-bottom: 104rpx;
+    image{width: 342rpx; height: 255rpx; margin-bottom: 55rpx;}
+    text{
+        color: #999999; font-size: 30rpx; .font;
+    }
+}
+
+
+.address_btn{
+    width: 400rpx; height: 88rpx; text-align: center; line-height: 88rpx; color: white; background-color: #F4695F; 
+    border-radius: 44rpx; font-family:PingFang-SC-Bold; font-weight:bold; margin: 0 auto; margin-top: 78rpx; font-size: 36rpx;
+}
+
+
+
+</style>

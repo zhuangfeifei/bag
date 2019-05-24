@@ -1,0 +1,145 @@
+<template>
+    <view id="myOrder" class="{{orderIndex == 1 ? 'isPay' : ''}}">
+
+        <view class="myOrderTab">
+            <view class="myOrderTabList {{index == orderIndex ? 'tabActive' : ''}}" wx:for="{{tab}}" wx:key="{{index}}" @tap="changeTab" data-index="{{index}}">{{item}}</view>
+        </view>
+
+        <view class="orders">
+            <view class="orderList" wx:for="{{4}}" wx:key="{{index}}">
+                <h3>
+                    <view wx:if="{{orderIndex == 1}}" class="orderList_checked">
+                        <image src="/images/my/WDDD__xuanzhonganniu.png" mode="scaleToFill" lazy-load="false" />
+                    </view>
+                    等待买家付款
+                </h3>
+                <card-item></card-item>
+                <view class="orderList_combined">共2件商品 合计：<text>￥400.00</text></view>
+                <view class="orderList_status">
+                    <view>付款</view><view class="Cancel">取消订单</view>
+                    <!-- <view class="payment">提醒发货</view><view class="Cancel">查看物流</view>
+                    <view class="payment">评价</view> -->
+                </view>
+            </view>
+        </view>
+
+        <view wx:if="{{orderIndex == 1}}" class="paymentList">
+            <view class="payment">付款</view>
+        </view>
+
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import 'wepy-async-function'
+import card from '../../../components/card'
+
+@connect({
+    orderIndex(state){
+        return state.counter.orderIndex
+    }
+})
+    
+export default class MyOrder extends wepy.page {
+    
+    config = {
+        navigationBarTitleText: '我的订单'
+    }
+    
+    components = {
+        'card-item': card
+    }
+    
+    data = {
+        tab:['全部','待付款','待发货','待收货','评价/售后'], 
+    }
+    
+    computed = {
+    
+    }
+    
+    methods = {
+        changeTab(e){
+            let index = e.currentTarget.dataset.index
+            wepy.$store.dispatch({type:'ASYNC_INCREMENT', payload: index})
+        },
+    }
+    
+    onLoad() {
+    
+    }
+}
+</script>
+
+<style lang='less'>
+#myOrder{
+    width: 100%; min-height: 100%; background-color: #F2F2F2; box-sizing: border-box; padding-top: 101rpx;
+}
+.isPay{ padding-bottom: 98rpx;}
+
+.font{
+    font-family:PingFang-SC-Medium; font-weight:500;
+}
+
+.displays{
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal !important;
+    -webkit-box-orient: vertical;
+}
+
+.myOrderTab{
+    width: 100%; height: 101rpx; display: flex; justify-content: space-around; .font; color: #363636;
+    font-size: 28rpx; text-align: center; line-height: 101rpx; background-color: white; position: fixed; top: 0; left: 0;
+    .myOrderTabList{
+        min-width: 100rpx; height: 99rpx;
+    }
+    .tabActive{ border-bottom: 2rpx solid #F4695F; color: #F4695F;}
+}
+
+
+
+.orders{
+    width: 100%; padding: 20rpx 30rpx; box-sizing: border-box; .font;
+    .orderList{
+        width: 100%; background-color: #FFFFFF; border-radius: 10rpx; box-sizing: border-box;
+        padding: 20rpx 35rpx 30rpx 32rpx; margin-bottom: 20rpx;
+        h3{
+            color: #F4695F; display: flex;
+            .orderList_checked{
+                width: 40rpx; height: 40rpx; border-radius: 50%; border: 1px solid #E8E8E8; margin-right: 30rpx;
+                image{width: 100%; height: 100%;}
+            }
+        }
+        .orderList_combined{
+            width: 100%; font-size: 24rpx; text-align: right; margin-top: 30rpx;
+            text{font-size: 28rpx;}
+        }
+        .orderList_status{
+            width: 100%; display: flex; flex-flow: row-reverse; text-align: center; line-height: 56rpx; font-size: 24rpx; color: #F4695F; margin-top: 30rpx;
+            view{width: 160rpx; height: 56rpx; border-radius: 28rpx; border: 1px solid #F4695F; margin-left: 20rpx;}
+            .Cancel{
+                border: 1px solid #808080; color: #808080;
+            }
+        }
+    }
+}
+
+
+
+.paymentList{
+    width: 100%; height: 98rpx; background-color: white; position: fixed; bottom: 0; left: 0; display: flex; flex-flow: row-reverse; align-items: center;
+    padding-right: 40rpx; box-sizing: border-box; border-top: 1rpx solid #CECECE;
+    .payment{
+        width: 160rpx; height: 56rpx; background-color: #F4695F; color: white; text-align: center; line-height: 56rpx;
+        font-size: 24rpx; .font; border-radius: 28rpx;
+    }
+}
+
+
+
+</style>

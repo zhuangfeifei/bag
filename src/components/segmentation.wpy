@@ -1,0 +1,63 @@
+<template>
+    <view id='segmentation'>
+        <block wx:for="{{10}}" wx:key="index">
+            <view class='segmentation_list' bindtap='checke' data-data="{{item}}" data-index="{{index}}">
+                <image src='https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1906062556,3201568577&fm=27&gp=0.jpg'/>
+                <view wx:if="{{!isAnimation}}"><image wx:if="{{item.checked}}" src='/images/my/checked.png'/></view>
+            </view>
+        </block>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import 'wepy-async-function'
+
+@connect({
+    
+})
+    
+export default class Segmentation extends wepy.component {
+    
+    config = {
+        navigationBarTitleText: ''
+    }
+    
+    components = {
+    
+    }
+    
+    data = {
+    
+    }
+    
+    computed = {
+    
+    }
+    
+    methods = {
+    
+    }
+    
+    onLoad() {
+    
+    }
+}
+</script>
+
+<style lang='less'>
+#segmentation{
+  width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; background-color: #FFFFFF;
+}
+.segmentation_list{
+  width: 210rpx; height: 210rpx; margin-bottom: 20rpx; position: relative;
+}
+.segmentation_list image{
+  width: 100%; height: 100%; border-radius: 10rpx;
+}
+.segmentation_list view{
+  width: 40rpx; height: 40rpx; background:rgba(255,255,255,0.6); border-radius: 50%; 
+  position: absolute; right: 2rpx; top: 2rpx;
+}
+</style>

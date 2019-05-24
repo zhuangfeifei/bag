@@ -1,0 +1,218 @@
+<template>
+    <view id="favorites">
+
+
+        <view id='favorites' style="padding-bottom: {{!isAnimation ? '98rpx' : '20rpx'}}" class="{{allCategory || allState ? 'scroll' : ''}}">
+            <view class='favorites'>
+                <view class='favorites_nav'>
+                <view>
+                    <text @tap='allCategory'>全部类目</text>
+                    <image @tap='allCategory' src="/images/my/{{allCategory ? 'up' : 'down'}}.png"/>
+                    <text @tap='allState'>全部状态</text>
+                    <image @tap='allState' src="/images/my/{{allState ? 'up' : 'down'}}.png"/>
+                </view>
+                <view>
+                    <image @tap="change" src="/images/my/SCJ_guanli.png" />
+                    <text @tap='management' class="{{!isAnimation ? 'complete' : ''}}">{{isAnimation ? '管理' : '完成'}}</text>
+                </view>
+                </view>
+                <view class='divider'></view>
+            </view>
+        </view>
+
+        <view class='favorites_list'>
+            <view wx:if="{{isChange}}" class='goodsList_checked' animation="{{animationRight}}">
+                <view class='goodsList_checked_' wx:for="{{20}}" wx:key="{{index}}" bindtap='checke' data-data="{{item}}" data-index="{{index}}">
+                    <view><image wx:if="{{true}}" src='/images/my/checked.png'/></view>
+                </view>
+            </view>
+            <view wx:if="{{isChange}}" class='goodsList' animation="{{animationLeft}}" style="min-height: {{screenHeight+'px'}};">
+                <favoritesGoodsList></favoritesGoodsList>
+            </view>
+            <view wx:else class='goodsList_' animation="{{animationLeft}}">
+                <segmentation></segmentation>
+            </view>
+        </view>
+
+
+
+        <view class='management' wx:if="{{!isAnimation}}">
+          <view bindtap='checkedAll'>
+            <view><image wx:if="{{checkedAll}}" src='/images/my/checked.png'/></view><text>全选</text>
+          </view>
+          <view>
+            <button bindtap="emptyShelves">清空下架</button>
+            <button bindtap="deleteCollotion">删除</button>
+          </view>
+        </view>
+
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import 'wepy-async-function'
+import favoritesGoodsList from '../../../components/favoritesGoodsList'
+import segmentation from '../../../components/segmentation'
+
+@connect({
+    
+})
+    
+export default class Favorites extends wepy.page {
+    
+    config = {
+        navigationBarTitleText: '收藏夹'
+    }
+    
+    components = {
+        favoritesGoodsList,
+        segmentation
+    }
+    
+    data = {
+        allCategory: true, isChange: true,
+        animationLeft: '', animationRight: '', isAnimation: true
+    }
+    
+    computed = {
+    
+    }
+    
+    methods = {
+      change(){
+        this.isChange = !this.isChange
+        this.$apply()
+      },
+      // 管理
+      management() {
+        if(this.isChange){
+          const animationLeft = wx.createAnimation({
+            duration: 1000,
+            timingFunction: 'ease',
+          })
+          const animationRight = wx.createAnimation({
+            duration: 1000,
+            timingFunction: 'ease',
+          })
+
+          animationLeft.translate(this.isAnimation ? this.methods.px(100) : 0).step({ duration: 500 })
+          animationRight.translate(this.isAnimation ? this.methods.px(120) : 0).step({ duration: 500 })
+
+          this.animationLeft = animationLeft.export()
+          this.animationRight = animationRight.export()
+        }
+        this.isAnimation = !this.isAnimation
+        this.$apply()
+      },
+      // rpx转px
+      px(rpx) {
+        var systemInfo = wx.getSystemInfoSync()
+        return rpx / 750 * systemInfo.windowWidth
+      },
+    }
+    
+    onLoad() {
+    
+    }
+}
+</script>
+
+<style lang='less'>
+#favorites{
+    width: 100%; min-height: 100%; background-color: #F2F2F2;
+}
+
+
+#favorites{
+  width: 100%; min-height: 100%; background:rgba(246,246,246,1); box-sizing: border-box; overflow: hidden; padding-top: 60rpx; padding-bottom: 0!important;
+}
+// .scroll{ position: fixed; }
+
+
+.favorites{
+  width: 100%; height: 120rpx; background-color: #FFFFFF; box-sizing: border-box; position: fixed; top: 0; left: 0; z-index: 5;
+}
+.favorites_nav{
+  width: 100%; height: 100%; font-size: 24rpx; display: flex; justify-content: space-between; align-items: center;
+  padding: 0 40rpx; color: #1A213C; font-family:PingFang-SC-Medium; font-weight:500; box-sizing: border-box;
+}
+.divider{ width: calc(100% - 80rpx); height: 2rpx; background-color: #E8E8E8; margin: 0 auto; }
+.favorites_nav view:nth-child(1) image{
+  width: 20rpx; height: 10rpx; margin-left: 10rpx;
+}
+.favorites_nav view:nth-child(2){
+  display: flex; align-items: center;
+}
+.favorites_nav view:nth-child(2) image{
+  width: 24rpx; height: 24rpx; margin-right: 20rpx;
+}
+.favorites_nav view:nth-child(1) text:nth-child(3){
+  margin-left: 48rpx;
+}
+.favorites_nav view:nth-child(2) text:nth-child(2){
+  border-left: 2rpx solid #E8E8E8; padding-left: 20rpx;
+}
+.complete{ color: #C15356; }
+
+
+
+.favorites_list{
+  width: 100%; display: flex; background-color: #FFFFFF; padding-bottom: 100rpx;
+}
+.goodsList{
+  width: 100%; padding: 0 40rpx; box-sizing: border-box;
+}
+.goodsList_{
+  width: 100%; padding: 48rpx 40rpx; box-sizing: border-box;
+}
+.goodsList_checked{
+  width: 120rpx; background-color: #F6F6F6; padding-bottom: 20rpx;
+  margin-left: -120rpx;
+}
+.goodsList_checked_{
+  width: 120rpx; height: 180rpx; display: flex; align-items: center; justify-content: center;
+  //  border-bottom: 1px solid black;
+}
+.goodsList_checked_:last-child{
+  margin-bottom: 0;
+}
+.goodsList_checked_ view{
+  width: 40rpx; height: 40rpx;
+}
+.goodsList_checked_ view image{
+  width: 100%; height: 100%;
+}
+
+
+
+
+
+
+
+.management{
+  width: 100%; height: 98rpx; border-top: 1rpx solid #C15356; position: fixed; bottom: 0; left: 0; background-color: #FFFFFF;
+  display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; padding: 0 38rpx;
+}
+.management view{
+  display: flex; font-size: 30rpx; color: #2A2A2A; line-height: 48rpx;
+}
+.management view:nth-child(1) view{
+  width: 40rpx; height: 40rpx; border-radius: 50%; border: 2rpx solid #E8E8E8; margin-right: 20rpx;
+}
+.management image{ width: 100%; height: 100%; }
+.management button{
+  width: 160rpx; height: 56rpx; font-size: 24rpx; line-height: 56rpx; text-align: center; border-radius: 28rpx; border: 0;
+  font-family:PingFang-SC-Medium; font-weight:500;
+}
+.management button:nth-child(1){
+  width: 180rpx; background-color: #FFFFFF; border: 1px solid #808080; color: #808080;
+}
+.management button:nth-child(2){
+  background-color: #C15356; color: #FFFFFF; margin-left: 20rpx;
+}
+
+
+
+</style>

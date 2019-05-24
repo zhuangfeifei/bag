@@ -1,5 +1,5 @@
 <style lang="less">
-
+  page{width: 100%; height: 100%; font-size: 28rpx;}
 </style>
 
 <script>
@@ -11,18 +11,34 @@ import configStore from './store'
 
 const store = configStore()
 setStore(store)
+wepy.$store = store
+
+const Api = require('./wxApi/api')
+wepy.$Api = Api
 
 export default class extends wepy.app {
   config = {
     pages: [
       'pages/index/index',
       'pages/cart/cart',
-      'pages/my/my'
+      'pages/my/my',
+      'pages/my/membershipRules',
+      'pages/my/address/address',
+      'pages/my/address/addAddress',
+      'pages/my/favorites/favorites',
+      'pages/my/order/myOrder',
+      'pages/my/order/orderDetail',
+      'pages/my/order/refund',
+      'pages/my/order/refundDetails',
+      'pages/my/order/logistics',
+      'pages/my/order/return',
+      'pages/my/order/evaluation',
+      'pages/authorization/authorization',
     ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: '袋鼠利购',
+      navigationBarTitleText: '白鸽优购',
       navigationBarTextStyle: 'black'
     },
     tabBar: {
@@ -63,7 +79,42 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
-    
+    // 登录
+    wepy.login({
+      success: res_login => {
+        // 获取用户信息
+        wepy.getSetting({
+          success: res => {
+            // console.log(res)
+            if (res.authSetting['scope.userInfo']) {
+              wepy.getUserInfo({
+                success: res => {
+                  // console.log(res)
+                  var jsonData = {
+                    code: res_login.code,
+                    encryptedData: res.encryptedData,
+                    iv: res.iv
+                  }
+                  Api.userinfo(jsonData).then(res => { 
+                    console.log(res.data)
+                    if (res.data.code == 200) {
+                      wepy.setStorageSync('userinfo', res.data.data)
+                      wepy.$store.dispatch({ type : 'userinfos', payload: res.data.data})
+                    }
+                  }, err => {
+                    
+                  })
+                }
+              })
+            } else {
+              wepy.navigateTo({
+                url: '/pages/authorization/authorization'
+              })
+            }
+          }
+        })
+      }
+    })
   }
 
 }

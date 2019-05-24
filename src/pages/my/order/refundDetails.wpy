@@ -1,0 +1,141 @@
+<template>
+    <view id="refundDetails">
+
+        <view class="refundDetails_nav">
+            等待买家付款
+            <text> \n剩22小时16分自动关闭</text>
+        </view>
+
+        <view class="refundDetails_status"> 
+            <h3>您已经成功发起退款申请，请耐心等待商家处理</h3>
+            <text>\n·商家同意或者超时未处理，系统会自动给您退款</text>
+            <text>\n·如果商家拒绝退款，请联系客服协商后再次发起申请</text>
+        </view>
+
+        <view class="refundDetails_cont">
+            <view class="orderList_content">
+                <image src="/images/my/WDDD_TU_shangpintu.png" mode="scaleToFill" lazy-load="false" />
+                <view class="orderList_contents">
+                    <view class="orderList_title">商品标题商品标题商品标题商品标题商品标题商品标题商品标商品标题商品标题商品标题商品标题商品标题商品标题商品标</view>
+                    <view class="orderList_specifications">颜色(黑色）；尺码(大码)：尺码(大码)商品标题商品标题商品标题商品标题商品标题商品标题商品标</view>
+                    <view class="orderList_price">￥200.00<text>x2</text></view>
+                </view>
+            </view>
+            <view class="refundDetails_cont_">退款原因：多拍/错拍</view>
+            <view class="refundDetails_cont_">退款金额：¥280</view>
+            <view class="refundDetails_cont_">申请时间：2019.06.08 12:24:23</view>
+            <view class="refundDetails_cont_">退款编号：1234 5678 1234 5678 12</view>
+        </view>
+
+        <view class="CustomerService">客户服务</view>
+
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import 'wepy-async-function'
+
+@connect({
+    
+})
+    
+export default class RefundDetails extends wepy.page {
+    
+    config = {
+        navigationBarTitleText: '退款详情'
+    }
+    
+    components = {
+    
+    }
+    
+    data = {
+    
+    }
+    
+    computed = {
+    
+    }
+    
+    methods = {
+    
+    }
+    
+    onLoad() {
+    
+    }
+}
+</script>
+
+<style lang='less'>
+#refundDetails{
+    width: 100%; min-height: 100%; box-sizing: border-box; background-color: #F2F2F2; .font;
+}
+
+
+.font{
+    font-family:PingFang-SC-Medium; font-weight:500;
+}
+.displays{
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal !important;
+    -webkit-box-orient: vertical;
+}
+
+
+.refundDetails_nav{
+    width: 100%; height: 200rpx; color: white; font-size: 30rpx; padding: 55rpx 78rpx; box-sizing: border-box;
+    background: linear-gradient(to right, #fd857a, #e94a40);
+    text{line-height: 50rpx;}
+}
+
+
+
+.refundDetails_status{
+    width: 100%; padding: 20rpx 30rpx 35rpx 30rpx; box-sizing: border-box; color: #999999; font-size: 24rpx;
+    h3{line-height: 60rpx;}
+}
+
+
+
+.refundDetails_cont{
+    width: 100%; height: 480rpx; background-color: white; box-sizing: border-box; padding: 23rpx 30rpx;
+    .orderList_content{
+        width: 100%; height: 160rpx; margin-top: 10rpx; display: flex; justify-content: space-between; align-items: center;
+        box-sizing: border-box; color: #363636; margin-bottom: 20rpx; .font;
+        image{width: 160rpx; height: 160rpx; border-radius: 10rpx;}
+        .orderList_contents{
+            width: calc(100% - 190rpx);
+            .orderList_title{
+                width: 100%; max-height: 60rpx; line-height: 31rpx; .displays; -webkit-line-clamp: 2;
+            }
+            .orderList_specifications{
+                width: 100%; height: 25rpx; line-height: 26rpx; color: #999999; font-size: 24rpx; .displays; -webkit-line-clamp: 1;
+                margin: 23rpx 0 21rpx 0;
+            }
+            .orderList_price{
+                font-size: 24rpx; 
+                text{font-size: 20rpx; color: #999999; margin-left: 28rpx;}
+            }
+        }
+    }
+    .refundDetails_cont_{
+        width: 100%; height: 60rpx; line-height: 60rpx; font-size: 24rpx;
+    }
+}
+
+
+
+.CustomerService{
+    width: 400rpx; height: 88rpx; line-height: 88rpx; text-align: center; color: white; font-size: 36rpx; 
+    font-family:PingFang-SC-Bold; font-weight:bold; background-color: #F4695F; border-radius: 44rpx; margin: 62rpx auto;
+}
+
+
+
+</style>
