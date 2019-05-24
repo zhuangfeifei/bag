@@ -1,0 +1,186 @@
+<template>
+	<view class="useriphone">
+		<text>输入当前支付密码</text>
+		<input
+		 type="password"
+		 placeholder="请输入密码"
+		 name="userNames"
+		 placeholder-class="placeholderStyle"
+		 class="phoneinputs"
+		 bindinput="userNameInputs"
+		 maxlength="6"
+		></input>
+	</view>
+	<view class="admiuser" @tap="tapnext">忘记密码?</view>
+	<view class="useriphone">
+		<text>输入新密码</text>
+		<input
+		 type="password"
+		 placeholder="请输入密码"
+		 name="userName"
+		 placeholder-class="placeholderStyle"
+		 class="phoneinput"
+		 bindinput="userNameInput"
+		 maxlength="6"
+		></input>
+	</view>
+	<view class="useriphone">
+		<text>确认新密码</text>
+		<input
+		 type="password"
+		 placeholder="请确认密码"
+		 name="usernum"
+		 bindinput="userInput"
+		 placeholder-class="placeholderStyle"
+		 class="phoneinput"
+		 maxlength="6"
+		></input>
+	</view>
+	<view class="titleli">提示：密码为6位数数字密码</view>
+	<view class="obtn">
+		<image
+		 wx:if="{{stsat==0}}"
+		 src="/images/notices/querenjinyong.png"
+		 class="btnimg"
+		></image>
+		<image
+		 wx:else
+		 src="/images/notices/querenqiyongt.png"
+		 class="btnimg"
+		 @tap="ontapy"
+		></image>
+	</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+
+@connect({})
+export default class Playkey extends wepy.page {
+  config = {
+    navigationBarTitleText: '修改支付密码'
+  };
+
+  components = {};
+
+  data = {
+    userName: '',
+    userNames: '',
+    usernum: '',
+    stsat: 0,
+    texts: '两次密码不同，请重新输入!'
+  };
+
+  computed = {};
+
+  methods = {
+    userNameInput(e) {
+      this.userName = e.detail.value;
+    },
+    userNameInputs(e) {
+      this.userNames = e.detail.value;
+    },
+    userInput(e) {
+      this.usernum = e.detail.value;
+      if (this.userNames.length == 6&&this.userName.length == 6 && this.usernum.length == 6) {
+        this.stsat = 1;
+      }
+    },
+    ontapy() {
+      if (this.userName != this.usernum) {
+        wx.showToast({
+          title: this.texts,
+          icon: 'none',
+          duration: 1100,
+          mask: true
+        });
+        return false;
+      }
+		},
+		tapnext(){
+			wepy.navigateTo({
+				url: '/pages/my/setting/clonekey',
+			});
+		}
+  };
+
+  onLoad() {}
+}
+</script>
+
+<style lang='less'>
+.useriphone {
+  width: 690rpx;
+  height: 120rpx;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 10rpx;
+  margin: 19rpx auto;
+  display: flex;
+}
+.useriphone text {
+  font-size: 34rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 120rpx;
+  margin-left: 32rpx;
+}
+.phoneinput {
+  width: 200rpx;
+  height: 40rpx;
+  margin-left: 152rpx;
+  margin-top: 37rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+}
+.phoneinputs {
+  width: 200rpx;
+  height: 40rpx;
+  margin-left: 49rpx;
+  margin-top: 37rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+}
+.placeholderStyle {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+}
+.titleli {
+  width: 400rpx;
+  height: 26rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  margin: 40rpx 62rpx;
+  letter-spacing: 1px;
+}
+.obtn {
+  width: 100%;
+  text-align: center;
+}
+.btnimg {
+  width: 400rpx;
+  height: 88rpx;
+  margin-top: 81rpx;
+}
+.admiuser {
+  width: 140rpx;
+  height: 33rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  text-decoration: underline;
+  color: rgba(244, 105, 95, 1);
+  margin: 31rpx 61rpx;
+  letter-spacing: 2rpx;
+}
+</style>

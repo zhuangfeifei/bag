@@ -1,0 +1,320 @@
+<template>
+	<!--交易类型-->
+	<view class="top_liatsec" @tap="list_up">
+		<text class="triangle-text">全部交易类型</text>
+		<view class="triangle-down" wx:if="{{sceted==false}}"></view>
+		<view class="triangle_border_up" wx:else></view>
+	</view>
+	<!--交易时间-->
+	<picker mode="date" value="{{date}}" start="{{year}}-01" fields="month" end="{{years}}-12" bindchange="bindTimeChange">
+		<view class="bill_timelist" @tap="list_down">
+			<text>{{year}}年{{month}}月</text>
+			<image src="/images/notices/sc_xialaup.png" wx:if="{{anmiaon==false}}"></image>
+			<image src="/images/notices/sc_xiala.png" wx:else></image>
+		</view>
+	</picker>
+	<!--账单列表-->
+	<view class="bill_up_list" wx:for="{{bill_list}}" wx:key="{{bill_list}}">
+		<view>
+			<image src="/images/notices/tbweixinqianbao.png" wx:if="{{item.stat==0}}"></image>
+			<image src="/images/notices/qb_yongjin.png" wx:if="{{item.stat==1}}"></image>
+			<image src="/images/notices/qb_xiaogeqianbao.png" wx:if="{{item.stat==2}}"></image>
+		</view>
+		<view>
+			<view>
+				<view wx:if="{{item.stat==0}}">微信钱包</view>
+				<view wx:if="{{item.stat==1}}">佣金</view>
+				<view wx:if="{{item.stat==2}}">小鸽钱包</view>
+				<view wx:if="{{item.codes==0}}">充值</view>
+				<view wx:if="{{item.codes==1}}">提现</view>
+				<view wx:if="{{item.codes==2}}">购物退款</view>
+				<view wx:if="{{item.codes==3}}">购物支付</view>
+			</view>
+			<view>{{item.time}}</view>
+		</view>
+		<view wx:if="{{item.statce==0}}">+￥{{item.price}}</view>
+		<view wx:if="{{item.statce==1}}" style="color: rgba(102, 102, 102, 1);">-￥{{item.price}}</view>
+	</view>
+
+	<view class="btsbackj" wx:if="{{hidend==false}}"></view>
+  <view class="btns_bak" wx:if="{{hidend==false}}">
+			<view class="back_top">选择交易类型</view>
+			<view class="sexlist">
+				<view class="liat">
+					<view wx:for="{{list}}" wx:key="{{list}}" data-id="{{index}}" style="{{index == id?'color:white;background:rgba(244,105,95,1);':'background:rgba(255,255,255,1);;border:none'}}" @tap="click">{{item.text}}</view>
+				</view>
+			</view>
+			<view class="back_tops" @tap="clckhide">取消</view>
+		</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+
+@connect({})
+export default class Bill extends wepy.page {
+  config = {
+    navigationBarTitleText: '账单'
+  };
+
+  components = {};
+
+  data = {
+    id: 0,
+    year: '',
+    years: '',
+    hidend: true,
+    sceted: false,
+		anmiaon: false,
+		month:'',
+    codes: '',
+    stat: '',
+    statce: '',
+    month: '',
+    bill_list: [
+      { time: '2019.05.08 12:39', price: '50', codes: 0, stat: 0, statce: 0 },
+      { time: '2019.05.08 12:39', price: '100', codes: 1, stat: 1, statce: 1 },
+      { time: '2019.05.08 12:39', price: '50', codes: 2, stat: 2, statce: 0 },
+      { time: '2019.05.08 12:39', price: '200', codes: 3, stat: 0, statce: 1 }
+    ],
+    list: [
+      { text: '全部' },
+      { text: '小鸽钱包' },
+      { text: '微信钱包' },
+      { text: '佣金' }
+    ]
+  };
+
+  computed = {};
+
+  methods = {
+    list_up() {
+      this.sceted = !this.sceted;
+      this.hidend = false;
+    },
+    list_down() {
+      this.anmiaon = !this.anmiaon;
+    },
+    bindTimeChange(e) {
+			let time = e.detail.value.substring(5, 7);
+			time = time.replace(/^0/, '');
+      let year = e.detail.value.substring(0, 4);
+      this.month = time;
+      this.year = year;
+      this.anmiaon = !this.anmiaon;
+    },
+    click: function(e) {
+      var ids = e.currentTarget.dataset.id;
+      this.id = ids;
+    },
+    clckhide() {
+      this.hidend = true;
+    }
+  };
+
+  onLoad() {
+    var now = new Date();
+		var year = now.getFullYear();
+		var month = now.getMonth() + 1;
+    var years = now.getFullYear() + 3;
+    this.year = year;
+		this.years = years;
+		this.month = month
+  }
+}
+</script>
+
+<style lang='less'>
+page {
+  background-color: #ffffff;
+}
+//top_liatsec
+.top_liatsec {
+  width: 100%;
+  height: 100rpx;
+  background: rgba(248, 248, 248, 1);
+  display: flex;
+}
+.triangle-text {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin: 37rpx 271rpx;
+  letter-spacing: 2rpx;
+}
+.triangle-down {
+  width: 0;
+  height: 0;
+  border-width: 16rpx 16rpx 0;
+  border-style: solid;
+  border-color: #666666 transparent transparent;
+  margin: 48rpx -247rpx;
+}
+.triangle_border_up {
+  width: 0;
+  height: 0;
+  border-width: 0 16rpx 16rpx;
+  border-style: solid;
+  border-color: transparent transparent #333;
+  margin: 48rpx -247rpx;
+}
+
+//bill_timelist
+.bill_timelist {
+  width: 100%;
+  height: 100rpx;
+  background: rgba(234, 234, 234, 1);
+  display: flex;
+}
+
+.bill_timelist text {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 100rpx;
+  margin-left: 32rpx;
+}
+
+.bill_timelist image {
+  width: 20rpx;
+  height: 10rpx;
+  margin: 45rpx 4rpx;
+}
+.bill_up_list {
+  width: 100%;
+  height: 120rpx;
+  background: rgba(255, 255, 255, 1);
+  border-bottom: 1px solid #f2f2f2;
+  display: flex;
+}
+.bill_up_list view:nth-child(1) {
+  width: 70rpx;
+  height: 70rpx;
+  margin: 25rpx 32rpx;
+}
+.bill_up_list view:nth-child(1) image {
+  width: 70rpx;
+  height: 70rpx;
+}
+.bill_up_list view:nth-child(2) {
+  width: 243rpx;
+  height: 75rpx;
+  margin: 25rpx -11rpx;
+}
+.bill_up_list view:nth-child(2) view:nth-child(1) {
+  width: 100%;
+  height: 34rpx;
+  margin: 0;
+  display: flex;
+}
+.bill_up_list view:nth-child(2) view:nth-child(1) view:nth-child(1) {
+  height: 34rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 34rpx;
+}
+.bill_up_list view:nth-child(2) view:nth-child(1) view:nth-child(2) {
+  height: 34rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 26rpx;
+}
+.bill_up_list view:nth-child(2) view:nth-child(2) {
+  width: 100%;
+  height: 34rpx;
+  margin-top: 5rpx;
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  line-height: 36rpx;
+  margin-left: 3rpx;
+}
+.bill_up_list view:nth-child(3) {
+  width: 360rpx;
+  height: 100%;
+  text-align: right;
+  line-height: 120rpx;
+  letter-spacing: 0rpx;
+  font-size: 32rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(228, 171, 19, 1);
+  margin-left: 10rpx;
+}
+
+.btsbackj {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 1);
+  position: fixed;
+  top: 0rpx;
+  overflow: hidden;
+  opacity: 0.5;
+}
+.btns_bak {
+  width: 100%;
+  height: 500rpx;
+  background: rgba(242, 242, 242, 1);
+  position: fixed;
+  bottom: 0rpx;
+}
+.back_top {
+  width: 100%;
+  height: 100rpx;
+  text-align: center;
+  line-height: 100rpx;
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  border-bottom: 1px solid #eaeaea;
+  letter-spacing: 2rpx;
+}
+.back_tops {
+  width: 100%;
+  height: 100rpx;
+  text-align: center;
+  line-height: 100rpx;
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  border-bottom: 1px solid #eaeaea;
+  letter-spacing: 4rpx;
+}
+.sexlist {
+  width: 100%;
+  height: 300rpx;
+  border-bottom: 3px solid #eaeaea;
+}
+.liat {
+  width: 530rpx;
+  height: 226rpx;
+  margin: auto;
+  position: relative;
+  top: 35rpx;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.liat view {
+  width: 250rpx;
+  height: 100rpx;
+  margin-top: 5rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  line-height: 100rpx;
+  font-size: 34rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+}
+</style>

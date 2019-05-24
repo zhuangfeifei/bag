@@ -1,0 +1,177 @@
+<template>
+	<view class="topclass">
+		<view class="t_lit">
+			<text>提现方式</text>
+			<text>微信钱包</text>
+		</view>
+		<view class="numchong">提现金额（可提现余额¥{{picks}}）</view>
+		<view class="podtlist">
+			<view
+			 wx:for="{{postlist}}"
+			 wx:key="{{postlist}}"
+			 data-id="{{index}}"
+			 data-pick="{{item.title}}"
+			 style="{{index == id?'background: rgba(244, 105, 95, 1)':'background:rgba(206,206,206,1)'}}"
+			 @tap="click"
+			>￥{{item.title}}</view>
+		</view>
+		<view class="numchongs">每日最多可提现一次</view>
+		<view
+		 class="clsimg"
+		 @tap="titapnext"
+		>确认提现</view>
+	</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+
+@connect({})
+export default class Recharge extends wepy.page {
+  config = {
+    navigationBarTitleText: '提现'
+  };
+
+  components = {};
+
+  data = {
+    id: 0,
+    picks: '50',
+    pics: '50',
+    postlist: [
+      {
+        title: '50'
+      },
+      {
+        title: '100'
+      },
+      {
+        title: '200'
+      }
+    ]
+  };
+
+  computed = {};
+
+  methods = {
+    click: function(e) {
+      var ids = e.currentTarget.dataset.id;
+      var pics = e.currentTarget.dataset.pick;
+      this.id = ids;
+      this.pics = pics;
+    },
+    titapnext() {
+      let that = this;
+      if (that.picks != that.pics) {
+        wx.showToast({
+          title: '提现金额不足' + that.pics,
+          icon: 'none',
+          duration: 1100,
+          mask: true
+        });
+        return false;
+      } else {
+        wx.showToast({
+          title: '提现成功',
+          icon: 'none',
+          duration: 1100,
+          mask: true
+        });
+      }
+    }
+  };
+
+  onLoad() {}
+}
+</script>
+
+<style lang='less'>
+.topclass {
+  width: 690rpx;
+  height: 620rpx;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 10rpx;
+  margin: 19rpx auto;
+}
+.t_lit {
+  width: 690rpx;
+  height: 120rpx;
+  background: rgba(248, 248, 248, 1);
+  border-radius: 10rpx 10rpx 0rpx 0rpx;
+  display: flex;
+  line-height: 120rpx;
+}
+.t_lit text:nth-child(1) {
+  font-size: 32rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-left: 32rpx;
+  letter-spacing: 3rpx;
+}
+.t_lit text:nth-child(2) {
+  font-size: 32rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(244, 105, 95, 1);
+  margin-left: 370rpx;
+  letter-spacing: 3rpx;
+}
+.numchong {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin: 44rpx 32rpx;
+  letter-spacing: 3rpx;
+}
+.clsimg {
+  width: 400rpx;
+  height: 88rpx;
+  margin: 100rpx 145rpx;
+  font-size: 36rpx;
+  text-align: center;
+  line-height: 88rpx;
+  letter-spacing: 3rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  background: #f4695f;
+  border-radius: 44rpx;
+  color: rgba(255, 255, 255, 1);
+}
+.podtlist {
+  width: 90%;
+  height: 62rpx;
+  margin: auto;
+  position: relative;
+  top: -10rpx;
+  display: flex;
+}
+.podtlist view {
+  text-align: center;
+  line-height: 60rpx;
+  width: 20%;
+  height: 60rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+}
+.podtlist view:nth-child(2) {
+  margin-left: 46rpx;
+}
+.podtlist view:nth-child(3) {
+  margin-left: 46rpx;
+}
+.numchongs {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Regular;
+  font-weight: 400;
+  color: rgba(102, 102, 102, 1);
+  margin: 20rpx 32rpx;
+}
+</style>

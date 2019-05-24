@@ -1,0 +1,98 @@
+<template>
+	<view class="payment">
+		<image mode="aspectFill" lazy-load="true" src='/images/notices/playment.png' />
+	</view>
+	<view class="pay_ment">订单支付成功￥158.44</view>
+	<view class="pay_menta">恭喜您此次支付获得158积分</view>
+	<view class="btn_liat">
+		<view>查看订单</view>
+		<view @tap="backindexs">返回首页</view>
+	</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+
+@connect({})
+export default class Payment extends wepy.page {
+  config = {
+    navigationBarTitleText: '支付成功'
+  };
+
+  components = {};
+
+  data = {};
+
+  computed = {};
+
+  methods = {
+    backindexs() {
+      wx.switchTab({
+        url: '/pages/index/index'
+      });
+    }
+  };
+
+  onLoad() {}
+}
+</script>
+
+<style lang='less'>
+page {
+  background-color: white;
+}
+.payment {
+  width: 100%;
+  height: 354rpx;
+  text-align: center;
+  margin-top: 98rpx;
+}
+.payment image {
+  width: 367rpx;
+  height: 354rpx;
+}
+.pay_ment {
+  width: 100%;
+  text-align: center;
+  font-size: 36rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(54, 54, 54, 1);
+  letter-spacing: 1.5rpx;
+  margin-top: 35rpx;
+}
+.pay_menta {
+  width: 100%;
+  text-align: center;
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  letter-spacing: 1.5rpx;
+  margin-top: 21rpx;
+}
+.btn_liat {
+  width: 650rpx;
+  height: 88rpx;
+  margin: 98rpx auto;
+  display: flex;
+}
+.btn_liat view {
+  width: 300rpx;
+  height: 88rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 44rpx;
+  font-size: 36rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+  line-height: 88rpx;
+  letter-spacing: 1.5rpx;
+}
+.btn_liat view:nth-child(2) {
+  margin-left: 50rpx;
+}
+</style>

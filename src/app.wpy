@@ -3,11 +3,11 @@
 </style>
 
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
+import wepy from 'wepy';
+import 'wepy-async-function';
 
-import { setStore } from 'wepy-redux'
-import configStore from './store'
+import { setStore } from 'wepy-redux';
+import configStore from './store';
 
 const store = configStore()
 setStore(store)
@@ -19,7 +19,6 @@ wepy.$Api = Api
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index/index',
       'pages/cart/cart',
       'pages/my/my',
       'pages/my/membershipRules',
@@ -34,6 +33,27 @@ export default class extends wepy.app {
       'pages/my/order/return',
       'pages/my/order/evaluation',
       'pages/authorization/authorization',
+      'pages/index/detail',
+      'pages/index/index',
+      'pages/index/order',
+      'pages/index/onplay',
+      'pages/index/payment',
+      'pages/index/evaluation',
+      'pages/my/wallet/bill',
+      'pages/my/wallet/wallet',
+      'pages/my/wallet/withdraw',
+      'pages/my/wallet/recharge',
+      'pages/my/setting/easitplay',
+      'pages/my/coupon/coupon',
+      'pages/my/setting/setting',
+      'pages/my/setting/playkey',
+      'pages/my/setting/clonekey',
+      'pages/my/Notice/Notice',
+      'pages/my/setting/phone',
+      'pages/my/Notice/commodity',
+      'pages/my/Notice/announcement',
+      'pages/my/sIgnRecord/record',
+      'pages/my/my'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -44,39 +64,34 @@ export default class extends wepy.app {
     tabBar: {
       list: [
         {
-          pagePath: "pages/index/index",
-          text: "首页",
-          iconPath: "images/bottom/SY_weixuanzhong.png",
-          selectedIconPath: "images/bottom/SY_yixuanzhong.png"
+          pagePath: 'pages/index/index',
+          text: '首页',
+          iconPath: 'images/bottom/SY_weixuanzhong.png',
+          selectedIconPath: 'images/bottom/SY_yixuanzhong.png'
         },
         {
-          pagePath: "pages/cart/cart",
-          text: "购物车",
-          iconPath: "images/bottom/GWC_weixuanze.png",
-          selectedIconPath: "images/bottom/GWC_yixuanzhong.png"
+          pagePath: 'pages/cart/cart',
+          text: '购物车',
+          iconPath: 'images/bottom/GWC_weixuanze.png',
+          selectedIconPath: 'images/bottom/GWC_yixuanzhong.png'
         },
         {
-          pagePath: "pages/my/my",
-          text: "会员中心",
-          iconPath: "images/bottom/HYZX_weixuanze.png",
-          selectedIconPath: "images/bottom/HYZX_yixuanzhong.png"
+          pagePath: 'pages/my/my',
+          text: '会员中心',
+          iconPath: 'images/bottom/HYZX_weixuanze.png',
+          selectedIconPath: 'images/bottom/HYZX_yixuanzhong.png'
         }
       ],
-      borderStyle: "white",
-      backgroundColor: "#ffffff",
-      color: "#363636",
-      selectedColor: "#F4695F"
-    },
-  }
+      borderStyle: 'white',
+      backgroundColor: '#ffffff',
+      color: '#363636',
+      selectedColor: '#F4695F'
+    }
+  };
 
   globalData = {
     userInfo: null
-  }
-
-  constructor () {
-    super()
-    this.use('requestfix')
-  }
+  };
 
   onLaunch() {
     // 登录
@@ -117,5 +132,6 @@ export default class extends wepy.app {
     })
   }
 
+  onLaunch() {}
 }
 </script>

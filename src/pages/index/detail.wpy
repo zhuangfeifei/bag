@@ -1,0 +1,1948 @@
+<template>
+  <view class="swprice">
+    <swiper class="topswiper" indicator-dots="{{indicatorDots}}" circular="true" indicator-active-color="white" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      <block wx:for="{{imgUrls}}" wx:key="{{imgUrls}}">
+        <swiper-item>
+          <image mode="aspectFill" lazy-load="true" src="{{item}}" />
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="rightbtom">
+      <text> 开业酬宾疯狂抢购中</text>
+    </view>
+    <view class="onconter">
+      <view class="onma">
+        <text class="oma_a">￥</text>
+        <text class="oma_b">123</text>
+        <text class="oma_c">￥</text>
+        <text class="oma_d">239</text>
+        <text class="oma_e">销量\t 223324</text>
+      </view>
+      <view class="onmb">
+        <view class="omnb_text">{{text}}
+        </view>
+        <view class="fenxi" @tap="clckhide">
+          <image src="/images/notices/fenxiangsk.png" />
+          <text>分享</text>
+        </view>
+      </view>
+    </view>
+    <view class="onters">
+      <view class="fenxia">
+        <image wx:if="{{cloon==0}}" src="/images/notices/shoucang.png" />
+        <image wx:else src="/images/notices/yishoucang.png" />
+        <text>收藏</text>
+      </view>
+      <view class="fenxib">
+        <image wx:if="{{cloon==0}}" src="/images/notices/xihaun.png" />
+        <image wx:else src="/images/notices/yixihuan.png" />
+        <text>喜欢</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="onho">
+    <image src="/images/notices/labaimg.png" />
+    <text>暂无活动~</text>
+  </view>
+  <view class="onhos">
+    <view class="cuogai">
+      <view class="onhos_a">选择</view>
+      <view class="onhos_b">
+        <view class="b_show" @tap="gosho_pup">
+          <view wx:if="{{cont==1}}">
+            <text>请选择</text>
+            <text>颜色分类</text>
+          </view>
+          <view>
+            <text wx:if="{{cont==0&&scolor}}">已选："{{scolor}}"</text>
+          </view>
+          <view style="text-align: right;">
+            <image src="/images/notices/jinruop.png" />
+          </view>
+        </view>
+        <view class="onbtn">
+          <view class="liatimg">
+            <view wx:for="{{listimg}}" wx:key="{{listimg}}">
+              <image src="{{item.src}}" />
+            </view>
+          </view>
+          <view class="lait">共四种颜色分类可选</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="onhosd">
+    <view class="ondise">
+      <view>
+        <text>商品评价</text>
+        <text>（223）</text>
+      </view>
+      <view @tap="evaldetail">
+        <text>查看全部</text>
+        <image src="/images/notices/jinruhong.png" />
+      </view>
+    </view>
+    <view class="lsnull">
+      <swiper class="tops" bindchange="bindchange" next-margin="230rpx">
+        <block wx:for="{{postlist}}" wx:key="{{postlist}}" data-id="{{index}}" wx:if="{{index<5}}">
+          <swiper-item class="onswiper">
+            <view class="slide-image {{swiperIndex == index ? 'active' : 'quiet'}}">
+              <view class="name_list">
+                <image src="{{item.pic}}"></image>
+                <view>{{item.name}}</view>
+              </view>
+              <view class="ontetx">{{item.context}}</view>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+  </view>
+  <view class="ontn" wx:if="{{state==1}}">
+    <text>暂无商品评价</text>
+  </view>
+  <view class="liatflex">
+    <view class="fllist">
+      <view class="ona"></view>
+      <text>商品详情</text>
+      <view class="onb"></view>
+    </view>
+  </view>
+  <!--详情图片-->
+  <view class="onlimng">
+    <image mode="aspectFill" lazy-load="true" src="http://img4.imgtn.bdimg.com/it/u=3408550672,3477661678&fm=26&gp=0.jpg"></image>
+  </view>
+  <view class="liatflex">
+    <view class="fllist">
+      <view class="ona"></view>
+      <text>相似推荐</text>
+      <view class="onb"></view>
+    </view>
+  </view>
+  <view class="btnoom">
+    <view class="btn_list">
+      <view class="ontab_list">
+        <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
+          <image src="{{item.pic}}">
+          </image>
+          <view class="ontbnt">
+            <text>￥{{item.oprice}}</text>
+            <text>￥{{item.price}}</text>
+          </view>
+          <view class="btnbuton" @tap="tap_play">立即购买</view>
+        </view>
+      </view>
+    </view>
+    <view style="height:60rpx"></view>
+  </view>
+  <view class="onnone">没有更多了哦~</view>
+  <view style="height:100rpx"></view>
+  <view class="ontabbtn">
+    <view>
+      <view>
+        <image src='/images/notices/tab_shouye.png'></image>
+        <text>首页</text>
+      </view>
+      <view>
+        <button open-type='contact'>
+          <image src='/images/notices/tab_kefu.png'></image>
+        </button>
+        <text>客服</text>
+      </view>
+      <view>
+        <image src='/images/notices/tab_gouwuche.png'></image>
+        <text>购物车</text>
+      </view>
+    </view>
+    <view>
+      <view @tap="gosho_pup">
+        <text>加入购物车</text>
+      </view>
+      <view>
+        <text @tap="tap_play">立即购买</text>
+      </view>
+    </view>
+  </view>
+  <view class="bomtrnfxid" wx:if="{{cosde}}">
+    <image src='/images/notices/tab_tanjiangc.png'></image>
+    <text>添加成功，在购物车等你哦~</text>
+  </view>
+  <view class="fixedsd">
+    <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop"></image>
+  </view>
+  <view class="fenxs">返回顶部</view>
+  <!--底部属性弹窗-->
+  <view class="btn_tab_uo" wx:if="{{sod_up==1}}"></view>
+  <view class="ontabbtnsfdg" wx:if="{{sod_up==1}}">
+    <view class="up_top">
+      <view class="om">
+        <image mode="aspectFill" lazy-load="true" src="https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg" @tap="goTop"></image>
+      </view>
+      <view class="oms">
+        <view>￥299</view>
+        <view wx:if="{{sexid==0}}">选择 颜色 尺码</view>
+        <view wx:if="{{sexid==1}}">选择 {{sexcale}}</view>
+        <view wx:if="{{sexid==2}}" style="width:350rpx;">已选："{{scolor}}" "{{ssexd}}"</view>
+      </view>
+    </view>
+    <view class="zws_list"></view>
+    <view class="up_cont_tap">
+      <text>颜色</text>
+      <view class="up_donwn">
+        <view wx:for="{{up_text}}" wx:key="{{up_text}}" data-name="{{item.text}}" data-id="{{index}}" style="{{index == id?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="click">{{item.text}}</view>
+      </view>
+    </view>
+    <view class="up_cont_tap" style="margin-top:55rpx;">
+      <text>尺码</text>
+      <view class="up_donwn">
+        <view wx:for="{{up_texts}}" wx:key="{{up_text}}" data-name="{{item.text}}" data-id="{{index}}" style="{{index == ida?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="clicks">{{item.text}}</view>
+      </view>
+    </view>
+    <view class="ontabs_numa">
+      <view class="_numa_text">
+        <text>购买数量</text>
+      </view>
+      <view class="_numa_numt">
+        <view class="_inputas" wx:if="{{num==1}}">-</view>
+        <view class="_inputa" wx:else @tap="shopnumdown">-</view>
+        <input type="text" value="{{num}}" disabled="true" />
+        <view class="_inputb" @tap="shopnumup">+</view>
+      </view>
+    </view>
+    <view class="_num_btn_a" wx:if="{{porice==1}}">
+      <view class="_btnaf" @tap="jiashop_list">加入购物车</view>
+      <view class="_btnafs" @tap="tap_play">立即购买</view>
+    </view>
+    <view class="on_clicki" wx:else>确定</view>
+  </view>
+  <view class="btn_tab_uo" wx:if="{{phone_number==1}}"></view>
+  <view class="bashouji" wx:if="{{phone_number==1}}">
+    <view class="bacdinpaho">绑定手机号</view>
+    <view class="bacdinpahoa">请先绑定手机号，再来购物哦~</view>
+    <view class="bacdinpahob">立即绑定</view>
+  </view>
+  <view class="cbtndown" wx:if="{{onhidup==false}}"></view>
+  <view class="cla_view" wx:if="{{onhidup==false}}">
+    <view class="hlpelist">
+      <view class="onm">
+        <view class="hlpelist_list">
+          <button open-type="share">
+            <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png"></image>
+          </button>
+        </view>
+        <view class="on">分享给好友和微信群</view>
+      </view>
+      <view class="onm">
+        <view class="hlpelist_list">
+          <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics'></image>
+        </view>
+        <view class="on">生成海报 保存分享</view>
+      </view>
+    </view>
+    <view class="back_tops" @tap="clckhide">取消</view>
+  </view>
+  <!--创建分享卡片-->
+  <!-- 分享 S -->
+  <view class="share-cover" wx:if="{{showSharePic}}" catchtouchmove='true' style="display:{{hinde}}">
+    <scroll-view scroll-y="true" style="height:1300rpx;">
+      <view class="topimg_sd">
+        <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden"></image>
+      </view>
+      <view class="share-pic-box">
+        <view class="share-pic">
+          <image src="{{sharePicUrl}}" class="sharePic"></image>
+        </view>
+        <button class="share-tips" @tap='savePicsd'>保存图片到相册</button>
+      </view>
+    </scroll-view>
+  </view>
+  <canvas canvas-id="shareFrends" class="canvas"></canvas>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+
+@connect({})
+export default class Detail extends wepy.page {
+  config = {
+    navigationBarTitleText: '商品详情'
+  };
+
+  components = {};
+
+  data = {
+    onhidup: true,
+    showSharePic: false, //分享海报显示隐藏
+    sharePicUrl: '', //生成海报链接
+    isShow: false,
+    text:
+      '商品标题商品标题商商品标题商品标题商商品标题商品标题商商品标题商品标题商商品标题商品标题商',
+    imgUrls: [
+      'http://img4.imgtn.bdimg.com/it/u=3408550672,3477661678&fm=26&gp=0.jpg',
+      'http://img4.imgtn.bdimg.com/it/u=3408550672,3477661678&fm=26&gp=0.jpg',
+      'http://img4.imgtn.bdimg.com/it/u=3408550672,3477661678&fm=26&gp=0.jpg'
+    ],
+    id: -1,
+    ida: -1,
+    cont: 1,
+    sod_up: 0, //购物车是否隐藏
+    cloon: 0,
+    sexid: 0, //判断商品选择id
+    sexcale: '', //判断商品选择
+    cosde: false, //加购物车成功弹框
+    ssexd: '', //商品大小
+    scolor: '', //商品属性
+    swiperIndex: 0,
+    phone_number: 0, //判断是否绑定手机号
+    num: 1, //购物车数量
+    porice: 1, //判断商品是否加入购物车
+    indicatorDots: true,
+    autoplay: true,
+    interval: 5000,
+    duration: 1000,
+    onhiden: true,
+    listimg: [
+      { src: '/images/notices/yansefenlei.png' },
+      { src: '/images/notices/yansefenlei.png' },
+      { src: '/images/notices/yansefenlei.png' },
+      { src: '/images/notices/yansefenlei.png' }
+    ],
+    _selData: {
+      logoUrl:
+        'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1088055381,270553227&fm=27&gp=0.jpg', //分享图
+      headIcon:
+        'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1557475058,916927548&fm=26&gp=0.jpg', //头像
+      codeLogo:
+        'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3091440975,3250070917&fm=27&gp=0.jpg' //小程序码
+    },
+    home_liat: [
+      {
+        pic:
+          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
+        oprice: 800,
+        price: 300
+      },
+      {
+        pic:
+          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
+        oprice: 800,
+        price: 300
+      },
+      {
+        pic:
+          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
+        oprice: 800,
+        price: 300
+      },
+      {
+        pic:
+          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
+        oprice: 800,
+        price: 300
+      }
+    ],
+    postlist: [
+      {
+        pic:
+          'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2888777689,2205122633&fm=26&gp=0.jpg',
+        name: '昵称昵称昵称1',
+        context:
+          '昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称'
+      },
+      {
+        pic:
+          'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2888777689,2205122633&fm=26&gp=0.jpg',
+        name: '昵称昵称昵称2',
+        context:
+          '昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称'
+      },
+      {
+        pic:
+          'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2888777689,2205122633&fm=26&gp=0.jpg',
+        name: '昵称昵称昵称3',
+        context:
+          '昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称'
+      },
+      {
+        pic:
+          'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2888777689,2205122633&fm=26&gp=0.jpg',
+        name: '昵称昵称昵称4',
+        context:
+          '昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称'
+      },
+      {
+        pic:
+          'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2888777689,2205122633&fm=26&gp=0.jpg',
+        name: '昵称昵称昵称5',
+        context:
+          '昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称'
+      }
+    ],
+    up_text: [
+      { text: '银白色' },
+      { text: '酒红色' },
+      { text: '黑色' },
+      { text: '绿色' }
+    ],
+    up_texts: [
+      { text: '大号' },
+      { text: '中号' },
+      { text: '小号' },
+      { text: '迷你' }
+    ]
+  };
+
+  computed = {};
+
+  methods = {
+    bindchange(e) {
+      this.swiperIndex = e.detail.current;
+    },
+    goTop() {
+      if (wx.pageScrollTo) {
+        wx.pageScrollTo({
+          scrollTop: 0
+        });
+      } else {
+        wx.showModal({
+          title: '提示',
+          content:
+            '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+        });
+      }
+    },
+    click: function(e) {
+      let ids = e.currentTarget.dataset.id;
+      let name = e.currentTarget.dataset.name;
+      this.scolor = name;
+      this.id = ids;
+      if (this.ssexd == '') {
+        this.sexcale = '尺码';
+        this.sexid = 1;
+      } else {
+        this.sexid = 2;
+      }
+    },
+    clicks: function(e) {
+      let ids = e.currentTarget.dataset.id;
+      let name = e.currentTarget.dataset.name;
+      this.ssexd = name;
+      this.ida = ids;
+      if (this.scolor == '') {
+        this.sexcale = '颜色';
+        this.sexid = 1;
+      } else {
+        this.sexid = 2;
+      }
+    },
+    showPics() {
+      this.showPic();
+    },
+    savePicsd() {
+      this.savePic();
+    },
+    onhiden() {
+      this.hinde = 'none';
+    },
+    clckhide() {
+      this.onhidup = !this.onhidup;
+    },
+    //点击显示商品属性弹框
+    gosho_pup() {
+      let that = this;
+      that.sod_up = 1;
+    },
+    //点击加入购车隐藏商品属性弹框
+    jiashop_list() {
+      let that = this;
+      this.cont = 0;
+      let pay = this.phone_number;
+      if (pay == 1) {
+        this.phone_number = 1;
+      } else {
+        if (that.ssexd && that.scolor) {
+          that.cosde = true;
+          that.sod_up = 0;
+          setTimeout(() => {
+            that.cosde = false;
+            that.$apply();
+          }, 2500);
+        } else {
+          wx.showToast({
+            title: '请选择商品属性',
+            icon: 'none',
+            duration: 2000
+          });
+          that.sod_up = 1;
+        }
+      }
+    },
+    //购物车数量+
+    shopnumup() {
+      let num = this.num;
+      num++;
+      this.num = num;
+    },
+    //购物车数量-
+    shopnumdown() {
+      let num = this.num;
+      if (this.num == 1) {
+        return false;
+      } else {
+        num--;
+        this.num = num;
+      }
+    },
+    //立即购买
+    tap_play() {
+      let pay = this.phone_number;
+      if (pay == 1) {
+        this.phone_number = 1;
+      } else {
+        wx.navigateTo({
+          url: '/pages/index/order'
+        });
+      }
+    },
+    evaldetail() {
+      wx.navigateTo({
+        url: '/pages/index/evaluation'
+      });
+    }
+  };
+  onShareAppMessage(res) {
+    if (res.from === 'button') {
+    }
+    return {
+      title: '白鸽优购',
+      path: '/pages/index/index',
+      imageUrl:
+        'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg'
+    };
+  }
+  showPic() {
+    let sharePicUrl = this.data.sharePicUrl;
+
+    if (sharePicUrl != '') {
+      //如果已经生成过一次直接显示
+      this.setData({
+        showSharePic: true
+      });
+    } else {
+      wx.showToast({
+        title: '图片生成中',
+        mask: true,
+        icon: 'loading',
+        duration: 100000
+      });
+
+      this.setData({
+        share: false
+      });
+
+      let logo = '';
+      let headIcon = '';
+      let code = '';
+      this.getHead()
+        .then(headUrl => {
+          headIcon = headUrl;
+          return this.getLogo();
+        })
+        .then(logoUrl => {
+          logo = logoUrl;
+          return this.getCode();
+        })
+        .then(codeUrl => {
+          code = codeUrl;
+          this.drawImg(logo, headIcon, code);
+        });
+    }
+  }
+
+  //获取头像
+  getHead() {
+    return new Promise((resolve, reject) => {
+      wx.downloadFile({
+        url: this._selData.headIcon,
+        success: res => {
+          resolve(res.tempFilePath);
+        }
+      });
+    });
+  }
+
+  //获取logo
+  getLogo() {
+    return new Promise((resolve, reject) => {
+      wx.downloadFile({
+        url: this._selData.logoUrl,
+        success: res => {
+          resolve(res.tempFilePath);
+        },
+        fail: err => {
+          console.log(er);
+        }
+      });
+    });
+  }
+
+  //获取二维码
+  getCode() {
+    return new Promise((resolve, reject) => {
+      let tid = this._selData.tid;
+
+      wx.downloadFile({
+        url: this._selData.codeLogo,
+        success: res => {
+          resolve(res.tempFilePath);
+        },
+        fail: err => {
+          console.log(er);
+        }
+      });
+    });
+  }
+
+  //绘图
+  drawImg(logo, headIcon, code) {
+    let w = 0;
+    wx.getSystemInfo({
+      success: function(res) {
+        w = res.screenWidth;
+      }
+    });
+
+    let ctx = wx.createCanvasContext('shareFrends');
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, (w / 750) * 670 * 2, (w / 750) * 744 * 2);
+    ctx.drawImage(
+      '/images/notices/zhuangshi1.png',
+      (w / 750) * 500 * 2,
+      (w / 750) * 42 * 2,
+      (w / 750) * 125 * 2,
+      (w / 750) * 43 * 2,
+      0,
+      0
+    );
+    ctx.drawImage(
+      '/images/notices/haowutuijian.png',
+      (w / 750) * 225 * 2,
+      (w / 750) * 36 * 2,
+      (w / 750) * 218 * 2,
+      (w / 750) * 67 * 2,
+      0,
+      0
+    );
+    ctx.drawImage(
+      '/images/notices/zhaungshi.png',
+      (w / 750) * 42 * 2,
+      (w / 750) * 49 * 2,
+      (w / 750) * 125 * 2,
+      (w / 750) * 43 * 2,
+      0,
+      0
+    );
+
+    //绘制分享图
+    ctx.drawImage(
+      logo,
+      (w / 750) * 55 * 2,
+      (w / 750) * 165 * 2,
+      (w / 750) * 555 * 2,
+      (w / 750) * 460 * 2,
+      0,
+      0
+    );
+
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 5;
+    ctx.arc(
+      (w / 750) * 330 * 2,
+      (w / 750) * 163 * 2,
+      (w / 750) * 45 * 2,
+      (w / 750) * 45 * 2,
+      0.5 * Math.PI,
+      true
+    );
+    ctx.fillStyle = 'red';
+    ctx.fill();
+    ctx.stroke();
+    //绘制头像、昵称
+    ctx.save(); //保存当前的绘图上下文。
+    ctx.beginPath(); //开始创建一个路径
+    ctx.arc(
+      (w / 750) * 52 * 2,
+      (w / 750) * 486 * 2,
+      (w / 750) * 90 * 2,
+      0,
+      2 * Math.PI,
+      false
+    );
+    ctx.clip(); //裁剪
+
+    //绘制图片
+    ctx.drawImage(
+      headIcon,
+      (w / 750) * 285 * 2,
+      (w / 750) * 109 * 2,
+      (w / 750) * 90 * 2,
+      (w / 750) * 102 * 2,
+      0.5 * Math.PI,
+      true
+    );
+
+    ctx.restore(); //恢复之前保存的绘图上下文
+
+    //绘制二维码
+    ctx.drawImage(
+      code,
+      (w / 750) * 70 * 2,
+      (w / 750) * 645 * 2,
+      (w / 750) * 100 * 2,
+      (w / 750) * 100 * 2
+    );
+    ctx.setFontSize((w / 750) * 20 * 2);
+    ctx.setFillStyle('#aaaaaa');
+    //绘制文本
+    ctx.fillText(
+      '保存长按识别打开小程序',
+      (w / 750) * 220 * 2,
+      (w / 750) * 705 * 2
+    );
+
+    ctx.draw(false, () => {
+      //调用接口将画布转换为图片
+      wx.canvasToTempFilePath({
+        x: 0,
+        y: 0,
+        fileType: 'jpg',
+        quality: 1,
+        width: (w / 750) * 670 * 2,
+        height: (w / 750) * 744 * 2,
+        destWidth: (w / 750) * 670 * 2,
+        destHeight: (w / 750) * 744 * 2,
+        canvasId: 'shareFrends',
+        success: res => {
+          wx.hideToast();
+
+          this.setData(
+            {
+              sharePicUrl: res.tempFilePath //生成的图片路径
+            },
+            () => {
+              //渲染完后再显示分享海报
+              this.setData({
+                share: false,
+                showSharePic: true
+              });
+            }
+          );
+        },
+        fail(err) {
+          wx.showToast({
+            title: '图片生成失败，请稍候再试！',
+            icon: 'none',
+            mask: true
+          });
+        }
+      });
+    });
+  }
+
+  //保存图片
+  savePic() {
+    let sharePicUrl = this.data.sharePicUrl;
+    wx.getSetting({
+      success: res => {
+        if (res.authSetting['scope.writePhotosAlbum'] == true) {
+          wx.showModal({
+            title: '提示',
+            content: '是否授权将相册保存到相册？',
+            confirmColor: '#2ca2ed',
+            success: res => {
+              //点击确定打开授权设置
+              if (res.confirm) {
+                wx.openSetting({
+                  success: res => {
+                    setTimeout(() => {
+                      if (res.authSetting['scope.writePhotosAlbum'] == true) {
+                        wx.saveImageToPhotosAlbum({
+                          filePath: sharePicUrl,
+                          success: res => {
+                            this.closeShare();
+                            wx.showToast({
+                              title: '保存成功！',
+                              icon: 'success',
+                              mask: true
+                            });
+                          },
+                          fail: err => {
+                            wx.showToast({
+                              title: '保存失败！',
+                              icon: 'none',
+                              mask: true
+                            });
+                          }
+                        });
+                      } else {
+                        wx.showToast({
+                          title: '保存失败！',
+                          icon: 'none',
+                          mask: true
+                        });
+                      }
+                    }, 500);
+                  }
+                });
+              }
+            }
+          });
+        } else {
+          wx.saveImageToPhotosAlbum({
+            filePath: sharePicUrl,
+            success: res => {
+              this.closeShare();
+              wx.showToast({
+                title: '保存成功！',
+                icon: 'success',
+                mask: true
+              });
+            }
+          });
+        }
+      }
+    });
+  }
+  onLoad() {}
+}
+</script>
+
+<style lang='less'>
+.swprice {
+  width: 100%;
+  height: auto;
+}
+.topswiper {
+  width: 100%;
+  height: 1000rpx;
+}
+.topswiper image {
+  width: 100%;
+  height: 1000rpx;
+}
+.rightbtom {
+  width: 191rpx;
+  height: 104rpx;
+  background: rgba(245, 183, 34, 1);
+  border-radius: 20rpx 0rpx 0rpx 0rpx;
+  float: right;
+  position: relative;
+  top: -104rpx;
+  display: flex;
+  flex-direction: column;
+}
+.rightbtom text {
+  width: 160rpx;
+  height: 69rpx;
+  font-size: 30rpx;
+  text-indent: 17rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  letter-spacing: 1rpx;
+  margin: 12rpx 22rpx;
+}
+.onconter {
+  width: 100%;
+  height: 210rpx;
+  background: rgba(255, 255, 255, 1);
+}
+.onma {
+  width: 100%;
+  height: 104rpx;
+}
+.oma_a {
+  font-size: 36rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(244, 105, 95, 1);
+  line-height: 104rpx;
+  margin-left: 30rpx;
+}
+.oma_b {
+  font-size: 48rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(244, 105, 95, 1);
+  line-height: 104rpx;
+}
+.oma_c {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  line-height: 107rpx;
+  margin-left: 27rpx;
+  text-decoration: line-through;
+}
+.oma_d {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  line-height: 107rpx;
+  text-decoration: line-through;
+}
+.oma_e {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  line-height: 104rpx;
+  float: right;
+  position: relative;
+  left: 152rpx;
+  letter-spacing: 1rpx;
+}
+.onmb {
+  width: 100%;
+  height: auto;
+  display: flex;
+}
+.omnb_text {
+  width: 544rpx;
+  height: 75rpx;
+  font-size: 30rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(54, 54, 54, 1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin: -10rpx 31rpx;
+  letter-spacing: 1rpx;
+  line-height: 38rpx;
+}
+.fenxi {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.fenxi image {
+  width: 30rpx;
+  height: 36rpx;
+  margin: 19rpx 89rpx;
+}
+.fenxi text {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-top: -11rpx;
+}
+.fenxia {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.fenxia image {
+  width: 40rpx;
+  height: 40rpx;
+  margin-left: 237rpx;
+}
+.fenxia text {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-left: 230rpx;
+  position: relative;
+  top: 12rpx;
+  letter-spacing: 1rpx;
+}
+.fenxib {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.fenxib image {
+  width: 40rpx;
+  height: 33rpx;
+  margin: 6rpx 195rpx;
+}
+.fenxib text {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin: 11rpx 189rpx;
+  letter-spacing: 1rpx;
+}
+.onters {
+  width: 100%;
+  height: 120rpx;
+  background: rgba(255, 255, 255, 1);
+  position: relative;
+  top: 0rpx;
+  display: flex;
+}
+.onho {
+  width: 100%;
+  height: 100rpx;
+  background: white;
+  margin-top: 20rpx;
+  display: flex;
+  line-height: 101rpx;
+}
+.onho image {
+  width: 47rpx;
+  height: 40rpx;
+  margin: 35rpx;
+}
+.onho text {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  letter-spacing: 2rpx;
+  margin-left: -5rpx;
+}
+.onhos {
+  width: 100%;
+  height: 180rpx;
+  background: white;
+  margin-top: 20rpx;
+}
+.cuogai {
+  width: 90%;
+  height: 180rpx;
+  margin: auto;
+  display: flex;
+}
+.onhos_a {
+  width: 10%;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  margin-top: 34rpx;
+  letter-spacing: 2rpx;
+}
+.onhos_b {
+  width: 90%;
+  height: 100%;
+}
+.onbtn {
+  height: 82rpx;
+  display: flex;
+}
+.liatimg {
+  width: 280rpx;
+  height: 60rpx;
+  display: flex;
+  margin-left: 10rpx;
+}
+.liatimg view:nth-child(1) {
+  width: 60rpx;
+  height: 60rpx;
+}
+.liatimg view {
+  width: 60rpx;
+  height: 60rpx;
+  margin-left: 10rpx;
+  border-radius: 10rpx;
+  position: relative;
+  top: 2rpx;
+}
+.liatimg view image {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 10rpx;
+}
+.lait {
+  width: 220rpx;
+  height: 40rpx;
+  background: rgba(242, 242, 242, 1);
+  border-radius: 10rpx;
+  margin: 15rpx 10rpx;
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  letter-spacing: 2rpx;
+  text-align: center;
+  line-height: 40rpx;
+  padding: 5rpx;
+}
+.onhosd {
+  width: 100%;
+  height: 300rpx;
+  background: white;
+  margin-top: 20rpx;
+}
+.ondise {
+  width: 90%;
+  height: 65rpx;
+  margin: auto;
+  display: flex;
+}
+.ondise view:nth-child(1) {
+  width: 50%;
+  height: 65rpx;
+  line-height: 90rpx;
+}
+.ondise view:nth-child(2) {
+  width: 50%;
+  height: 65rpx;
+  text-align: right;
+  line-height: 90rpx;
+}
+.ondise view:nth-child(1) text:nth-child(1),
+.ondise view:nth-child(1) text:nth-child(2) {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  letter-spacing: 1rpx;
+  margin-top: 36rpx;
+}
+.ondise view:nth-child(2) text {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(244, 105, 95, 1);
+  margin-right: 12rpx;
+}
+.ondise view:nth-child(2) image {
+  width: 13rpx;
+  height: 20rpx;
+  margin-top: 1rpx;
+}
+.b_show {
+  height: 83rpx;
+  display: flex;
+}
+.b_show view:nth-child(1) {
+  width: 400rpx;
+}
+.b_show view:nth-child(2) {
+  width: 263rpx;
+}
+.b_show view:nth-child(3) {
+  width: 200rpx;
+  text-align: right;
+}
+.b_show view:nth-child(1) text:nth-child(1) {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-left: 21rpx;
+  letter-spacing: 1rpx;
+  position: relative;
+  top: 24rpx;
+}
+.b_show view:nth-child(1) text:nth-child(2) {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-left: 10rpx;
+  position: relative;
+  top: 24rpx;
+  letter-spacing: 1rpx;
+}
+.b_show view image {
+  width: 13rpx;
+  height: 20rpx;
+  margin-top:47rpx;
+}
+.lsnull {
+  width: 100%;
+  height: 180rpx;
+  margin: 26rpx 38rpx;
+}
+.onswiper {
+  width: 500rpx;
+  height: 230rp;
+}
+.tops {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  margin-top: 10px;
+}
+.slide-image {
+  width: 500rpx;
+  height: 180rpx;
+  border-radius: 10rpx;
+  position: relative;
+  background: rgba(253, 244, 244, 1);
+}
+
+image.active {
+  transform: none;
+  transition: all 0.2s ease-in 0s;
+}
+
+image.quiet {
+  transform: scale(1);
+  transition: all 0.2s ease-in 0s;
+}
+.name_list {
+  width: 92%;
+  height: 50rpx;
+  display: flex;
+  margin: auto;
+}
+.name_list image {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  margin-top: 26rpx;
+}
+.name_list view {
+  width: 90%;
+  height: 50rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  margin: 39rpx 21rpx;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.ontetx {
+  width: 92%;
+  height: 60rpx;
+  margin: 42rpx auto;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 31rpx;
+}
+.liatflex {
+  width: 100%;
+  height: 100rpx;
+}
+.fllist {
+  width: 350rpx;
+  height: 100%;
+  display: flex;
+  margin: auto;
+}
+.ona {
+  width: 70rpx;
+  height: 1px;
+  background: rgba(153, 153, 153, 1);
+  margin: 50rpx 5rpx;
+}
+.onb {
+  width: 70rpx;
+  height: 1px;
+  background: rgba(153, 153, 153, 1);
+  margin-top: 50rpx;
+}
+.liatflex view text {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  margin: 30rpx 30rpx;
+}
+.onlimng {
+  width: 100%;
+  height: 2000rpx;
+}
+
+.onlimng image {
+  width: 100%;
+  height: 100%;
+}
+.btnoom {
+  width: 100%;
+  background: rgba(255, 255, 255, 1);
+  margin-top: 25rpx;
+}
+.ontn {
+  width: 100%;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 1);
+  margin-top: 20rpx;
+  line-height: 100rpx;
+}
+.ontn text {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-left: 30rpx;
+}
+.btnom_ilg image {
+  width: 100%;
+  height: 300rpx;
+  margin-top: 30rpx;
+}
+.btn_list {
+  width: 690rpx;
+  height: auto;
+  margin: -25rpx auto;
+}
+.ontab_list {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.price {
+  width: 330rpx;
+  height: 440rpx;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0rpx 3rpx 6rpx 1rpx rgba(0, 0, 0, 0.04);
+  border-radius: 10rpx;
+  margin-top: 30rpx;
+  display: flex;
+  flex-direction: column;
+}
+.price image {
+  width: 100%;
+  height: 350rpx;
+  border-top-left-radius: 10rpx;
+  border-top-right-radius: 10rpx;
+}
+.ontbnt {
+  width: 120rpx;
+  height: 60rpx;
+  background: linear-gradient(
+    138deg,
+    rgba(253, 133, 122, 1),
+    rgba(233, 74, 64, 1)
+  );
+  border-radius: 30rpx 0rpx 0rpx 0rpx;
+  margin: -59rpx 210rpx;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+.ontbnt text:nth-child(1) {
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  text-decoration: line-through;
+  margin-right: 13rpx;
+}
+.ontbnt text:nth-child(2) {
+  font-size: 32rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 1);
+  margin: -9rpx 13rpx;
+  letter-spacing: 0rpx;
+}
+.btnbuton {
+  width: 100%;
+  font-size: 30rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(244, 105, 95, 1);
+  margin-top: 88rpx;
+  text-align: center;
+  letter-spacing: 1.5rpx;
+}
+.onnone {
+  width: 100%;
+  height: 63rpx;
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  text-align: center;
+  line-height: 63rpx;
+  letter-spacing: 1rpx;
+}
+.ontabbtn {
+  width: 100%;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 1);
+  position: fixed;
+  bottom: 0;
+  display: flex;
+}
+.ontabbtn view:nth-child(1) {
+  width: 45%;
+  height: 100rpx;
+  display: flex;
+}
+.ontabbtn view:nth-child(1) view {
+  width: 33.3%;
+  height: 100rpx;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.ontabbtn view:nth-child(1) view image {
+  width: 35rpx;
+  height: 35rpx;
+  margin: 17rpx 40rpx;
+}
+.ontabbtn view:nth-child(1) view text {
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  position: relative;
+  top: -4rpx;
+}
+
+button::after {
+  border: none;
+}
+.ontabbtn view:nth-child(1) view:nth-child(2) button {
+  width: 100%;
+  height: 66%;
+  background: none;
+}
+.ontabbtn view:nth-child(1) view:nth-child(2) button image {
+  margin-left: 12rpx;
+  position: relative;
+  top: -3rpx;
+}
+.ontabbtn view:nth-child(2) {
+  width: 55%;
+  height: 100rpx;
+  display: flex;
+}
+.ontabbtn view:nth-child(2) view:nth-child(1) {
+  width: 50%;
+  height: 60rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 30rpx;
+  margin: 22rpx 20rpx;
+}
+.ontabbtn view:nth-child(2) view:nth-child(1) text {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  line-height: 60rpx;
+  letter-spacing: 1rpx;
+  margin-left: 25rpx;
+}
+.ontabbtn view:nth-child(2) view:nth-child(2) {
+  width: 50%;
+  height: 60rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 30rpx;
+  margin: 22rpx 20rpx;
+}
+.ontabbtn view:nth-child(2) view:nth-child(2) text {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+  line-height: 60rpx;
+  letter-spacing: 1rpx;
+  margin-left: 36rpx;
+}
+.bomtrnfxid {
+  width: 420rpx;
+  height: 250rpx;
+  background: rgba(0, 0, 0, 1);
+  opacity: 0.7;
+  border-radius: 10rpx;
+  z-index: 11;
+  position: fixed;
+  bottom: 500rpx;
+  left: 170rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.bomtrnfxid image {
+  width: 64rpx;
+  height: 56rpx;
+  margin: 68rpx 178rpx;
+}
+
+.bomtrnfxid text {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  margin-top: -37rpx;
+}
+.fixedsd {
+  width: 100%;
+  height: 80rpx;
+  position: fixed;
+  top: 881rpx;
+  text-align: right;
+}
+.fenxs {
+  position: fixed;
+  top: 982rpx;
+  width: 97%;
+  height: 24rpx;
+  text-align: right;
+  line-height: 21rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 1);
+  letter-spacing: 1rpx;
+}
+.fixedsd image {
+  width: 80rpx;
+  height: 80rpx;
+  margin-right: 30rpx;
+}
+.btn_tab_uo {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 1);
+  opacity: 0.5;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+}
+.ontabbtnsfdg {
+  width: 100%;
+  height: 880rpx;
+  background: rgba(255, 255, 255, 1);
+  position: fixed;
+  bottom: 0;
+}
+.up_top {
+  width: 700rpx;
+  height: 192rpx;
+  display: flex;
+  margin: auto;
+}
+.om {
+  width: 236rpx;
+  height: 236rpx;
+  margin-top: -44rpx;
+  background: rgba(255, 255, 255, 1);
+  border: 1px solid rgba(230, 230, 230, 1);
+}
+.om image {
+  width: 226rpx;
+  height: 226rpx;
+  margin: 5rpx;
+}
+.oms {
+  width: 214rpx;
+  height: 110rpx;
+}
+.oms view:nth-child(1) {
+  width: 214rpx;
+  height: 30rpx;
+  background: none;
+  position: relative;
+  top: 105rpx;
+  left: 32rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 51, 51, 1);
+  border: none;
+  letter-spacing: 1rpx;
+}
+.oms view:nth-child(2) {
+  width: 214rpx;
+  height: 30rpx;
+  position: relative;
+  top: 120rpx;
+  left: 32rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  letter-spacing: 1rpx;
+}
+.oms view:nth-child(3) {
+  width: 214rpx;
+  height: 30rpx;
+  position: relative;
+  top: 120rpx;
+  left: 32rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  letter-spacing: 1rpx;
+}
+.oms view:nth-child(4) {
+  height: 30rpx;
+  position: relative;
+  top: 120rpx;
+  left: 32rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  letter-spacing: 1rpx;
+}
+.zws_list {
+  width: 100%;
+  height: 1px;
+  background: #e6e6e6;
+  margin-top: 28rpx;
+}
+.up_cont_tap {
+  width: 700rpx;
+  height: 115rpx;
+  margin: 20rpx auto;
+}
+.up_cont_tap text {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  letter-spacing: 1rpx;
+}
+.up_donwn {
+  width: 100%;
+  height: 90rpx;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 28rpx;
+}
+.up_donwn view {
+  width: 144rpx;
+  height: 58rpx;
+  background: rgba(245, 245, 245, 1);
+  border-radius: 10rpx;
+  text-align: center;
+  line-height: 58rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  letter-spacing: 1rpx;
+}
+.ontabs_numa {
+  width: 700rpx;
+  height: 60rpx;
+  display: flex;
+  margin: 70rpx auto;
+}
+._numa_text {
+  width: 453rpx;
+}
+._numa_text text {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  letter-spacing: 1rpx;
+}
+._numa_numt {
+  width: 247rpx;
+  height: 100%;
+  display: flex;
+  float: right;
+}
+._inputa {
+  width: 57rpx;
+  height: 57rpx;
+  background: rgba(245, 245, 245, 1);
+  border-radius: 5rpx;
+  line-height: 57rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+}
+._inputas {
+  width: 57rpx;
+  height: 57rpx;
+  background: rgba(251, 251, 251, 1);
+  border-radius: 5rpx;
+  line-height: 57rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+}
+._inputb {
+  width: 57rpx;
+  height: 57rpx;
+  background: rgba(245, 245, 245, 1);
+  border-radius: 5rpx;
+  line-height: 57rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-left: 5rpx;
+}
+._numa_numt input {
+  width: 113rpx;
+  height: 57rpx;
+  background: rgba(245, 245, 245, 1);
+  border-radius: 5rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 57rpx;
+  text-align: center;
+  margin-left: 5rpx;
+}
+._num_btn_a {
+  width: 700rpx;
+  height: 70rpx;
+  display: flex;
+  margin: 125rpx auto;
+}
+._num_btn_a view:nth-child(1) {
+  width: 330rpx;
+  height: 70rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 35rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+  line-height: 70rpx;
+  letter-spacing: 1rpx;
+  margin-left: 8rpx;
+}
+._num_btn_a view:nth-child(2) {
+  width: 330rpx;
+  height: 70rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 35rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+  line-height: 70rpx;
+  margin-left: 30rpx;
+  letter-spacing: 1rpx;
+}
+.on_clicki {
+  width: 600rpx;
+  height: 70rpx;
+  margin: 125rpx auto;
+  text-align: center;
+  line-height: 70rpx;
+  letter-spacing: 2rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 35rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+}
+.bashouji {
+  width: 500rpx;
+  height: 377rpx;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 15rpx;
+  position: absolute;
+  bottom: 450rpx;
+  left: 130rpx;
+}
+.bacdinpaho {
+  width: 100%;
+  font-size: 46rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(244, 105, 95, 1);
+  text-align: center;
+  margin-top: 30rpx;
+  letter-spacing: 2rpx;
+}
+.bacdinpahoa {
+  width: 100%;
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  text-align: center;
+  letter-spacing: 2rpx;
+  margin-top: 103rpx;
+}
+.bacdinpahob {
+  width: 338rpx;
+  height: 70rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 30rpx;
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  letter-spacing: 2rpx;
+  line-height: 70rpx;
+  text-align: center;
+  margin: 48rpx auto;
+}
+.cbtndown {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 1);
+  position: fixed;
+  top: 0rpx;
+  overflow: hidden;
+  opacity: 0.5;
+}
+.cla_view {
+  width: 100%;
+  height: 402rpx;
+  background: rgba(255, 255, 255, 1);
+  position: fixed;
+  bottom: 0;
+}
+.hlpelist {
+  width: 100%;
+  height: 302rpx;
+  border-bottom: 1px solid #f2f2f2;
+  display: flex;
+}
+.onm {
+  width: 50%;
+  height: 302rpx;
+  display: flex;
+  flex-direction: column;
+}
+.hlpelist_list {
+  width: 100%;
+  height: 213rpx;
+  text-align: center;
+}
+.hlpelist_list button {
+  width: 100%;
+  height: 213rpx;
+  text-align: center;
+  background-color: #ffffff;
+  outline: none !important;
+}
+button::after {
+  border: none;
+}
+.hlpelist_list button image {
+  width: 120rpx;
+  height: 120rpx;
+  margin-top: 62rpx;
+}
+.hlpelist_list image {
+  width: 120rpx;
+  height: 120rpx;
+  margin-top: 62rpx;
+}
+.on {
+  width: 100%;
+  height: 89rpx;
+  text-align: center;
+  line-height: 25rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+}
+.back_tops {
+  width: 100%;
+  height: 100rpx;
+  text-align: center;
+  line-height: 100rpx;
+  font-size: 32rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  border-bottom: 1rpx solid #f2f2f2;
+  letter-spacing: 4rpx;
+}
+.share-cover {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 55;
+  background: rgba(0, 0, 0, 0.5);
+}
+.share-pic-box {
+  width: 670rpx;
+  left: 50%;
+  height: 300rpx;
+  margin-left: -335rpx;
+  top: 120rpx;
+  position: relative;
+}
+.share-pic {
+  width: 670rpx;
+  height: 720rpx;
+  border-radius: 12rpx;
+  background: #fff;
+  margin-bottom: 40rpx;
+}
+.share-tips {
+  width: 400rpx;
+  height: 78rpx;
+  background: rgba(244, 105, 95, 1);
+  text-align: center;
+  border-radius: 39rpx;
+  line-height: 78rpx;
+  font-size: 32rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+}
+.close-share {
+  width: 50rpx;
+  height: 50rpx;
+  position: absolute;
+  top: -25rpx;
+  right: -25rpx;
+  border-radius: 50%;
+  z-index: 101;
+}
+.sharePic {
+  width: 670rpx;
+  height: 744rpx;
+  margin-top: -60rpx;
+}
+.canvas {
+  width: 1340rpx;
+  height: 1488rpx;
+  position: fixed;
+  top: -1000000rpx;
+}
+.topimg_sd {
+  text-align: right;
+  width: 95%;
+  height: 56rpx;
+  margin-top: 50rpx;
+}
+.stopimg {
+  width: 56rpx;
+  height: 56rpx;
+}
+</style>
