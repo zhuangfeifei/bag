@@ -1,0 +1,296 @@
+<template>
+	<view class="ontop_play">
+		<text>订单金额：</text>
+		<view>
+			<text>￥</text>
+			<text>128</text>
+		</view>
+	</view>
+	<view class="colocumn">请选择支付方式</view>
+	<view class="play_omnd">
+		<view>
+			<image src="/images/notices/qb_xiaogeqianbao.png" />
+			<text>钱包支付</text>
+		</view>
+		<view @tap="secteds">
+			<text class="plain">余额不足</text>
+			<image wx:if="{{sreaidos}}" src="/images/notices/cxuanzhong.png" />
+			<image wx:else src="/images/notices/nnxuanzhong.png" />
+		</view>
+	</view>
+	<view class="play_omnd">
+		<view>
+			<image src="/images/notices/tbweixinqianbao.png" />
+			<text>微信支付</text>
+		</view>
+		<view @tap="sected_nt">
+			<image wx:if="{{sreaido}}" src="/images/notices/cxuanzhong.png" />
+			<image wx:else src="/images/notices/nnxuanzhong.png" />
+		</view>
+	</view>
+	<view class="btom_button" @tap="playnone">确认支付</view>
+	<view class="ondce" wx:if="{{codeiph==1}}"></view>
+	<view class="ontabc" wx:if="{{codeiph==1}}">
+		<view class="payword">设置支付密码</view>
+		<view class="word">您还未设置钱包支付密码</view>
+		<view class="settign" @tap="toplay">立即设置</view>
+	</view>
+	<view class="pamser" wx:if="{{cosde}}">
+		<view class="uuimg">
+			<image src="/images/notices/playcs.png" />
+		</view>
+		<view class="shibai">支付失败</view>
+	</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+
+@connect({})
+export default class Onplay extends wepy.page {
+  config = {
+    navigationBarTitleText: '支付方式'
+  };
+
+  components = {};
+
+  data = {
+    sreaido: false,
+    sreaidos: false,
+    codeiph: '',
+    cosde: false
+  };
+
+  computed = {};
+
+  methods = {
+    secteds() {
+      this.sreaidos = !this.sreaidos;
+      if (this.sreaido == true) {
+        this.sreaido = false;
+      }
+    },
+    sected_nt() {
+      this.sreaido = !this.sreaido;
+      if (this.sreaidos == true) {
+        this.sreaidos = false;
+      }
+    },
+    playnone() {
+      this.codeiph = 1;
+    },
+    toplay() {
+      wx.navigateTo({
+        url: '/pages/my/setting/playkey'
+      });
+      this.codeiph = 0;
+      this.cosde = true;
+      setTimeout(() => {
+        this.cosde = false;
+        this.$apply();
+			}, 2000);
+			
+			// wx.navigateTo({
+      //   url: '/pages/index/payment'
+      // });
+    }
+  };
+
+  onLoad() {}
+}
+</script>
+
+<style lang='less'>
+page {
+  background: white;
+}
+.ontop_play {
+  width: 100%;
+  height: 312rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.ontop_play text:nth-child(1) {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(51, 51, 51, 1);
+  margin-top: 83rpx;
+  letter-spacing: 1.5rpx;
+}
+.ontop_play view {
+  width: 100%;
+  text-align: center;
+  margin-top: 20rpx;
+}
+.ontop_play view text:nth-child(1) {
+  font-size: 72rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(51, 51, 51, 1);
+}
+
+.ontop_play view text:nth-child(2) {
+  font-size: 72rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(51, 51, 51, 1);
+  letter-spacing: 0;
+}
+.colocumn {
+  width: 70%;
+  height: 27rpx;
+  margin-left: 29rpx;
+  letter-spacing: 1.5rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+}
+.play_omnd {
+  width: 680rpx;
+  height: 70rpx;
+  margin: 54rpx auto;
+  line-height: 70rpx;
+  display: flex;
+}
+
+.play_omnd view {
+  width: 50%;
+  height: 100%;
+}
+.play_omnd view:nth-child(1) {
+  display: flex;
+}
+.play_omnd view:nth-child(2) {
+  text-align: right;
+}
+.play_omnd view:nth-child(1) image {
+  width: 70rpx;
+  height: 70rpx;
+}
+.play_omnd view:nth-child(1) text {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-left: 22rpx;
+  letter-spacing: 1.5rpx;
+}
+
+.play_omnd view:nth-child(2) image {
+  width: 40rpx;
+  height: 40rpx;
+  float: right;
+  margin-top: 15rpx;
+}
+.btom_button {
+  width: 400rpx;
+  height: 88rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 44rpx;
+  margin: 178rpx auto;
+  text-align: center;
+  line-height: 88rpx;
+  letter-spacing: 1.5rpx;
+  font-size: 36rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 1);
+}
+.plain {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  margin-right: 19rpx;
+  position: relative;
+  top: -5rpx;
+}
+.ondce {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 1);
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  z-index: 11;
+}
+.ontabc {
+  width: 500rpx;
+  height: 377rpx;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 15rpx;
+  position: fixed;
+  bottom: 500rpx;
+  left: 130rpx;
+  z-index: 55;
+}
+.payword {
+  font-size: 46rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(244, 105, 95, 1);
+  line-height: 67rpx;
+  text-align: center;
+  margin-top: 30rpx;
+  letter-spacing: 1.5rpx;
+}
+.word {
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 42rpx;
+  margin-top: 93rpx;
+  text-align: center;
+  letter-spacing: 1.5rpx;
+}
+.settign {
+  width: 338rpx;
+  height: 70rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 30rpx;
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  line-height: 70rpx;
+  text-align: center;
+  margin: 50rpx auto;
+}
+.pamser {
+  width: 200rpx;
+  height: 200rpx;
+  background: rgba(0, 0, 0, 1);
+  opacity: 0.7;
+  border-radius: 10rpx;
+  position: absolute;
+  top: 448rpx;
+  left: 270rpx;
+  z-index: 66;
+}
+.uuimg {
+  width: 100%;
+  height: 52rpx;
+  text-align: center;
+  margin-top: 47rpx;
+}
+.uuimg image {
+  width: 52rpx;
+  height: 52rpx;
+}
+.shibai {
+  width: 100%;
+  text-align: center;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  letter-spacing: 1.5rpx;
+  margin-top: 36rpx;
+}
+</style>

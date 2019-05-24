@@ -1,0 +1,179 @@
+<template>
+  <view class="bchd">
+    <image src="/images/notices/bg-5.png"></image>
+    <view class="dort">
+      <image src="/images/notices/zhangdan.png" @tap="nextbill"></image>
+      <text @tap="nextbill">账单</text>
+    </view>
+    <view class="playnumb">450.50</view>
+    <view class="playnumbs">钱包余额</view>
+  </view>
+  <view
+    class="ontliat"
+    @tap="regularto"
+  >
+    <image
+      src='/images/notices/chongzhi.png'
+      class="onliimg"
+    ></image>
+    <text class="cltextsdf">充值</text>
+    <image
+      src='/images/notices/jinru.png'
+      class="onliimged"
+    ></image>
+  </view>
+  <view class="ontliats">
+    <image
+      src='/images/notices/tixian.png'
+      class="onliimg"
+    ></image>
+    <text
+      class="cltextsdf"
+      @tap="withdraw"
+    >提现</text>
+    <image
+      src='/images/notices/jinru.png'
+      class="onliimged"
+    ></image>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+
+@connect({})
+export default class Wallet extends wepy.page {
+  config = {
+    navigationBarTitleText: '钱包'
+  };
+
+  components = {};
+
+  data = {};
+
+  computed = {};
+
+  methods = {
+    regularto() {
+      wx.navigateTo({
+        url: '/pages/my/wallet/recharge'
+      });
+    },
+    withdraw() {
+      wx.navigateTo({
+        url: '/pages/my/wallet/withdraw'
+      });
+    },
+    nextbill(){
+      wx.navigateTo({
+        url: '/pages/my/wallet/bill'
+      });
+    }
+  };
+
+  onLoad() {}
+}
+</script>
+
+<style lang='less'>
+.bchd {
+  width: 690rpx;
+  height: 260rpx;
+  margin: 29rpx auto;
+}
+.bchd image {
+  width: 690rpx;
+  height: 260rpx;
+  position: absolute;
+  z-index: -1;
+}
+.dort {
+  width: 100%;
+  height: 65rpx;
+  line-height: 82rpx;
+  text-align: right;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  text-decoration: underline;
+  color: rgba(255, 255, 255, 1);
+  letter-spacing: 2rpx;
+}
+.dort image {
+  width: 23rpx;
+  height: 26rpx;
+  margin-left: -32rpx;
+  margin-top: 30rpx;
+}
+.dort text {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  text-decoration: underline;
+  color: rgba(255, 255, 255, 1);
+  letter-spacing: 2rpx;
+  margin-right: 29rpx;
+}
+.playnumb {
+  width: 100%;
+  height: 50rpx;
+  line-height: 50rpx;
+  text-align: center;
+  font-size: 50rpx;
+  font-family: PingFang-SC-Regular;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 1);
+  margin-top: 15rpx;
+}
+.playnumbs {
+  width: 100%;
+  height: 50rpx;
+  line-height: 50rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Regular;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  margin-top: 15rpx;
+  letter-spacing: 1rpx;
+}
+.ontliat {
+  width: 690rpx;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 10rpx;
+  margin: auto;
+  position: relative;
+  top: -4rpx;
+  display: flex;
+}
+.ontliats {
+  width: 690rpx;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 10rpx;
+  margin: 20rpx auto;
+  display: flex;
+}
+.onliimg {
+  width: 40rpx;
+  height: 37rpx;
+  margin: 32rpx 30rpx;
+}
+.cltextsdf {
+  font-size: 32rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  line-height: 100rpx;
+  margin-left: 33rpx;
+  color: rgba(54, 54, 54, 1);
+}
+.onliimged {
+  width: 13rpx;
+  height: 27rpx;
+  margin-left: 463rpx;
+  margin-top: 36rpx;
+}
+</style>

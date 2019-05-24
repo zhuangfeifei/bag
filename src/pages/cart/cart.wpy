@@ -1,44 +1,779 @@
 <template>
-    <view>132</view>
+  <view class="tap_back" wx:if="{{post_list.length>0}}"></view>
+  <view class="top_v" wx:if="{{clckcode==false&&post_list.length>0}}" @tap="management">管理</view>
+  <view class="top_v" wx:if="{{clckcode==true&&post_list.length>0}}" @tap="manageall">完成</view>
+  <view class="shop_list" wx:if="{{post_list.length>0}}">
+    <view class="top_ve" wx:for="{{post_list}}" wx:key="{{post_list}}">
+      <view class="_detil">
+        <view class="_dr_list" wx:if="{{selection==true}}" @tap="selectdck" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">
+          <image wx:if="{{index==idx||item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
+          <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
+        </view>
+        <view class="_dr_list" wx:else @tap="selectdcks" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">
+          <image wx:if="{{item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
+          <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
+        </view>
+        <view class="_detail_v">
+          <image src="{{item.spic}}" />
+          <view wx:if="{{item.code==0}}">已失效</view>
+          <view wx:if="{{item.code==1}}">降价中</view>
+          <view wx:if='{{item.code==2}}'>库存低</view>
+        </view>
+        <view class="_detail_vs">
+          <view class="_detail_sd">{{item.text}}</view>
+          <view class="_detail_s">颜色({{item.color}}）；尺码({{item.size}})</view>
+          <view class="_detail_d">
+            <view class="_d_price">
+              <text>￥</text>
+              <text>{{item.sprice}}</text>
+            </view>
+            <view class="_d_num">
+              <view @tap="prnumj" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">-</view>
+              <view>{{item.count}}</view>
+              <view @tap="prnumz" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">+</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="liatflex" wx:if="{{post_list.length>0}}">
+    <view class="fllist">
+      <view class="ona"></view>
+      <text>相似推荐</text>
+      <view class="onb"></view>
+    </view>
+  </view>
+  <view class="btnoom" wx:if="{{post_list.length>0}}">
+    <view class="btn_list">
+      <view class="ontab_list">
+        <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
+          <image src="{{item.pic}}">
+          </image>
+          <view class="ontbnt">
+            <text>￥{{item.oprice}}</text>
+            <text>￥{{item.price}}</text>
+          </view>
+          <view class="btnbuton" @tap="tap_play">立即购买</view>
+        </view>
+      </view>
+    </view>
+    <view style="height:60rpx"></view>
+  </view>
+  <view class="onnone" wx:if="{{post_list.length>0}}">没有更多了哦~</view>
+  <view style="height:100rpx;" wx:if="{{post_list.length>0}}"></view>
+  <view class="po_fxide" wx:if="{{clckcode==false&&post_list.length>0}}">
+    <view>
+      <view>合计:
+        <text>￥{{total_price}}</text>
+      </view>
+    </view>
+    <view>
+      <view>结算</view>
+    </view>
+  </view>
+  <view class="btno" wx:if="{{clckcode==true&&post_list.length>0}}">
+    <view @tap="selectall">
+      <image wx:if="{{selectds==true}}" src="/images/notices/cxuanzhong.png" />
+      <image wx:else src="/images/notices/nnxuanzhong.png" />
+      <text>全选</text>
+    </view>
+    <view>
+      <view>
+        <text>移入收藏夹</text>
+      </view>
+      <view @tap="detelte">
+        <text>删除</text>
+      </view>
+    </view>
+  </view>
+  <view class="empty_tip" wx:if="{{post_list.length==0}}">
+    <view>
+      <image src="/images/notices/cartnone.png" />
+    </view>
+    <view>购物车还是空空的哦~</view>
+    <view @tap="onbackin">去首页逛逛</view>
+  </view>
 </template>
 
 <script>
-import wepy from 'wepy'
-import { connect } from 'wepy-redux'
-import 'wepy-async-function'
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
 
-@connect({
-    
-})
-    
+@connect({})
 export default class Cart extends wepy.page {
-    
-    config = {
-        navigationBarTitleText: '购物车'
+  config = {
+    navigationBarTitleText: '购物车'
+  };
+
+  components = {};
+
+  data = {
+    clckcode: false,
+    total_price: 0,
+    selection: true, //管理(多选 单选)
+    sprice: '',
+    po_idnum: '', //删除个数
+    idx: -1,
+    selectds: false,
+    post_list: [
+      {
+        spic:
+          'http://img1.imgtn.bdimg.com/it/u=817252206,2157667651&fm=15&gp=0.jpg',
+        text:
+          '商品标题商品标题商品标题商品标题商品标题商品标题商品标商品标题商品标题商品标题商品标题商品标题商品标题商品标',
+        color: '黑色',
+        size: '大码',
+        sprice: 139,
+        count: 1,
+        code: 1,
+        selectd: false
+      },
+      {
+        spic:
+          'http://img1.imgtn.bdimg.com/it/u=817252206,2157667651&fm=15&gp=0.jpg',
+        text:
+          '商品标题商品标题商品标题商品标题商品标题商品标题商品标商品标题商品标题商品标题商品标题商品标题商品标题商品标',
+        color: '黑色',
+        size: '大码',
+        sprice: 140,
+        count: 1,
+        code: 0,
+        selectd: false
+      },
+      {
+        spic:
+          'http://img1.imgtn.bdimg.com/it/u=817252206,2157667651&fm=15&gp=0.jpg',
+        text:
+          '商品标题商品标题商品标题商品标题商品标题商品标题商品标商品标题商品标题商品标题商品标题商品标题商品标题商品标',
+        color: '黑色',
+        size: '大码',
+        sprice: 139,
+        count: 1,
+        code: 2,
+        selectd: false
+      }
+    ],
+    home_liat: [
+      {
+        pic:
+          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
+        oprice: 800,
+        price: 300
+      },
+      {
+        pic:
+          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
+        oprice: 800,
+        price: 300
+      },
+      {
+        pic:
+          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
+        oprice: 800,
+        price: 300
+      },
+      {
+        pic:
+          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
+        oprice: 800,
+        price: 300
+      }
+    ]
+  };
+
+  computed = {};
+
+  methods = {
+    //商品数量减少
+    prnumj(e) {
+      let index = e.currentTarget.dataset.id;
+      let post_list = this.post_list;
+      let selectd = this.post_list[index].selectd;
+      let count = post_list[index].count;
+      count = count - 1;
+      if (count < 1) {
+        return false;
+      }
+      post_list[index].count = count;
+      this.post_list = post_list;
+      this.sprice = e.currentTarget.dataset.price;
+      if (selectd == false) {
+        this.total_price = 0;
+      } else {
+        this.total_price = this.sprice * count;
+      }
+    },
+    //商品数量增加
+    prnumz(e) {
+      let index = e.currentTarget.dataset.id;
+      let post_list = this.post_list;
+      let selectd = this.post_list[index].selectd;
+      let count = post_list[index].count;
+      count = count + 1;
+      post_list[index].count = count;
+      this.post_list = post_list;
+      this.sprice = e.currentTarget.dataset.price;
+      this.total_price = this.sprice * count;
+      if (selectd == false) {
+        this.total_price = 0;
+      } else {
+        this.total_price = this.sprice * count;
+      }
+    },
+    tap_play() {
+      wx.navigateTo({
+        url: '/pages/index/detail'
+      });
+    },
+
+    //管理
+    management() {
+      this.clckcode = !this.clckcode;
+      this.selection = false;
+    },
+
+    //选择
+    selectdck(e) {
+      let index = e.currentTarget.dataset.id;
+      this.sprice = e.currentTarget.dataset.price;
+      this.count = e.currentTarget.dataset.count;
+      this.idx = index;
+      if (this.idx == index) {
+        this.total_price = this.sprice * this.count;
+      }
+    },
+    //多选
+    selectdcks(e) {
+      let index = e.currentTarget.dataset.id;
+      let array = this.post_list;
+      let selectd = array[index].selectd;
+      array[index].selectd = !array[index].selectd;
+      this.post_list = array;
+      let po_id = [];
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].selectd == true) {
+          po_id.push(i);
+        }
+      }
+      this.po_idnum = po_id.length;
+    },
+    //全选
+    selectall() {
+      this.selec_tall();
+      this.selectds = !this.selectds;
+    },
+    //完成
+    manageall() {
+      let array = this.post_list;
+      this.clckcode = !this.clckcode;
+      this.selectds = false;
+      for (let i = 0; i < array.length; i++) {
+        array[i].selectd = false;
+      }
+      this.selection = true;
+    },
+    //删除
+    detelte() {
+      if (this.po_idnum) {
+        wx.showModal({
+          title: '删除商品',
+          content: '确定将这' + this.po_idnum + '个宝贝删除？',
+          showCancel: true,
+          cancelText: '取消',
+          cancelColor: '#FF5858',
+          confirmText: '确定',
+          confirmColor: '#7C838D',
+          success: result => {
+            if (result.confirm) {
+            }
+          }
+        });
+      }else{
+        wx.showModal({
+          content: '请选择要删除的商品',
+          showCancel:false,
+          confirmText: '确定',
+          confirmColor: '#7C838D',
+        });
+      }
+    },
+    onbackin() {
+      wx.switchTab({
+        url: '/pages/index/index'
+      });
     }
-    
-    components = {
-    
+  };
+  //全选
+  selec_tall() {
+    let array = this.post_list;
+    let po_id = [];
+    for (let i = 0; i < array.length; i++) {
+      array[i].selectd=!array[i].selectd
+      if (array[i].selectd == true) {
+        po_id.push(i)
+      }
+      this.po_idnum = po_id.length;
     }
-    
-    data = {
-    
-    }
-    
-    computed = {
-    
-    }
-    
-    methods = {
-    
-    }
-    
-    onLoad() {
-    
-    }
+  }
+  onLoad() {}
+
+  onReachBottom() {
+    // console.log("123")
+  }
 }
 </script>
 
 <style lang='less'>
+.tap_back {
+  width: 100%;
+  height: 226rpx;
+  background: rgba(244, 105, 95, 1);
+  position: absolute;
+  z-index: -1;
+  border-bottom-left-radius: 150%;
+  border-bottom-right-radius: 150%;
+}
+.top_v {
+  width: 690rpx;
+  margin: auto;
+  position: relative;
+  top: 30rpx;
+  text-align: right;
+  font-size: 32rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  letter-spacing: 2rpx;
+}
+.shop_list {
+  width: 100%;
+  margin-top: 60rpx;
+}
+.top_ve {
+  width: 690rpx;
+  height: 260rpx;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 10rpx;
+  margin: 20rpx auto;
+}
+._detil {
+  width: 610rpx;
+  height: 160rpx;
+  margin: auto;
+  display: flex;
+  position: relative;
+  top: 31rpx;
+}
+._detail_v {
+  width: 160rpx;
+  height: 100%;
+}
+._detail_v image {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 10rpx;
+  margin: 17rpx 43rpx;
+  position: absolute;
+  z-index: 1;
+}
+._detail_v view {
+  width: 160rpx;
+  height: 30rpx;
+  background: rgba(0, 0, 0, 1);
+  opacity: 0.7;
+  border-radius: 0rpx 0rpx 10rpx 10rpx;
+  letter-spacing: 1.5rpx;
+  position: absolute;
+  top: 149rpx;
+  left: 83rpx;
+  z-index: 22;
+  text-align: center;
+  line-height: 30rpx;
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+}
+._detail_vs {
+  width: 336rpx;
+  height: 100%;
+}
+._detail_sd {
+  width: 336rpx;
+  height: 61rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  letter-spacing: 1rpx;
+  line-height: 31rpx;
+  margin: 20rpx 72rpx;
+}
+._detail_s {
+  width: 336rpx;
+  height: 25rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  line-height: 25rpx;
+  margin: 19rpx 70rpx;
+}
 
+._detail_d {
+  width: 336rpx;
+  height: 40rpx;
+  line-height: 31rpx;
+  margin-left: 72rpx;
+  display: flex;
+}
+
+._d_price {
+  width: 50%;
+  height: 40rpx;
+}
+._d_price text:nth-child(1) {
+  font-size: 21rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 40rpx;
+  margin: 0;
+  color: red;
+}
+._d_price text:nth-child(2) {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 40rpx;
+  margin: 0;
+  color: red;
+}
+._d_num {
+  width: 50%;
+  height: 40rpx;
+  margin-top: 5rpx;
+  display: flex;
+}
+._d_num view {
+  width: 40rpx;
+  height: 40rpx;
+  background: rgba(251, 251, 251, 1);
+  border: 1px solid rgba(234, 234, 234, 1);
+  border-radius: 5rpx 0rpx 0rpx 5rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  line-height: 40rpx;
+  margin: 0;
+}
+._d_num view:nth-child(1) {
+  margin-left: 45rpx;
+}
+._d_num view:nth-child(3) {
+  background: rgba(255, 255, 255, 1);
+  border-radius: 0rpx 5rpx 5rpx 0rpx;
+}
+._d_num view:nth-child(2) {
+  width: 60rpx;
+  height: 40rpx;
+  text-align: center;
+  background: rgba(255, 255, 255, 1);
+  border: 1px solid rgba(234, 234, 234, 1);
+  border-left: none;
+  border-right: none;
+  line-height: 40rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  border-radius: 0;
+}
+._dr_list {
+  width: 40rpx;
+  height: 100%;
+}
+._dr_list image {
+  width: 40rpx;
+  height: 40rpx;
+  margin-top: 72rpx;
+}
+.liatflex {
+  width: 100%;
+  height: 100rpx;
+}
+.fllist {
+  width: 350rpx;
+  height: 100%;
+  display: flex;
+  margin: auto;
+}
+.ona {
+  width: 70rpx;
+  height: 1px;
+  background: rgba(153, 153, 153, 1);
+  margin: 50rpx 5rpx;
+}
+.onb {
+  width: 70rpx;
+  height: 1px;
+  background: rgba(153, 153, 153, 1);
+  margin-top: 50rpx;
+}
+.liatflex view text {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  margin: 30rpx 30rpx;
+}
+.btnoom {
+  width: 100%;
+  background: rgba(255, 255, 255, 1);
+  margin-top: 25rpx;
+}
+.btn_list {
+  width: 690rpx;
+  height: auto;
+  margin: -25rpx auto;
+}
+.ontab_list {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.price {
+  width: 330rpx;
+  height: 440rpx;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0rpx 3rpx 6rpx 1rpx rgba(0, 0, 0, 0.04);
+  border-radius: 10rpx;
+  margin-top: 30rpx;
+  display: flex;
+  flex-direction: column;
+}
+.price image {
+  width: 100%;
+  height: 350rpx;
+  border-top-left-radius: 10rpx;
+  border-top-right-radius: 10rpx;
+}
+.ontbnt {
+  width: 120rpx;
+  height: 60rpx;
+  background: linear-gradient(
+    138deg,
+    rgba(253, 133, 122, 1),
+    rgba(233, 74, 64, 1)
+  );
+  border-radius: 30rpx 0rpx 0rpx 0rpx;
+  margin: -59rpx 210rpx;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+.ontbnt text:nth-child(1) {
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  text-decoration: line-through;
+  margin-right: 13rpx;
+}
+.ontbnt text:nth-child(2) {
+  font-size: 32rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 1);
+  margin: -9rpx 13rpx;
+  letter-spacing: 0rpx;
+}
+.btnbuton {
+  width: 100%;
+  font-size: 30rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(244, 105, 95, 1);
+  margin-top: 88rpx;
+  text-align: center;
+  letter-spacing: 1.5rpx;
+}
+.onnone {
+  width: 100%;
+  height: 63rpx;
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  text-align: center;
+  line-height: 63rpx;
+  letter-spacing: 1rpx;
+}
+.po_fxide {
+  width: 100%;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 1);
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  border-bottom: 1px solid #f2f2f2;
+}
+.po_fxide view:nth-child(1) {
+  width: 72%;
+  height: 100rpx;
+}
+.po_fxide view:nth-child(1) view {
+  width: 93%;
+  text-align: right;
+  line-height: 100rpx;
+  font-size: 34rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+}
+.po_fxide view:nth-child(1) view text {
+  color: red;
+}
+.po_fxide view:nth-child(2) {
+  width: 28%;
+  height: 100rpx;
+}
+.po_fxide view:nth-child(2) view {
+  width: 170rpx;
+  height: 60rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+  line-height: 60rpx;
+  margin-top: 19rpx;
+  letter-spacing: 2rpx;
+}
+.btno {
+  width: 100%;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 1);
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.btno view:nth-child(1) {
+  width: 45%;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+  line-height: 100rpx;
+}
+
+.btno view:nth-child(1) image {
+  width: 40rpx;
+  height: 40rpx;
+  margin: 30rpx 40rpx;
+}
+.btno view:nth-child(1) text {
+  font-size: 30rpx;
+  font-family: PingFang-SC-Regular;
+  font-weight: 400;
+  color: rgba(54, 54, 54, 1);
+  position: relative;
+  left: -20rpx;
+}
+
+.btno view:nth-child(2) {
+  width: 55%;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+}
+.btno view:nth-child(2) view:nth-child(1) {
+  width: 196rpx;
+  height: 56rpx;
+  border: 1px solid rgba(128, 128, 128, 1);
+  border-radius: 28rpx;
+  line-height: 56rpx;
+  letter-spacing: 1.5rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(128, 128, 128, 1);
+  margin-top: 22rpx;
+}
+.btno view:nth-child(2) view:nth-child(1) text {
+  letter-spacing: 1.5rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(128, 128, 128, 1);
+  margin-left: 57rpx;
+}
+.btno view:nth-child(2) view:nth-child(2) {
+  width: 160rpx;
+  height: 56rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 28rpx;
+  font-size: 24rpx;
+  margin: 22rpx 20rpx;
+}
+.btno view:nth-child(2) view:nth-child(2) text {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  line-height: 56rpx;
+  letter-spacing: 1.5rpx;
+  margin-left: 55rpx;
+}
+.empty_tip {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: white;
+}
+.empty_tip view:nth-child(1) {
+  width: 100%;
+  text-align: center;
+  margin-top: 142rpx;
+}
+.empty_tip view:nth-child(1) image {
+  width: 384rpx;
+  height: 315rpx;
+}
+.empty_tip view:nth-child(2) {
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(136, 136, 136, 1);
+  text-align: center;
+  letter-spacing: 1.5rpx;
+  margin-top: 66rpx;
+}
+.empty_tip view:nth-child(3) {
+  width: 400rpx;
+  height: 88rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 44rpx;
+  margin: 110rpx auto;
+  text-align: center;
+  line-height: 88rpx;
+  font-size: 36rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 1);
+}
 </style>

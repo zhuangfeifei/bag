@@ -1,0 +1,196 @@
+<template>
+	<view class="topliat" wx:for="{{post_list}}" wx:key="{{post_list}}">
+		<view class="ons">
+			<image mode="aspectFill" lazy-load="true" src="{{item.user_pic}}" />
+		</view>
+		<view class="onsdf">
+			<view class="cname">{{item.user_name}}</view>
+			<view class="ctime">{{item.user_time}}</view>
+			<view class="ccontext">{{item.user_context}}</view>
+			<view class="img_list" wx:if="{{img_list!=''}}" style="display:{{tehm}}">
+				<image mode="aspectFill" lazy-load="true" wx:for="{{img_list}}" wx:key="{{img_list}}" data-id="{{index}}" wx:if="{{index<3}}" src="{{item.pic}}" />
+			</view>
+			<view class="shops" wx:if="{{item.shop_context}}">商家回复：</view>
+			<view class="ccontexts" wx:if="{{item.shop_context}}">{{item.shop_context}}</view>
+			<!-- <view class="img_list" wx:if="{{img_list!=''}}">
+				<image mode="aspectFill" lazy-load="true" wx:for="{{img_list}}" wx:key="{{img_list}}" data-id="{{index}}" wx:if="{{index<3}}" src="{{item.pic}}" />
+			</view> -->
+			<view class="ctimes" wx:if="{{item.shop_context}}">{{item.shop_time}}</view>
+			<view style="height:27rpx;" wx:if="{{item.shop_context}}"></view>
+		</view>
+	</view>
+	<view class="btn_span" wx:if="{{onlist==false}}">已经到底了，没有更多评价了哦~</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+
+@connect({})
+export default class Evaluation extends wepy.page {
+  config = {
+    navigationBarTitleText: '商品评价'
+  };
+
+  components = {};
+
+  data = {
+		tehm: '',
+		onlist:true,
+    img_list: [
+      {
+        pic:
+          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg'
+      },
+      {
+        pic:
+          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg'
+      },
+      {
+        pic:
+          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg'
+      }
+    ],
+    post_list: [
+      {
+        user_pic:
+          'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2627190932,867456967&fm=27&gp=0.jpg',
+        user_name: '昵称',
+        user_context:
+          '评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内',
+        user_time: '2019.05.05 12:30',
+        shop_time: '2019.05.05 12:40'
+      },
+      {
+        user_pic:
+          'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2627190932,867456967&fm=27&gp=0.jpg',
+        user_name: '昵称',
+        user_context:
+          '评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内',
+        user_time: '2019.05.05 12:30',
+        shop_context:
+          '评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内',
+        shop_time: '2019.05.05 12:30'
+      }
+    ]
+  };
+
+  computed = {};
+
+  methods = {};
+
+  onLoad() {
+    if (this.img_list) {
+      this.tehm = 'block';
+    } else {
+      this.tehm = 'none';
+    }
+  }
+}
+</script>
+
+<style lang='less'>
+.topliat {
+  width: 100%;
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+}
+.ons {
+  width: 20%;
+  height: 100%;
+  text-align: center;
+}
+.ons image {
+  width: 80rpx;
+  height: 80rpx;
+  margin-top: 30rpx;
+  border-radius: 50%;
+}
+.onsdf {
+  width: 77%;
+  height: 100%;
+}
+.cname {
+  width: 100%;
+  height: 32rpx;
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 32rpx;
+  overflow: hidden;
+  margin-top: 40rpx;
+  letter-spacing: 1rpx;
+}
+.ctime {
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  margin-top: 16rpx;
+  letter-spacing: 1rpx;
+}
+.ctimes {
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  margin-top: 15rpx;
+  letter-spacing: 1rpx;
+}
+.ccontext {
+  width: 100%;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-top: 27rpx;
+  letter-spacing: 1rpx;
+}
+.ccontexts {
+  width: 100%;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-top: 20rpx;
+  letter-spacing: 1rpx;
+}
+.shops {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(244, 105, 95, 1);
+  margin-top: 15rpx;
+}
+.img_list {
+  width: 566rpx;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  margin-top: 30rpx;
+}
+.img_list image {
+  width: 182rpx;
+  height: 182rpx;
+  margin-left: 10rpx;
+  border-radius: 10rpx;
+}
+.img_list image:nth-child(1) {
+  width: 182rpx;
+  height: 182rpx;
+  margin-left: 0rpx;
+}
+.btn_span {
+  width: 100%;
+  height: 73rpx;
+  text-align: center;
+  line-height: 73rpx;
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+	color: rgba(153, 153, 153, 1);
+	letter-spacing: 1rpx;
+}
+</style>

@@ -1,0 +1,772 @@
+<template>
+  <!--地址-->
+  <view class="top_addres">
+    <view class="addres" wx:if="{{addres==0}}">
+      <view class="addr">
+        <image src="/images/notices/dingwei.png" class="_imgas" />
+        <text>添加收货地址</text>
+      </view>
+      <view class="addrs">
+        <image src="/images/notices/jinru.png" class="_imgass" />
+      </view>
+    </view>
+    <view class="address" wx:if="{{addres==1}}">
+      <view class="addred">
+        <image src="/images/notices/dingwei.png" class="_imgas_a" />
+        <view class="adder_nan">
+          <text>王春刚</text>
+          <text>18298864760</text>
+          <view class="om_addres">收货地址收货地址收货地址收货地址收货地址收货地址收货地址</view>
+        </view>
+      </view>
+      <view class="addrs">
+        <image src="/images/notices/jinru.png" class="_imgass_a" />
+      </view>
+    </view>
+  </view>
+  <!--订单属性-->
+  <view class="shop_detil">
+    <view class="_detil">
+      <view class="_detail_v">
+        <image src="http://img1.imgtn.bdimg.com/it/u=817252206,2157667651&fm=15&gp=0.jpg" />
+      </view>
+      <view class="_detail_vs">
+        <view class="_detail_sd">商品标题商品标题商品标题商品标题商品标题商品标题商品标...</view>
+        <view class="_detail_s">颜色(黑色）；尺码(大码)</view>
+        <view class="_detail_d">
+          <view class="_d_price">
+            <text>￥</text>
+            <text>{{sprice}}</text>
+          </view>
+          <view class="_d_num">
+            <view @tap="prnumj">-</view>
+            <view>{{num}}</view>
+            <view @tap="prnumz">+</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="on_price">
+      <view>商品金额</view>
+      <view>¥{{mprice}}</view>
+    </view>
+    <view class="on_price">
+      <view>会员折扣</view>
+      <view>{{discount}}折</view>
+    </view>
+    <view class="onclicp"></view>
+    <view class="on_prices">
+      <view>共计</view>
+      <view>¥{{gjprice}}</view>
+    </view>
+  </view>
+
+  <view class="pricde">
+    <view class="on_price">
+      <view>商家活动</view>
+      <view>无活动</view>
+    </view>
+    <view class="on_priced" @tap="seylist">
+      <view>选择优惠券</view>
+      <view>
+        <text style="color:red;" wx:if="{{cuprice}}">-{{cuprice}}元</text>
+        <text style="color:#999999;" wx:if="{{snum==''}}">无优惠券</text>
+        <text style="color:#363636;" wx:if="{{snum>1&&cuprice==''}}">{{snum}}张可用</text>
+        <image src="/images/notices/jinru.png" />
+      </view>
+    </view>
+    <view class="on_price">
+      <view>运费</view>
+      <view>￥{{freight}}</view>
+    </view>
+    <view class="on_price">
+      <view>会员包邮</view>
+      <view>-{{shipping}}</view>
+    </view>
+    <view class="on_price">
+      <view>订单备注</view>
+      <view>
+        <input type="text" placeholder="选填，请先和商家协商(50字以内)" maxlength="50" name="usernums" bindinput="userInputs" />
+      </view>
+    </view>
+  </view>
+  <view style="height:150rpx;"></view>
+  <view class="btnom">
+    <view class="omplay">
+      <view>
+        <text>共{{num}}件</text>
+        <text>合计:￥{{total_price}}</text>
+      </view>
+      <view>
+        <view>付款</view>
+      </view>
+    </view>
+  </view>
+  <view class="index-p" wx:if="{{sected}}"></view>
+  <view class="_p-index" wx:if="{{sected}}">
+    <view class="om_uy">
+      <view>选择优惠券</view>
+      <view>
+        <image src="/images/notices/sguanbi.png" @tap="seylist" />
+      </view>
+    </view>
+    <scroll-view scroll-y='true' style='height:550rpx'>
+      <view class="om" wx:for="{{conum_list}}" wx:key="{{conum_list}}" data-id="{{index}}" data-name="{{item.price}}" @tap="cuonpicr">
+        <image src="/images/notices/youhuibacki.png" />
+        <view class="onpricf">
+          <image src="/images/notices/renminbi.png"></image>
+          <text>{{item.price}}</text>
+          <view>【{{item.text}}】</view>
+        </view>
+        <view class="wipics">有效期：{{item.ontime}}-{{item.untime}}</view>
+      </view>
+      <view class="oms" @tap="pricnone">
+        <image src="/images/notices/youhuibacki.png" />
+        <view>不使用任何优惠券</view>
+      </view>
+    </scroll-view>
+  </view>
+
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+
+@connect({})
+export default class Order extends wepy.page {
+  config = {
+    navigationBarTitleText: '确认订单'
+  };
+
+  components = {};
+
+  data = {
+    addres: 1,
+    num: 1,
+    usernums: '', //输入框内容
+    shipping: 10, //包邮
+    freight: 10, //运费
+    snum: '', //可用优惠券
+    gjprice: '', //共计价格
+    discount: 9.8, //商品折扣
+    mprice: '', // 商品金额
+    sected: false,
+    total_price: '',
+    sprice: 139, //售价
+    cuprice: '', //优惠券价格
+    conum_list: [
+      {
+        price: 20,
+        text: '无门槛优惠券',
+        ontime: '2019.05.01',
+        untime: '2020.05.01'
+      },
+      {
+        price: 100,
+        text: '满500元使用',
+        ontime: '2019.05.01',
+        untime: '2020.05.01'
+      },
+      {
+        price: 100,
+        text: '满500元使用',
+        ontime: '2019.05.01',
+        untime: '2020.05.01'
+      },
+      {
+        price: 100,
+        text: '满500元使用',
+        ontime: '2019.05.01',
+        untime: '2020.05.01'
+      }
+    ]
+  };
+
+  computed = {};
+
+  methods = {
+    //商品数量减少
+    prnumj() {
+      let num = this.num;
+      num--;
+      if (num < 1) {
+        return false;
+      }
+      this.num = num;
+      this.mprice = this.num * this.sprice;
+      this.totalprice();
+    },
+    //商品数量增加
+    prnumz() {
+      let num = this.num;
+      num++;
+      this.num = num;
+      this.mprice = this.num * this.sprice;
+      this.totalprice();
+    },
+    //显示关闭显示选择优惠券弹框
+    seylist() {
+      let sected = this.sected;
+      this.sected = !this.sected;
+    },
+    //获取优惠劵价格
+    cuonpicr(e) {
+      let cuprice = e.currentTarget.dataset.name;
+      this.cuprice = cuprice;
+      this.sected = false;
+      if (this.cuprice == '') {
+        this.cuprice = 0;
+      }
+      this.totalprice();
+    },
+    // 不使用优惠券
+    pricnone() {
+      this.cuprice = 0;
+      this.sected = false;
+    },
+    userInputs(e) {
+      this.usernums = e.detail.value;
+      console.log(this.usernums);
+    },
+    //去支付
+    ontopay() {
+      wx.navigateTo({
+        url: '/pages/index/onplay'
+      });
+    }
+  };
+  //计算价格
+  totalprice() {
+    this.mprice = this.num * this.sprice;
+    let num = (this.discount / 10) * this.mprice;
+    let result = num.toFixed(2);
+    this.gjprice = result;
+    let obj = this.gjprice - this.cuprice + (this.freight - this.shipping);
+    let wnums = obj.toFixed(2);
+    this.total_price = wnums;
+  }
+  onLoad() {
+    this.totalprice();
+    let snum = this.conum_list.length;
+    this.snum = snum;
+  }
+}
+</script>
+
+<style lang='less'>
+.top_addres {
+  width: 690rpx;
+  height: 200rpx;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 10rpx;
+  margin: 19rpx auto;
+}
+.addres {
+  width: 630rpx;
+  height: 60rpx;
+  display: flex;
+  margin: auto;
+  position: relative;
+  top: 70rpx;
+}
+.address {
+  width: 630rpx;
+  height: 107rpx;
+  display: flex;
+  margin: auto;
+  position: relative;
+  top: 47rpx;
+}
+.addr {
+  width: 90%;
+  height: 100%;
+  display: flex;
+}
+.addred {
+  width: 90%;
+  height: 100%;
+  display: flex;
+  position: relative;
+  top: -15rpx;
+}
+.addrs {
+  width: 10%;
+  height: 100%;
+  text-align: right;
+}
+._imgas {
+  width: 60rpx;
+  height: 60rpx;
+}
+._imgas_a {
+  width: 60rpx;
+  height: 60rpx;
+  margin-top: 24rpx;
+}
+
+._imgass {
+  width: 13rpx;
+  height: 20rpx;
+}
+._imgass_a {
+  width: 13rpx;
+  height: 20rpx;
+  margin-top: 44rpx;
+}
+.addres text {
+  font-size: 32rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-left: 27rpx;
+  line-height: 60rpx;
+  letter-spacing: 1.5rpx;
+}
+.adder_nan {
+  width: 100%;
+}
+
+.adder_nan text:nth-child(1) {
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-left: 28rpx;
+  overflow: hidden;
+  letter-spacing: 1.5rpx;
+}
+
+.adder_nan text:nth-child(2) {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  margin-left: 18rpx;
+  letter-spacing: 1.5rpx;
+  position: relative;
+  top: 4rpx;
+}
+.om_addres {
+  width: 100%;
+  height: 65rpx;
+  margin: 11rpx 28rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  letter-spacing: 1.5rpx;
+}
+
+.shop_detil {
+  width: 690rpx;
+  height: 420rpx;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 10rpx;
+  margin: 20rpx auto;
+}
+._detil {
+  width: 610rpx;
+  height: 160rpx;
+  margin: auto;
+  display: flex;
+  position: relative;
+  top: 31rpx;
+}
+._detail_v {
+  width: 160rpx;
+  height: 100%;
+}
+._detail_v image {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 10rpx;
+}
+._detail_vs {
+  width: 450rpx;
+  height: 100%;
+}
+._detail_sd {
+  width: 419rpx;
+  height: 61rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  letter-spacing: 1rpx;
+  line-height: 31rpx;
+  margin-left: 31rpx;
+}
+._detail_s {
+  width: 419rpx;
+  height: 25rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  line-height: 25rpx;
+  margin: 20rpx 30rpx;
+}
+
+._detail_d {
+  width: 419rpx;
+  height: 40rpx;
+  line-height: 31rpx;
+  margin-left: 31rpx;
+  display: flex;
+}
+
+._d_price {
+  width: 50%;
+  height: 40rpx;
+}
+._d_price text:nth-child(1) {
+  font-size: 21rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 40rpx;
+  margin-top:-5rpx;
+}
+._d_price text:nth-child(2) {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 40rpx;
+  margin-top:-5rpx;
+}
+._d_num {
+  width: 50%;
+  height: 40rpx;
+  margin: 0;
+  display: flex;
+}
+._d_num view {
+  width: 40rpx;
+  height: 40rpx;
+  background: rgba(251, 251, 251, 1);
+  border: 1px solid rgba(234, 234, 234, 1);
+  border-radius: 5rpx 0rpx 0rpx 5rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  line-height: 39rpx;
+  margin: 0;
+}
+._d_num view:nth-child(1) {
+  margin-left: 45rpx;
+}
+._d_num view:nth-child(3) {
+  background: rgba(255, 255, 255, 1);
+  border-radius: 0rpx 5rpx 5rpx 0rpx;
+}
+._d_num view:nth-child(2) {
+  width: 60rpx;
+  height: 40rpx;
+  text-align: center;
+  background: rgba(255, 255, 255, 1);
+  border: 1px solid rgba(234, 234, 234, 1);
+  border-left: none;
+  border-right: none;
+  line-height: 40rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  border-radius: 0;
+}
+.on_price {
+  width: 595rpx;
+  height: 27rpx;
+  display: flex;
+  margin: 38rpx auto;
+  position: relative;
+  top: 35rpx;
+}
+.on_price input {
+  text-align: left;
+  width: 450rpx;
+  height: 27rpx;
+  margin-left: -150rpx;
+  margin-top: -10rpx;
+}
+.on_prices {
+  width: 595rpx;
+  height: 27rpx;
+  display: flex;
+  margin: 45rpx auto;
+}
+.on_priced {
+  width: 595rpx;
+  height: 27rpx;
+  display: flex;
+  margin: auto;
+  position: relative;
+  top: 35rpx;
+}
+.on_price view:nth-child(1) {
+  width: 50%;
+  height: 27rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 27rpx;
+  letter-spacing: 1.5rpx;
+}
+.on_prices view:nth-child(1) {
+  width: 50%;
+  height: 27rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 27rpx;
+  letter-spacing: 1.5rpx;
+}
+.on_price view:nth-child(2) {
+  width: 50%;
+  height: 27rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 27rpx;
+  text-align: right;
+  letter-spacing: 1.5rpx;
+}
+.on_priced view:nth-child(1) {
+  width: 50%;
+  height: 27rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 27rpx;
+  letter-spacing: 1.5rpx;
+}
+.on_priced view:nth-child(2) {
+  width: 50%;
+  height: 27rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  line-height: 27rpx;
+  text-align: right;
+  letter-spacing: 1.5rpx;
+  display: flex;
+  position: relative;
+  left: 215rpx;
+}
+.on_priced view:nth-child(2) image {
+  width: 13rpx;
+  height: 20rpx;
+  position: relative;
+  left: 20rpx;
+  top: 3rpx;
+}
+.on_prices view:nth-child(2) {
+  width: 50%;
+  height: 27rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(244, 105, 95, 1);
+  line-height: 27rpx;
+  text-align: right;
+  letter-spacing: 1.5rpx;
+}
+.onclicp {
+  width: 610rpx;
+  height: 1px;
+  background: rgba(242, 242, 242, 1);
+  margin: auto;
+  position: relative;
+  top: 28rpx;
+}
+.pricde {
+  width: 690rpx;
+  height: 340rpx;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 10rpx;
+  margin: auto;
+}
+.btnom {
+  width: 750rpx;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 1);
+  position: fixed;
+  bottom: 0;
+}
+.omplay {
+  height: 100rpx;
+  display: flex;
+}
+.omplay view:nth-child(1) {
+  width: 72%;
+  height: 100rpx;
+  text-align: right;
+}
+.omplay view:nth-child(1) text:nth-child(1) {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  line-height: 105rpx;
+  letter-spacing: 1.5rpx;
+  margin-right:20rpx;
+}
+.omplay view:nth-child(1) text:nth-child(2) {
+  font-size: 34rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  letter-spacing: 1.5rpx;
+  line-height: 100rpx;
+  margin-right:48rpx;
+}
+.omplay view:nth-child(2) {
+  width: 28%;
+  height: 100rpx;
+}
+.omplay view:nth-child(2) view {
+  width: 170rpx;
+  height: 60rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+  line-height: 60rpx;
+  margin: 0;
+  margin-top: 22rpx;
+  letter-spacing: 2rpx;
+}
+.index-p {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 1);
+  opacity: 0.5;
+  position: fixed;
+  top: 0;
+}
+._p-index {
+  width: 750rpx;
+  height: 700rpx;
+  background: rgba(255, 255, 255, 1);
+  position: fixed;
+  bottom: 0;
+  z-index: 22;
+}
+.om_uy {
+  width: 690rpx;
+  height: 120rpx;
+  margin: auto;
+  display: flex;
+}
+.om_uy view:nth-child(1) {
+  width: 90%;
+  height: 100%;
+  font-size: 32rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(51, 51, 51, 1);
+  line-height: 80rpx;
+  text-align: center;
+  letter-spacing: 1.5rpx;
+}
+
+.om_uy view:nth-child(2) {
+  width: 10%;
+  height: 100%;
+  text-align: right;
+}
+.om_uy view:nth-child(2) image {
+  width: 20rpx;
+  height: 20rpx;
+  margin-top: 30rpx;
+}
+
+.om {
+  width: 690rpx;
+  height: 140rpx;
+  margin: 30rpx auto;
+}
+.om:nth-child(1) {
+  margin-left: 30rpx;
+}
+.om image {
+  width: 690rpx;
+  height: 140rpx;
+  position: absolute;
+  z-index: -1;
+}
+.onpricf {
+  width: 70%;
+  height: 30rpx;
+  display: flex;
+  margin-left: 38rpx;
+}
+.onpricf image {
+  width: 14rpx;
+  height: 18rpx;
+  margin-top: 46rpx;
+}
+.onpricf text {
+  font-size: 40rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(244, 105, 95, 1);
+  margin: 20rpx 20rpx;
+}
+
+.onpricf view {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Regular;
+  font-weight: 400;
+  color: rgba(54, 54, 54, 1);
+  margin: 30rpx 7rpx;
+  letter-spacing: 1rpx;
+}
+.wipics {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Regular;
+  font-weight: 400;
+  color: rgba(54, 54, 54, 1);
+  letter-spacing: 1rpx;
+  width: 70%;
+  margin: 43rpx 38rpx;
+}
+.oms {
+  width: 690rpx;
+  height: 140rpx;
+  margin: 30rpx auto;
+}
+.oms image {
+  width: 690rpx;
+  height: 140rpx;
+  position: absolute;
+  z-index: -1;
+}
+.oms view {
+  font-size: 36rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  letter-spacing: 1rpx;
+  line-height: 140rpx;
+  margin-left: 38rpx;
+}
+</style>

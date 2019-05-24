@@ -1,0 +1,120 @@
+<style lang="less">
+.onzhan{
+  background: #F2F2F2;
+  height: 4rpx;
+}
+.topconlist {
+  width: 100%;
+  height: 130rpx;
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+}
+.list_view {
+  width: 93%;
+  height: 100%;
+  border-bottom:1rpx solid #F2F2F2;
+  margin: auto;
+  display: flex;
+}
+.list_views {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.list_texta {
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(51, 51, 51, 1);
+  margin-top: 23rpx;
+}
+.list_textb {
+  font-size: 26rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  margin-top: 13rpx;
+}
+.list_textc {
+  font-size: 26rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color:rgba(244,105,95,1);
+  margin-top: 13rpx;
+}
+.reconlist {
+  width: 50%;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(244, 105, 95, 1);
+  line-height: 130rpx;
+  text-align: right;
+}
+.reconlists {
+  width: 50%;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color:rgba(102,102,102,1);
+  line-height: 130rpx;
+  text-align: right;
+}
+</style>
+<template>
+  <view class="onzhan"></view>
+  <repeat for="{{list}}">
+    <view class="topconlist">
+      <view class="list_view">
+        <view class="list_views">
+          <text class="list_texta">{{item.time}}</text>
+          <text class="list_textb" wx:if='{{item.statse==0}}'>连续签到{{item.day}}天</text>
+          <text class="list_textc" wx:else>未签到</text>
+        </view>
+        <view class="reconlist" wx:if='{{item.statse==0}}'>签到成功 +{{item.num}}积分</view>
+        <view class="reconlists" wx:else>签到失败 +{{item.num}}积分</view>
+      </view>
+    </view>
+  </repeat>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+
+@connect({})
+export default class Record extends wepy.page {
+  config = {
+    navigationBarTitleText: '签到记录'
+  };
+
+  components = {};
+
+  data = {
+    list:[
+      {
+        time:"2019.09.06",
+        day:3,
+        num:2,
+        statse:0
+      },
+      {
+        time:"2019.09.06",
+        day:3,
+        num:0,
+        statse:1
+      }
+    ]
+  };
+
+  computed = {};
+
+  methods = {};
+
+  onLoad() {
+
+  }
+}
+</script>
