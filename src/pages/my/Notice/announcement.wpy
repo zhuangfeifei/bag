@@ -48,7 +48,8 @@
 </style>
 
 <template>
-  <repeat for="{{list}}">
+  <view>
+    <repeat for="{{list}}">
     <view class="topcement">
       <view class="back">{{item.title}}</view>
       <image src='/images/notices/bg_4.png'></image>
@@ -58,6 +59,7 @@
       </view>
     </view>
   </repeat>
+  </view>
 </template>
 
 <script>

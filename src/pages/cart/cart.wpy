@@ -1,5 +1,6 @@
 <template>
-  <view class="tap_back" wx:if="{{post_list.length>0}}"></view>
+<view>
+    <view class="tap_back" wx:if="{{post_list.length>0}}"></view>
   <view class="top_v" wx:if="{{clckcode==false&&post_list.length>0}}" @tap="management">管理</view>
   <view class="top_v" wx:if="{{clckcode==true&&post_list.length>0}}" @tap="manageall">完成</view>
   <view class="shop_list" wx:if="{{post_list.length>0}}">
@@ -93,7 +94,8 @@
     </view>
     <view>购物车还是空空的哦~</view>
     <view @tap="onbackin">去首页逛逛</view>
-  </view>
+  </view>ff
+</view>
 </template>
 
 <script>
@@ -314,40 +316,40 @@ export default class Cart extends wepy.page {
     }
   }
   onLoad() {
-    // this.cartlist();
-    // this.userlike();
+    this.cartlist();
+    this.userlike();
   }
-  // cartlist() {
-  //   let a = {
-  //     unionid: this.userinfo.unionid,
-  //     limit: 10,
-  //     current: this.current
-  //   };
-  //   console.log(a);
-  //   wepy.$Api.cartList(a).then(
-  //     res => {
-  //       if (res.data.data) {
-  //         console.log(res);
-  //       }
-  //     },
-  //     err => {}
-  //   );
-  // }
-  // userlike() {
-  //   let a = {
-  //     unionid: this.userinfo.unionid,
-  //     limit: 10,
-  //     current: this.current
-  //   };
-  //   console.log(a);
-  //   wepy.$Api.userlike(a).then(
-  //     res => {
-  //       if (res.data.data) {
-  //         console.log(res);
-  //       }
-  //     },
-  //     err => {}
-  //   );
+  cartlist() {
+    let a = {
+      unionid: this.userinfo.unionid,
+      limit: 10,
+      current: this.current
+    };
+    console.log(a);
+    wepy.$Api.cartList(a).then(
+      res => {
+        if (res.data.data) {
+          console.log(res);
+        }
+      },
+      err => {}
+    );
+  }
+  userlike() {
+    let a = {
+      unionid: this.userinfo.unionid,
+      limit: 10,
+      current: this.current
+    };
+    console.log(a);
+    wepy.$Api.userlike(a).then(
+      res => {
+        if (res.data.data) {
+          console.log(res);
+        }
+      },
+      err => {}
+    );
   }
   onReachBottom() {
     //  wepy.$Api.cartList(a).then(

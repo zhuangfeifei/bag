@@ -1,6 +1,6 @@
 <style lang="less">
-.onzhan{
-  background: #F2F2F2;
+.onzhan {
+  background: #f2f2f2;
   height: 4rpx;
 }
 .topconlist {
@@ -12,7 +12,7 @@
 .list_view {
   width: 93%;
   height: 100%;
-  border-bottom:1rpx solid #F2F2F2;
+  border-bottom: 1rpx solid #f2f2f2;
   margin: auto;
   display: flex;
 }
@@ -40,7 +40,7 @@
   font-size: 26rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
-  color:rgba(244,105,95,1);
+  color: rgba(244, 105, 95, 1);
   margin-top: 13rpx;
 }
 .reconlist {
@@ -57,26 +57,28 @@
   font-size: 28rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
-  color:rgba(102,102,102,1);
+  color: rgba(102, 102, 102, 1);
   line-height: 130rpx;
   text-align: right;
 }
 </style>
 <template>
-  <view class="onzhan"></view>
-  <repeat for="{{list}}">
-    <view class="topconlist">
-      <view class="list_view">
-        <view class="list_views">
-          <text class="list_texta">{{item.time}}</text>
-          <text class="list_textb" wx:if='{{item.statse==0}}'>连续签到{{item.day}}天</text>
-          <text class="list_textc" wx:else>未签到</text>
+  <view>
+    <view class="onzhan"></view>
+    <repeat for="{{list}}">
+      <view class="topconlist">
+        <view class="list_view">
+          <view class="list_views">
+            <text class="list_texta">{{item.time}}</text>
+            <text class="list_textb" wx:if='{{item.statse==0}}'>连续签到{{item.day}}天</text>
+            <text class="list_textc" wx:else>未签到</text>
+          </view>
+          <view class="reconlist" wx:if='{{item.statse==0}}'>签到成功 +{{item.num}}积分</view>
+          <view class="reconlists" wx:else>签到失败 +{{item.num}}积分</view>
         </view>
-        <view class="reconlist" wx:if='{{item.statse==0}}'>签到成功 +{{item.num}}积分</view>
-        <view class="reconlists" wx:else>签到失败 +{{item.num}}积分</view>
       </view>
-    </view>
-  </repeat>
+    </repeat>
+  </view>
 </template>
 
 <script>
@@ -93,18 +95,18 @@ export default class Record extends wepy.page {
   components = {};
 
   data = {
-    list:[
+    list: [
       {
-        time:"2019.09.06",
-        day:3,
-        num:2,
-        statse:0
+        time: '2019.09.06',
+        day: 3,
+        num: 2,
+        statse: 0
       },
       {
-        time:"2019.09.06",
-        day:3,
-        num:0,
-        statse:1
+        time: '2019.09.06',
+        day: 3,
+        num: 0,
+        statse: 1
       }
     ]
   };
@@ -113,8 +115,6 @@ export default class Record extends wepy.page {
 
   methods = {};
 
-  onLoad() {
-
-  }
+  onLoad() {}
 }
 </script>

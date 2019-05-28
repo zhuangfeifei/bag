@@ -1,55 +1,24 @@
 <template>
-	<view class="useriphone">
-		<text>输入当前支付密码</text>
-		<input
-		 type="password"
-		 placeholder="请输入密码"
-		 name="userNames"
-		 placeholder-class="placeholderStyle"
-		 class="phoneinputs"
-		 bindinput="userNameInputs"
-		 maxlength="6"
-		></input>
-	</view>
-	<view class="admiuser" @tap="tapnext">忘记密码?</view>
-	<view class="useriphone">
-		<text>输入新密码</text>
-		<input
-		 type="password"
-		 placeholder="请输入密码"
-		 name="userName"
-		 placeholder-class="placeholderStyle"
-		 class="phoneinput"
-		 bindinput="userNameInput"
-		 maxlength="6"
-		></input>
-	</view>
-	<view class="useriphone">
-		<text>确认新密码</text>
-		<input
-		 type="password"
-		 placeholder="请确认密码"
-		 name="usernum"
-		 bindinput="userInput"
-		 placeholder-class="placeholderStyle"
-		 class="phoneinput"
-		 maxlength="6"
-		></input>
-	</view>
-	<view class="titleli">提示：密码为6位数数字密码</view>
-	<view class="obtn">
-		<image
-		 wx:if="{{stsat==0}}"
-		 src="/images/notices/querenjinyong.png"
-		 class="btnimg"
-		></image>
-		<image
-		 wx:else
-		 src="/images/notices/querenqiyongt.png"
-		 class="btnimg"
-		 @tap="ontapy"
-		></image>
-	</view>
+  <view>
+    <view class="useriphone">
+      <text>输入当前支付密码</text>
+      <input type="password" placeholder="请输入密码" name="userNames" placeholder-class="placeholderStyle" class="phoneinputs" bindinput="userNameInputs" maxlength="6"></input>
+    </view>
+    <view class="admiuser" @tap="tapnext">忘记密码?</view>
+    <view class="useriphone">
+      <text>输入新密码</text>
+      <input type="password" placeholder="请输入密码" name="userName" placeholder-class="placeholderStyle" class="phoneinput" bindinput="userNameInput" maxlength="6"></input>
+    </view>
+    <view class="useriphone">
+      <text>确认新密码</text>
+      <input type="password" placeholder="请确认密码" name="usernum" bindinput="userInput" placeholder-class="placeholderStyle" class="phoneinput" maxlength="6"></input>
+    </view>
+    <view class="titleli">提示：密码为6位数数字密码</view>
+    <view class="obtn">
+      <image wx:if="{{stsat==0}}" src="/images/notices/querenjinyong.png" class="btnimg"></image>
+      <image wx:else src="/images/notices/querenqiyongt.png" class="btnimg" @tap="ontapy"></image>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -84,7 +53,11 @@ export default class Playkey extends wepy.page {
     },
     userInput(e) {
       this.usernum = e.detail.value;
-      if (this.userNames.length == 6&&this.userName.length == 6 && this.usernum.length == 6) {
+      if (
+        this.userNames.length == 6 &&
+        this.userName.length == 6 &&
+        this.usernum.length == 6
+      ) {
         this.stsat = 1;
       }
     },
@@ -98,12 +71,12 @@ export default class Playkey extends wepy.page {
         });
         return false;
       }
-		},
-		tapnext(){
-			wepy.navigateTo({
-				url: '/pages/my/setting/clonekey',
-			});
-		}
+    },
+    tapnext() {
+      wepy.navigateTo({
+        url: '/pages/my/setting/clonekey'
+      });
+    }
   };
 
   onLoad() {}

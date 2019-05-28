@@ -1,51 +1,53 @@
 <template>
-	<!--交易类型-->
-	<view class="top_liatsec" @tap="list_up">
-		<text class="triangle-text">全部交易类型</text>
-		<view class="triangle-down" wx:if="{{sceted==false}}"></view>
-		<view class="triangle_border_up" wx:else></view>
-	</view>
-	<!--交易时间-->
-	<picker mode="date" value="{{date}}" start="{{year}}-01" fields="month" end="{{years}}-12" bindchange="bindTimeChange">
-		<view class="bill_timelist" @tap="list_down">
-			<text>{{year}}年{{month}}月</text>
-			<image src="/images/notices/sc_xialaup.png" wx:if="{{anmiaon==false}}"></image>
-			<image src="/images/notices/sc_xiala.png" wx:else></image>
-		</view>
-	</picker>
-	<!--账单列表-->
-	<view class="bill_up_list" wx:for="{{bill_list}}" wx:key="{{bill_list}}">
-		<view>
-			<image src="/images/notices/tbweixinqianbao.png" wx:if="{{item.stat==0}}"></image>
-			<image src="/images/notices/qb_yongjin.png" wx:if="{{item.stat==1}}"></image>
-			<image src="/images/notices/qb_xiaogeqianbao.png" wx:if="{{item.stat==2}}"></image>
-		</view>
-		<view>
-			<view>
-				<view wx:if="{{item.stat==0}}">微信钱包</view>
-				<view wx:if="{{item.stat==1}}">佣金</view>
-				<view wx:if="{{item.stat==2}}">小鸽钱包</view>
-				<view wx:if="{{item.codes==0}}">充值</view>
-				<view wx:if="{{item.codes==1}}">提现</view>
-				<view wx:if="{{item.codes==2}}">购物退款</view>
-				<view wx:if="{{item.codes==3}}">购物支付</view>
-			</view>
-			<view>{{item.time}}</view>
-		</view>
-		<view wx:if="{{item.statce==0}}">+￥{{item.price}}</view>
-		<view wx:if="{{item.statce==1}}" style="color: rgba(102, 102, 102, 1);">-￥{{item.price}}</view>
-	</view>
+  <view>
+    <!--交易类型-->
+    <view class="top_liatsec" @tap="list_up">
+      <text class="triangle-text">全部交易类型</text>
+      <view class="triangle-down" wx:if="{{sceted==false}}"></view>
+      <view class="triangle_border_up" wx:else></view>
+    </view>
+    <!--交易时间-->
+    <picker mode="date" value="{{date}}" start="{{year}}-01" fields="month" end="{{years}}-12" bindchange="bindTimeChange">
+      <view class="bill_timelist" @tap="list_down">
+        <text>{{year}}年{{month}}月</text>
+        <image src="/images/notices/sc_xialaup.png" wx:if="{{anmiaon==false}}"></image>
+        <image src="/images/notices/sc_xiala.png" wx:else></image>
+      </view>
+    </picker>
+    <!--账单列表-->
+    <view class="bill_up_list" wx:for="{{bill_list}}" wx:key="{{bill_list}}">
+      <view>
+        <image src="/images/notices/tbweixinqianbao.png" wx:if="{{item.stat==0}}"></image>
+        <image src="/images/notices/qb_yongjin.png" wx:if="{{item.stat==1}}"></image>
+        <image src="/images/notices/qb_xiaogeqianbao.png" wx:if="{{item.stat==2}}"></image>
+      </view>
+      <view>
+        <view>
+          <view wx:if="{{item.stat==0}}">微信钱包</view>
+          <view wx:if="{{item.stat==1}}">佣金</view>
+          <view wx:if="{{item.stat==2}}">小鸽钱包</view>
+          <view wx:if="{{item.codes==0}}">充值</view>
+          <view wx:if="{{item.codes==1}}">提现</view>
+          <view wx:if="{{item.codes==2}}">购物退款</view>
+          <view wx:if="{{item.codes==3}}">购物支付</view>
+        </view>
+        <view>{{item.time}}</view>
+      </view>
+      <view wx:if="{{item.statce==0}}">+￥{{item.price}}</view>
+      <view wx:if="{{item.statce==1}}" style="color: rgba(102, 102, 102, 1);">-￥{{item.price}}</view>
+    </view>
 
-	<view class="btsbackj" wx:if="{{hidend==false}}"></view>
-  <view class="btns_bak" wx:if="{{hidend==false}}">
-			<view class="back_top">选择交易类型</view>
-			<view class="sexlist">
-				<view class="liat">
-					<view wx:for="{{list}}" wx:key="{{list}}" data-id="{{index}}" style="{{index == id?'color:white;background:rgba(244,105,95,1);':'background:rgba(255,255,255,1);;border:none'}}" @tap="click">{{item.text}}</view>
-				</view>
-			</view>
-			<view class="back_tops" @tap="clckhide">取消</view>
-		</view>
+    <view class="btsbackj" wx:if="{{hidend==false}}"></view>
+    <view class="btns_bak" wx:if="{{hidend==false}}">
+      <view class="back_top">选择交易类型</view>
+      <view class="sexlist">
+        <view class="liat">
+          <view wx:for="{{list}}" wx:key="{{list}}" data-id="{{index}}" style="{{index == id?'color:white;background:rgba(244,105,95,1);':'background:rgba(255,255,255,1);;border:none'}}" @tap="click">{{item.text}}</view>
+        </view>
+      </view>
+      <view class="back_tops" @tap="clckhide">取消</view>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -67,8 +69,8 @@ export default class Bill extends wepy.page {
     years: '',
     hidend: true,
     sceted: false,
-		anmiaon: false,
-		month:'',
+    anmiaon: false,
+    month: '',
     codes: '',
     stat: '',
     statce: '',
@@ -98,8 +100,8 @@ export default class Bill extends wepy.page {
       this.anmiaon = !this.anmiaon;
     },
     bindTimeChange(e) {
-			let time = e.detail.value.substring(5, 7);
-			time = time.replace(/^0/, '');
+      let time = e.detail.value.substring(5, 7);
+      time = time.replace(/^0/, '');
       let year = e.detail.value.substring(0, 4);
       this.month = time;
       this.year = year;
@@ -116,12 +118,12 @@ export default class Bill extends wepy.page {
 
   onLoad() {
     var now = new Date();
-		var year = now.getFullYear();
-		var month = now.getMonth() + 1;
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
     var years = now.getFullYear() + 3;
     this.year = year;
-		this.years = years;
-		this.month = month
+    this.years = years;
+    this.month = month;
   }
 }
 </script>

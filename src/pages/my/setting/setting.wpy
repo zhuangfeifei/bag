@@ -31,8 +31,8 @@
   background: rgba(255, 255, 255, 1);
   border-radius: 10rpx;
   margin: 19rpx auto;
-	display: flex;
-	line-height: 100rpx;
+  display: flex;
+  line-height: 100rpx;
 }
 .tomgtitles {
   font-size: 34rpx;
@@ -47,57 +47,59 @@
   font-size: 28rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
-	color: rgba(153, 153, 153, 1);
-	margin-left:342rpx;
+  color: rgba(153, 153, 153, 1);
+  margin-left: 342rpx;
 }
 .textb {
   font-size: 28rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
-	color: rgba(153, 153, 153, 1);
-	margin-left:371rpx;
+  color: rgba(153, 153, 153, 1);
+  margin-left: 371rpx;
 }
 .textc {
   font-size: 28rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
-	color: rgba(153, 153, 153, 1);
-	margin-left:264rpx;
+  color: rgba(153, 153, 153, 1);
+  margin-left: 264rpx;
 }
-.onimg{
-	width: 13rpx;
-	height: 27rpx;
-	margin-left: 40rpx;
-	position: relative;
-	top: 38rpx;
+.onimg {
+  width: 13rpx;
+  height: 27rpx;
+  margin-left: 40rpx;
+  position: relative;
+  top: 38rpx;
 }
 </style>
 
 <template>
-	<view class="topconniar">
-		<view class="tomgtitle">头像</view>
-		<image src="/images/notices/weishangchuan.png"></image>
-	</view>
-	<view class="vipyuan">
-		<view class="tomgtitles">会员名</view>
-		<text class="texta">设置会员名</text>
-		<image src="/images/notices/jinru.png" class="onimg"></image>
-	</view>
-	<view class="vipyuan" @tap="myphone">
-		<view class="tomgtitles">手机</view>
-		<text class="textb">绑定手机号</text>
-		<image src="/images/notices/jinru.png" class="onimg"></image>
-	</view>
-	<view class="vipyuan" @tap="myphonekey">
-		<view class="tomgtitles">钱包支付密码</view>
-		<text class="textc">设置密码</text>
-		<image src="/images/notices/jinru.png" class="onimg"></image>
-	</view>
-	<view class="vipyuan">
-		<view class="tomgtitles">我的收获地址</view>
-		<text class="textc">添加地址</text>
-		<image src="/images/notices/jinru.png" class="onimg"></image>
-	</view>
+  <view>
+    <view class="topconniar">
+      <view class="tomgtitle">头像</view>
+      <image src="/images/notices/weishangchuan.png"></image>
+    </view>
+    <view class="vipyuan">
+      <view class="tomgtitles">会员名</view>
+      <text class="texta">设置会员名</text>
+      <image src="/images/notices/jinru.png" class="onimg"></image>
+    </view>
+    <view class="vipyuan" @tap="myphone">
+      <view class="tomgtitles">手机</view>
+      <text class="textb">绑定手机号</text>
+      <image src="/images/notices/jinru.png" class="onimg"></image>
+    </view>
+    <view class="vipyuan" @tap="myphonekey">
+      <view class="tomgtitles">钱包支付密码</view>
+      <text class="textc">设置密码</text>
+      <image src="/images/notices/jinru.png" class="onimg"></image>
+    </view>
+    <view class="vipyuan">
+      <view class="tomgtitles">我的收获地址</view>
+      <text class="textc">添加地址</text>
+      <image src="/images/notices/jinru.png" class="onimg"></image>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -119,12 +121,12 @@ export default class Setting extends wepy.page {
 
   methods = {
     //跳转绑定手机号
-    myphone(){
+    myphone() {
       wepy.navigateTo({
         url: '/pages/my/setting/phone'
       });
     },
-    myphonekey(){
+    myphonekey() {
       wepy.navigateTo({
         url: '/pages/my/setting/playkey'
       });

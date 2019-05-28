@@ -1,50 +1,21 @@
 <template>
-	<view class="topcpntarin">绑定手机号</view>
-	<view class="useriphone">
-		<text>手机</text>
-		<input
-		 type="text"
-		 placeholder="请输入手机号码"
-		 name="userName"
-		 placeholder-class="placeholderStyle"
-		 class="phoneinput"
-		 bindinput="userNameInput"
-		></input>
-	</view>
-	<view class="useriphones">
-		<text>验证码</text>
-		<input
-		 type="text"
-		 name="usernum"
-		 bindinput="userInput"
-		 placeholder="请输入验证码"
-		 placeholder-class="placeholderStyle"
-		 class="phonein"
-		 @tap="onipnone"
-		></input>
-		<image
-		 src="/images/notices/huoquyanzhengma.png"
-		 @tap="hqyzm"
-		 wx:if="{{code==0||countDownNum==0}}"
-		></image>
-		<view
-		 class="ontabtiime"
-		 wx:else
-		>正在获取({{countDownNum}})</view>
-	</view>
-	<view class="obtn">
-		<image
-		 wx:if="{{stsat==0}}"
-		 src="/images/notices/querenjinyong.png"
-		 class="btnimg"
-		></image>
-		<image
-		 wx:else
-		 src="/images/notices/querenqiyongt.png"
-		 class="btnimg"
-		 @tap="ontapy"
-		></image>
-	</view>
+  <view>
+    <view class="topcpntarin">绑定手机号</view>
+    <view class="useriphone">
+      <text>手机</text>
+      <input type="text" placeholder="请输入手机号码" name="userName" placeholder-class="placeholderStyle" class="phoneinput" bindinput="userNameInput"></input>
+    </view>
+    <view class="useriphones">
+      <text>验证码</text>
+      <input type="text" name="usernum" bindinput="userInput" placeholder="请输入验证码" placeholder-class="placeholderStyle" class="phonein" @tap="onipnone"></input>
+      <image src="/images/notices/huoquyanzhengma.png" @tap="hqyzm" wx:if="{{code==0||countDownNum==0}}"></image>
+      <view class="ontabtiime" wx:else>正在获取({{countDownNum}})</view>
+    </view>
+    <view class="obtn">
+      <image wx:if="{{stsat==0}}" src="/images/notices/querenjinyong.png" class="btnimg"></image>
+      <image wx:else src="/images/notices/querenqiyongt.png" class="btnimg" @tap="ontapy"></image>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -110,9 +81,9 @@ export default class Phone extends wepy.page {
           countDownNum: countDownNum
         });
         if (countDownNum == 0) {
-					clearInterval(that.timer);
+          clearInterval(that.timer);
         }
-			}, 1000);
+      }, 1000);
     }
   };
 
