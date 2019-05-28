@@ -1,15 +1,15 @@
 <template>
-    <view id="evaluation">
+	<view id="evaluation">
 
-        <view class="evaluation_nav">
-            <card-item></card-item>
-        </view>
+		<view class="evaluation_nav">
+			<card-item></card-item>
+		</view>
 
-        <view class="evaluation_content">
-            <view class="evaluation_cont">
-                <h3>请写下你对本商品的评价</h3>
-                <textarea placeholder="请输入内容..." maxlength="80" placeholder-style="color:#999999;font-size: 28rpx;"/>
-                <view>最多可输入80字</view>
+		<view class="evaluation_content">
+			<view class="evaluation_cont">
+				<h3>请写下你对本商品的评价</h3>
+				<textarea placeholder="请输入内容..." maxlength="80" placeholder-style="color:#999999;font-size: 28rpx;" />
+				<view>最多可输入80字</view>
             </view>
             <view class="file">
                 <h3>添加图片（最多可添加3张图片）</h3>
@@ -27,125 +27,167 @@
 </template>
 
 <script>
-import wepy from 'wepy'
-import { connect } from 'wepy-redux'
-import 'wepy-async-function'
-import card from '../../../components/card'
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+import card from '../../../components/card';
 
 @connect({
-    
+	 
 })
-    
 export default class Evaluation extends wepy.page {
-    
-    config = {
-        navigationBarTitleText: '评价'
-    }
-    
-    components = {
-        'card-item': card
-    }
-    
-    data = {
-        images:[]
-    }
-    
-    computed = {
-    
-    }
-    
-    methods = {
-        chooseImage(e) {
-            wx.chooseImage({
-                sizeType: ['original', 'compressed'],  //可选择原图或压缩后的图片
-                sourceType: ['album', 'camera'], //可选择性开放访问相册、相机
-                success: res => {
-                    console.log(res)
-                    const images = this.images.concat(res.tempFiles)
-                    // 限制最多只能留下3张照片
-                    this.images = images.length <= 3 ? images : images.slice(0, 3) 
-                    this.$apply()
-                }
-            })
+  config = {
+    navigationBarTitleText: '评价'
+  };
+
+  components = {
+    'card-item': card
+  };
+
+  data = {
+    images: []
+  };
+
+  computed = {};
+
+  methods = {
+    chooseImage(e) {
+      wx.chooseImage({
+        sizeType: ['original', 'compressed'], //可选择原图或压缩后的图片
+        sourceType: ['album', 'camera'], //可选择性开放访问相册、相机
+        success: res => {
+          console.log(res);
+          const images = this.images.concat(res.tempFiles);
+          // 限制最多只能留下3张照片
+          this.images = images.length <= 3 ? images : images.slice(0, 3);
+          this.$apply();
+        }
+      });
+    },
+    uploadFile() {
+      wx.uploadFile({
+        url: 'https://example.weixin.qq.com/upload', // 仅为示例，非真实的接口地址
+        filePath: tempFilePaths[0],
+        name: 'file',
+        formData: {
+          user: 'test'
         },
-        uploadFile(){
-            wx.uploadFile({
-                url: 'https://example.weixin.qq.com/upload', // 仅为示例，非真实的接口地址
-                filePath: tempFilePaths[0],
-                name: 'file',
-                formData: {
-                    user: 'test'
-                },
-                success(res) {
-                    const data = res.data
-                    // do something
-                }
-            })
-        },
-        imagedelete(e){
-            let index = e.currentTarget.dataset.index
-            this.images.splice(index, 1)
-            this.$apply()
-        },
+        success(res) {
+          const data = res.data;
+          // do something
+        }
+      });
+    },
+    imagedelete(e) {
+      let index = e.currentTarget.dataset.index;
+      this.images.splice(index, 1);
+      this.$apply();
     }
-    
-    onLoad() {
-    
-    }
+  };
+
+  onLoad() {
+		
+	}
 }
 </script>
 
 <style lang='less'>
-#evaluation{
-    width: 100%; min-height: 100%; box-sizing: border-box; background-color: #F2F2F2; padding-top: 3rpx;
-    font-size: 30rpx; .font;
+#evaluation {
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  background-color: #f2f2f2;
+  padding-top: 3rpx;
+  font-size: 30rpx;
+  .font;
 }
 
-
-.font{
-    font-family:PingFang-SC-Medium; font-weight:500;
+.font {
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
 }
 
-
-
-.evaluation_nav{
-    width: 100%; height: 230rpx; background-color: #FFFFFF; box-sizing: border-box;
-    padding: 20rpx 35rpx 0 32rpx; position: relative;
+.evaluation_nav {
+  width: 100%;
+  height: 230rpx;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  padding: 20rpx 35rpx 0 32rpx;
+  position: relative;
 }
 
-
-
-.evaluation_content{
-    width: 100%; height: 660rpx; background-color: white; box-sizing: border-box; margin-top: 20rpx; padding: 0 30rpx;
-    h3{font-size: 30rpx; color: #363636;}
-    .evaluation_cont{
-        width: 100%; height: 300rpx; border-bottom: 1px solid #F2F2F2; box-sizing: border-box; padding: 27rpx 0;
-        textarea{width: 100%; height: 150rpx; margin-top: 20rpx; font-size: 28rpx;}
-        view{text-align: right; font-size: 24rpx; color: #999999;}
+.evaluation_content {
+  width: 100%;
+  height: 660rpx;
+  background-color: white;
+  box-sizing: border-box;
+  margin-top: 20rpx;
+  padding: 0 30rpx;
+  h3 {
+    font-size: 30rpx;
+    color: #363636;
+  }
+  .evaluation_cont {
+    width: 100%;
+    height: 300rpx;
+    border-bottom: 1px solid #f2f2f2;
+    box-sizing: border-box;
+    padding: 27rpx 0;
+    textarea {
+      width: 100%;
+      height: 150rpx;
+      margin-top: 20rpx;
+      font-size: 28rpx;
     }
-    .file{
-        width: 100%; height: 320rpx; box-sizing: border-box; padding-top: 100rpx; position: relative;
-        display: flex; 
-        view{width: 200rpx; height: 200rpx; margin-right: 30rpx; position: relative;}
-        image{width: 200rpx; height: 200rpx;}
-        .delete{
-            width: 30rpx; height: 30rpx; position: absolute; top: -15rpx; right: -15rpx;
-        }
-        h3{
-            position: absolute; top: 27rpx; left: 0;
-        }
+    view {
+      text-align: right;
+      font-size: 24rpx;
+      color: #999999;
     }
+  }
+  .file {
+    width: 100%;
+    height: 320rpx;
+    box-sizing: border-box;
+    padding-top: 100rpx;
+    position: relative;
+    display: flex;
+    view {
+      width: 200rpx;
+      height: 200rpx;
+      margin-right: 30rpx;
+      position: relative;
+    }
+    image {
+      width: 200rpx;
+      height: 200rpx;
+    }
+    .delete {
+      width: 30rpx;
+      height: 30rpx;
+      position: absolute;
+      top: -15rpx;
+      right: -15rpx;
+    }
+    h3 {
+      position: absolute;
+      top: 27rpx;
+      left: 0;
+    }
+  }
 }
 
-
-
-
-.release{
-    width: 400rpx; height: 88rpx; line-height: 88rpx; text-align: center; color: white; font-size: 36rpx; 
-    font-family:PingFang-SC-Bold; font-weight:bold; background-color: #F4695F; border-radius: 44rpx; margin: 62rpx auto;
+.release {
+  width: 400rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  color: white;
+  font-size: 36rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  background-color: #f4695f;
+  border-radius: 44rpx;
+  margin: 62rpx auto;
 }
-
-
-
-
 </style>

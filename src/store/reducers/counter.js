@@ -6,7 +6,12 @@ const Api = require('../../wxApi/api')
 
 const defaultState = {
   orderIndex: 3,
-  userinfo:''
+  userinfo:'',
+  shop_detail:'',//首页跳转详情参数
+  shareit: Api.imgUrl+'/bag/static/modular/images',//分享卡片图
+  imgurl:Api.imgUrl+'/bag/kaptcha/file/gallery/' ,//首页图片地址
+  pric:Api.imgUrl+"/bag/kaptcha/",//评论图片地址
+  shareited:1
 }
 
 export default handleActions({
@@ -17,8 +22,21 @@ export default handleActions({
     }
   },
   userinfos(state, action){
-    
-    // console.log(a)
     return { ...state, userinfo: action.payload }
   },
+  imgurls(state, action){
+    return { ...state,imgurl:action.payload}
+  },
+  shop_detailsMethods(state, action){
+    return { ...state,shop_detail:action.payload}
+  },
+  shop_detaiMethods(state, action){
+    return { ...state,shareited:action.payload}
+  },
+  shareitMethods(state, action){
+    return { ...state,shareit:action.payload}
+  },
+  pricMethods(state, action){
+    return { ...state,pric:action.payload}
+  }
 }, defaultState)

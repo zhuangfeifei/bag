@@ -94,7 +94,7 @@ export default class My extends wepy.page {
     }
     
     onLoad() {
-        console.log(this.userinfo)
+        // console.log(this.userinfo)
     }
 }
 </script>
