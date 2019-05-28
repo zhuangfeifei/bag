@@ -40,7 +40,7 @@
   <view class="liatflex" wx:if="{{post_list.length>0}}">
     <view class="fllist">
       <view class="ona"></view>
-      <text>相似推荐</text>
+      <text>猜你喜欢</text>
       <view class="onb"></view>
     </view>
   </view>
@@ -101,7 +101,11 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  userinfo(state) {
+    return state.counter.userinfo;
+  }
+})
 export default class Cart extends wepy.page {
   config = {
     navigationBarTitleText: '购物车'
@@ -117,6 +121,7 @@ export default class Cart extends wepy.page {
     po_idnum: '', //删除个数
     idx: -1,
     selectds: false,
+    current: 1,
     post_list: [
       {
         spic:
@@ -199,11 +204,7 @@ export default class Cart extends wepy.page {
       post_list[index].count = count;
       this.post_list = post_list;
       this.sprice = e.currentTarget.dataset.price;
-      if (selectd == false) {
-        this.total_price = 0;
-      } else {
-        this.total_price = this.sprice * count;
-      }
+      this.total_price = this.sprice * count;
     },
     //商品数量增加
     prnumz(e) {
@@ -216,11 +217,6 @@ export default class Cart extends wepy.page {
       this.post_list = post_list;
       this.sprice = e.currentTarget.dataset.price;
       this.total_price = this.sprice * count;
-      if (selectd == false) {
-        this.total_price = 0;
-      } else {
-        this.total_price = this.sprice * count;
-      }
     },
     tap_play() {
       wx.navigateTo({
@@ -290,12 +286,12 @@ export default class Cart extends wepy.page {
             }
           }
         });
-      }else{
+      } else {
         wx.showModal({
           content: '请选择要删除的商品',
-          showCancel:false,
+          showCancel: false,
           confirmText: '确定',
-          confirmColor: '#7C838D',
+          confirmColor: '#7C838D'
         });
       }
     },
@@ -310,17 +306,60 @@ export default class Cart extends wepy.page {
     let array = this.post_list;
     let po_id = [];
     for (let i = 0; i < array.length; i++) {
-      array[i].selectd=!array[i].selectd
+      array[i].selectd = !array[i].selectd;
       if (array[i].selectd == true) {
-        po_id.push(i)
+        po_id.push(i);
       }
       this.po_idnum = po_id.length;
     }
   }
-  onLoad() {}
-
+  onLoad() {
+    // this.cartlist();
+    // this.userlike();
+  }
+  // cartlist() {
+  //   let a = {
+  //     unionid: this.userinfo.unionid,
+  //     limit: 10,
+  //     current: this.current
+  //   };
+  //   console.log(a);
+  //   wepy.$Api.cartList(a).then(
+  //     res => {
+  //       if (res.data.data) {
+  //         console.log(res);
+  //       }
+  //     },
+  //     err => {}
+  //   );
+  // }
+  // userlike() {
+  //   let a = {
+  //     unionid: this.userinfo.unionid,
+  //     limit: 10,
+  //     current: this.current
+  //   };
+  //   console.log(a);
+  //   wepy.$Api.userlike(a).then(
+  //     res => {
+  //       if (res.data.data) {
+  //         console.log(res);
+  //       }
+  //     },
+  //     err => {}
+  //   );
+  }
   onReachBottom() {
-    // console.log("123")
+    //  wepy.$Api.cartList(a).then(
+    //   res => {
+    //     if (res.data.data.length!=0) {
+    //       this.home_liat = res.data.data;
+    //     } else {
+    //       this.onhiden = false;
+    //     }
+    //   },
+    //   err => {}
+    // );
   }
 }
 </script>
@@ -511,6 +550,7 @@ export default class Cart extends wepy.page {
 .liatflex {
   width: 100%;
   height: 100rpx;
+  background-color: #f2f2f2;
 }
 .fllist {
   width: 350rpx;

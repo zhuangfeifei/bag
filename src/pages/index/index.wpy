@@ -1,10 +1,10 @@
 <template>
   <view class="home_swimg">
-    <image mode="aspectFill" lazy-load="true" src="http://img4.imgtn.bdimg.com/it/u=3408550672,3477661678&fm=26&gp=0.jpg"></image>
+    <image mode="aspectFill" lazy-load="true" src="{{shareitMethods+'/my/shareIt.png'}}"></image>
     <view class="swimg_v">
-      <image mode="aspectFill" lazy-load="true" src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2326754726,2213606147&fm=26&gp=0.jpg"></image>
-      <text>毛球毛球绒毛球毛球绒</text>
-      <view>积分+300</view>
+      <image mode="aspectFill" lazy-load="true" src="{{userinfo.avatar}}"></image>
+      <text>{{userinfo.nickname}}</text>
+      <view>积分+{{userinfo.experienceValue}}</view>
     </view>
   </view>
 
@@ -15,13 +15,13 @@
     <view class="btn_list">
       <view class="ontab_list">
         <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-          <image src="{{item.pic}}">
+          <image wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}">
           </image>
           <view class="ontbnt">
-            <text>￥{{item.oprice}}</text>
-            <text>￥{{item.price}}</text>
+            <text>￥{{item.original_price}}</text>
+            <text>￥{{item.market_price}}</text>
           </view>
-          <view class="btnbuton" @tap="tapondetil">立即购买</view>
+          <view class="btnbuton" @tap="tapondetil" data-goods_id='{{item.id}}'>立即购买</view>
         </view>
       </view>
     </view>
@@ -30,7 +30,7 @@
   <view class="fixeds">
     <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiang.png" @tap="clckhide"></image>
   </view>
-  <view class="fenx" @tap="clckhide">分享</view>
+  <view class="fenx">分享</view>
   <view class="fixedsd">
     <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop"></image>
   </view>
@@ -58,7 +58,7 @@
   </view>
 
   <view class="ball_bil" wx:if="{{bulletbox==0}}"></view>
-  <view class="onback_img"  wx:if="{{bulletbox==0}}">
+  <view class="onback_img" wx:if="{{bulletbox==0}}">
     <view class="ontab">会员等级优势</view>
     <image mode="aspectFill" lazy-load="true" src="/images/notices/bulletbox.png"></image>
     <view class="ontabs">商城不同等级会员在商品结算时享有不同折扣，此折扣不可用于活动商品。会员等级享有折扣如下：</view>
@@ -70,7 +70,7 @@
       </view>
     </view>
   </view>
-  <view class="on_stop"  wx:if="{{bulletbox==0}}">
+  <view class="on_stop" wx:if="{{bulletbox==0}}">
     <image mode="aspectFill" lazy-load="true" @tap="hibulletbox" src="/images/notices/index_stop.png" />
   </view>
   <!--创建分享卡片-->
@@ -97,7 +97,17 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  imgurls(state) {
+    return state.counter;
+  },
+  userinfo(state) {
+    return state.counter.userinfo;
+  },
+  shareitMethods(state) {
+    return state.counter.shareit;
+  }
+})
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '首页'
@@ -108,7 +118,10 @@ export default class Index extends wepy.page {
   data = {
     onhiden: true,
     onhidup: true,
-    bulletbox:0,
+    current:1,//分页参数
+    bulletbox: 1,
+    imgurl: '',
+    home_liat: [],
     hinde: 'block',
     showSharePic: false, //分享海报显示隐藏
     sharePicUrl: '', //生成海报链接
@@ -133,35 +146,7 @@ export default class Index extends wepy.page {
         context: '钻石卡会员：',
         text: '8.5折'
       }
-    ],
-    home_liat: [
-      {
-        pic:
-          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
-        oprice: 800,
-        price: 300
-      },
-      {
-        pic:
-          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
-        oprice: 800,
-        price: 300
-      },
-      {
-        pic:
-          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
-        oprice: 800,
-        price: 300
-      }
-    ],
-    _selData: {
-      logoUrl:
-        'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1088055381,270553227&fm=27&gp=0.jpg', //分享图
-      headIcon:
-        'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1557475058,916927548&fm=26&gp=0.jpg', //头像
-      codeLogo:
-        'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3091440975,3250070917&fm=27&gp=0.jpg' //小程序码
-    }
+    ]
   };
   computed = {};
 
@@ -180,10 +165,17 @@ export default class Index extends wepy.page {
       }
     },
     //跳转商品详情
-    tapondetil(){
-      wx.navigateTo({
-        url: '/pages/index/detail',
-      });
+    tapondetil(e) {
+      let a = {
+        unionid: this.userinfo.unionid,
+        goods_id: e.currentTarget.dataset.goods_id
+      };
+      if (a) {
+        wepy.$store.dispatch({ type: 'shop_detailsMethods', payload: a });
+        wx.navigateTo({
+          url: '/pages/index/detail'
+        });
+      }
     },
     onhiden() {
       this.hinde = 'none';
@@ -197,8 +189,8 @@ export default class Index extends wepy.page {
     savePicsd() {
       this.savePic();
     },
-    hibulletbox(){
-      this.bulletbox=1
+    hibulletbox() {
+      this.bulletbox = 1;
     }
   };
   onShareAppMessage(res) {
@@ -254,7 +246,7 @@ export default class Index extends wepy.page {
   getHead() {
     return new Promise((resolve, reject) => {
       wx.downloadFile({
-        url: this._selData.headIcon,
+        url: this.userinfo.avatar,
         success: res => {
           resolve(res.tempFilePath);
         }
@@ -266,13 +258,11 @@ export default class Index extends wepy.page {
   getLogo() {
     return new Promise((resolve, reject) => {
       wx.downloadFile({
-        url: this._selData.logoUrl,
+        url: this.shareitMethods+'/my/shareIt.png',
         success: res => {
           resolve(res.tempFilePath);
         },
-        fail: err => {
-          console.log(er);
-        }
+        fail: err => {}
       });
     });
   }
@@ -280,16 +270,14 @@ export default class Index extends wepy.page {
   //获取二维码
   getCode() {
     return new Promise((resolve, reject) => {
-      let tid = this._selData.tid;
+      // let tid = this._selData.tid;
 
       wx.downloadFile({
-        url: this._selData.codeLogo,
+        url: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3091440975,3250070917&fm=27&gp=0.jpg',
         success: res => {
           resolve(res.tempFilePath);
         },
-        fail: err => {
-          console.log(er);
-        }
+        fail: err => {}
       });
     });
   }
@@ -506,8 +494,44 @@ export default class Index extends wepy.page {
     });
   }
 
+  //首页商品展示
+  goodsLisd() {
+    let a = {
+      order: 0,
+      limit: 10,
+      current: this.current
+    };
+    wepy.$Api.goodsLis(a).then(
+      res => {
+        this.home_liat = res.data.data;
+      },
+      err => {}
+    );
+  }
   onLoad() {
-    this.bulletbox=1
+    this.bulletbox = 1;
+    this.goodsLisd();
+    this.imgurl = this.imgurls.imgurl;
+  }
+  onShow(){
+    this.goodsLisd();
+  }
+  onReachBottom() {
+    let a = {
+      order: 0,
+      limit: 10,
+      current: this.current++
+    };
+    wepy.$Api.goodsLis(a).then(
+      res => {
+        if (res.data.data.length!=0) {
+          this.home_liat = res.data.data;
+        } else {
+          this.onhiden = false;
+        }
+      },
+      err => {}
+    );
   }
 }
 </script>
@@ -651,6 +675,7 @@ export default class Index extends wepy.page {
   height: 63rpx;
   font-size: 20rpx;
   font-family: PingFang-SC-Medium;
+  background: #f2f2f2;
   font-weight: 500;
   color: rgba(153, 153, 153, 1);
   text-align: center;

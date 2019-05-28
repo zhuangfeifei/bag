@@ -1,9 +1,11 @@
+
 <template>
+  <import src="../../wxParse/wxParse.wxml" />
   <view class="swprice">
     <swiper class="topswiper" indicator-dots="{{indicatorDots}}" circular="true" indicator-active-color="white" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-      <block wx:for="{{imgUrls}}" wx:key="{{imgUrls}}">
+      <block wx:for="{{imgurlsd}}" wx:key="{{imgurlsd}}">
         <swiper-item>
-          <image mode="aspectFill" lazy-load="true" src="{{item}}" />
+          <image mode="aspectFill" lazy-load="true" src="{{imgurls+item}}" />
         </swiper-item>
       </block>
     </swiper>
@@ -13,13 +15,13 @@
     <view class="onconter">
       <view class="onma">
         <text class="oma_a">￥</text>
-        <text class="oma_b">123</text>
+        <text class="oma_b">{{poat_List.market_price}}</text>
         <text class="oma_c">￥</text>
-        <text class="oma_d">239</text>
-        <text class="oma_e">销量\t 223324</text>
+        <text class="oma_d">{{poat_List.original_price}}</text>
+        <text class="oma_e">销量\t {{poat_List.virtual_sales}}</text>
       </view>
       <view class="onmb">
-        <view class="omnb_text">{{text}}
+        <view class="omnb_text">{{poat_List.goods_name}}
         </view>
         <view class="fenxi" @tap="clckhide">
           <image src="/images/notices/fenxiangsk.png" />
@@ -29,27 +31,28 @@
     </view>
     <view class="onters">
       <view class="fenxia">
-        <image wx:if="{{cloon==0}}" src="/images/notices/shoucang.png" />
-        <image wx:else src="/images/notices/yishoucang.png" />
+        <image wx:if="{{poat_List.isCollection==0}}" @tap="Collection" src="/images/notices/shoucang.png" />
+        <image wx:else @tap="Collection" src="/images/notices/yishoucang.png" />
         <text>收藏</text>
       </view>
       <view class="fenxib">
-        <image wx:if="{{cloon==0}}" src="/images/notices/xihaun.png" />
-        <image wx:else src="/images/notices/yixihuan.png" />
+        <image wx:if="{{poat_List.islike==0}}" @tap="uesrlike" src="/images/notices/xihaun.png" />
+        <image wx:else @tap="uesrlike" src="/images/notices/yixihuan.png" />
         <text>喜欢</text>
       </view>
     </view>
   </view>
-
+  <view style="height:20rpx;background:#f2f2f2"></view>
   <view class="onho">
     <image src="/images/notices/labaimg.png" />
     <text>暂无活动~</text>
   </view>
+  <view style="height:20rpx;background:#f2f2f2"></view>
   <view class="onhos">
-    <view class="cuogai">
+    <view class="cuogai" @tap="jiaru_ups">
       <view class="onhos_a">选择</view>
       <view class="onhos_b">
-        <view class="b_show" @tap="gosho_pup">
+        <view class="b_show">
           <view wx:if="{{cont==1}}">
             <text>请选择</text>
             <text>颜色分类</text>
@@ -63,20 +66,21 @@
         </view>
         <view class="onbtn">
           <view class="liatimg">
-            <view wx:for="{{listimg}}" wx:key="{{listimg}}">
-              <image src="{{item.src}}" />
+            <view wx:for="{{imgurlsd}}" wx:key="{{imgurlsd}}">
+              <image data-id="{{index}}" mode="aspectFill" wx:if="{{index<name_list.length}}" lazy-load="true" src="{{imgurls+item}}" />
             </view>
           </view>
-          <view class="lait">共四种颜色分类可选</view>
+          <view class="lait">共{{name_list.length}}种颜色分类可选</view>
         </view>
       </view>
     </view>
   </view>
-  <view class="onhosd">
+  <view style="height:20rpx;background:#f2f2f2"></view>
+  <view class="onhosd" wx:if="{{poat_List.commentsMap.commentsList!=''}}">
     <view class="ondise">
       <view>
         <text>商品评价</text>
-        <text>（223）</text>
+        <text>（{{poat_List.commentsMap.count}}）</text>
       </view>
       <view @tap="evaldetail">
         <text>查看全部</text>
@@ -85,21 +89,21 @@
     </view>
     <view class="lsnull">
       <swiper class="tops" bindchange="bindchange" next-margin="230rpx">
-        <block wx:for="{{postlist}}" wx:key="{{postlist}}" data-id="{{index}}" wx:if="{{index<5}}">
+        <block wx:for="{{data_pric}}" wx:key="{{data_pric}}" data-id="{{index}}" wx:if="{{index<5}}">
           <swiper-item class="onswiper">
             <view class="slide-image {{swiperIndex == index ? 'active' : 'quiet'}}">
               <view class="name_list">
-                <image src="{{item.pic}}"></image>
-                <view>{{item.name}}</view>
+                <image src="{{data_pric[index].headicon}}"></image>
+                <view>{{data_pric[index].realname}}</view>
               </view>
-              <view class="ontetx">{{item.context}}</view>
+              <view class="ontetx">{{data_pric[index].content}}</view>
             </view>
           </swiper-item>
         </block>
       </swiper>
     </view>
   </view>
-  <view class="ontn" wx:if="{{state==1}}">
+  <view class="ontn" wx:else>
     <text>暂无商品评价</text>
   </view>
   <view class="liatflex">
@@ -111,7 +115,9 @@
   </view>
   <!--详情图片-->
   <view class="onlimng">
-    <image mode="aspectFill" lazy-load="true" src="http://img4.imgtn.bdimg.com/it/u=3408550672,3477661678&fm=26&gp=0.jpg"></image>
+    <view class="container" style='font-size:28rpx;'>
+      <template is="wxParse" data="{{wxParseData:article.nodes}}" />
+    </view>
   </view>
   <view class="liatflex">
     <view class="fllist">
@@ -124,19 +130,19 @@
     <view class="btn_list">
       <view class="ontab_list">
         <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-          <image src="{{item.pic}}">
+          <image src="{{imgurls+home_liat[index].thumbnail_pic}}">
           </image>
           <view class="ontbnt">
-            <text>￥{{item.oprice}}</text>
-            <text>￥{{item.price}}</text>
+            <text>￥{{home_liat[index].original_price}}</text>
+            <text>￥{{home_liat[index].fall_price}}</text>
           </view>
-          <view class="btnbuton" @tap="tap_play">立即购买</view>
+          <view class="btnbuton" @tap="tap_playto" data-id="{{home_liat[index].id}}">立即购买</view>
         </view>
       </view>
     </view>
     <view style="height:60rpx"></view>
   </view>
-  <view class="onnone">没有更多了哦~</view>
+  <view class="onnone" wx:if="{{homelist==false}}">没有更多了哦~</view>
   <view style="height:100rpx"></view>
   <view class="ontabbtn">
     <view>
@@ -156,7 +162,7 @@
       </view>
     </view>
     <view>
-      <view @tap="gosho_pup">
+      <view @tap="jiaru_up">
         <text>加入购物车</text>
       </view>
       <view>
@@ -177,10 +183,10 @@
   <view class="ontabbtnsfdg" wx:if="{{sod_up==1}}">
     <view class="up_top">
       <view class="om">
-        <image mode="aspectFill" lazy-load="true" src="https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg" @tap="goTop"></image>
+        <image mode="aspectFill" lazy-load="true" src="{{imgurls+poat_List.thumbnail_pic}}"></image>
       </view>
       <view class="oms">
-        <view>￥299</view>
+        <view>￥{{poat_List.market_price}}</view>
         <view wx:if="{{sexid==0}}">选择 颜色 尺码</view>
         <view wx:if="{{sexid==1}}">选择 {{sexcale}}</view>
         <view wx:if="{{sexid==2}}" style="width:350rpx;">已选："{{scolor}}" "{{ssexd}}"</view>
@@ -190,13 +196,15 @@
     <view class="up_cont_tap">
       <text>颜色</text>
       <view class="up_donwn">
-        <view wx:for="{{up_text}}" wx:key="{{up_text}}" data-name="{{item.text}}" data-id="{{index}}" style="{{index == id?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="click">{{item.text}}</view>
+        <view wx:for="{{name_list}}" wx:key="{{name_list}}" data-exclusiveId="{{name_list[index].id}}" data-name="{{name_list[index].colorName}}" data-id="{{index}}" style="{{index == id?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" wx:if="{{name_list[index].colorName}}" @tap="click">{{name_list[index].colorName}}</view>
+        <!-- <view wx:if="{{datacodes==false}}" data-name="{{colorName}}" style="{{idasd==0?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="clickdedf">{{colorName}}</view> -->
       </view>
     </view>
     <view class="up_cont_tap" style="margin-top:55rpx;">
       <text>尺码</text>
       <view class="up_donwn">
-        <view wx:for="{{up_texts}}" wx:key="{{up_text}}" data-name="{{item.text}}" data-id="{{index}}" style="{{index == ida?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="clicks">{{item.text}}</view>
+        <view wx:for="{{data_list}}" wx:key="{{data_list}}" wx:if="{{data_list[index].name&&datacode==true}}" data-name="{{data_list[index].name}}" data-id="{{index}}" style="{{index == ida?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="clicks">{{data_list[index].name}}</view>
+        <view wx:if="{{datacode==false}}" data-name="{{sizeName}}" style="{{idas==0?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="clicksdf">{{sizeName}}</view>
       </view>
     </view>
     <view class="ontabs_numa">
@@ -210,17 +218,11 @@
         <view class="_inputb" @tap="shopnumup">+</view>
       </view>
     </view>
-    <view class="_num_btn_a" wx:if="{{porice==1}}">
+    <view class="_num_btn_a" wx:if="{{poat_List.isCart==0}}">
       <view class="_btnaf" @tap="jiashop_list">加入购物车</view>
       <view class="_btnafs" @tap="tap_play">立即购买</view>
     </view>
-    <view class="on_clicki" wx:else>确定</view>
-  </view>
-  <view class="btn_tab_uo" wx:if="{{phone_number==1}}"></view>
-  <view class="bashouji" wx:if="{{phone_number==1}}">
-    <view class="bacdinpaho">绑定手机号</view>
-    <view class="bacdinpahoa">请先绑定手机号，再来购物哦~</view>
-    <view class="bacdinpahob">立即绑定</view>
+    <view class="on_clicki" wx:else @tap="tap_play">确定</view>
   </view>
   <view class="cbtndown" wx:if="{{onhidup==false}}"></view>
   <view class="cla_view" wx:if="{{onhidup==false}}">
@@ -264,8 +266,25 @@
 import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
+import WxParse from '../../wxParse/wxParse.js';
 
-@connect({})
+@connect({
+  shop_detailsMethods(state) {
+    return state.counter.shop_detail;
+  },
+  imgurls(state) {
+    return state.counter.imgurl;
+  },
+  shareitMethods(state) {
+    return state.counter.shareit;
+  },
+  userinfo(state) {
+    return state.counter.userinfo;
+  },
+  shop_detaiMethods(state) {
+    return state.counter.shareited;
+  }
+})
 export default class Detail extends wepy.page {
   config = {
     navigationBarTitleText: '商品详情'
@@ -275,124 +294,40 @@ export default class Detail extends wepy.page {
 
   data = {
     onhidup: true,
+    imgurlsd: [], //轮播图
+    poat_List: [], //详情
     showSharePic: false, //分享海报显示隐藏
     sharePicUrl: '', //生成海报链接
     isShow: false,
-    text:
-      '商品标题商品标题商商品标题商品标题商商品标题商品标题商商品标题商品标题商商品标题商品标题商',
-    imgUrls: [
-      'http://img4.imgtn.bdimg.com/it/u=3408550672,3477661678&fm=26&gp=0.jpg',
-      'http://img4.imgtn.bdimg.com/it/u=3408550672,3477661678&fm=26&gp=0.jpg',
-      'http://img4.imgtn.bdimg.com/it/u=3408550672,3477661678&fm=26&gp=0.jpg'
-    ],
     id: -1,
+    sizeName: '', //商品属性大小
+    colorName: [], //商品属性颜色
     ida: -1,
+    idas: -1,
+    datacode: true,
+    imgurls: '',
+    exclusiveId: '', //商品属性id
     cont: 1,
     sod_up: 0, //购物车是否隐藏
-    cloon: 0,
     sexid: 0, //判断商品选择id
     sexcale: '', //判断商品选择
     cosde: false, //加购物车成功弹框
     ssexd: '', //商品大小
     scolor: '', //商品属性
     swiperIndex: 0,
-    phone_number: 0, //判断是否绑定手机号
     num: 1, //购物车数量
-    porice: 1, //判断商品是否加入购物车
     indicatorDots: true,
     autoplay: true,
+    homelist: true,
+    current: 1, //分页参数
     interval: 5000,
     duration: 1000,
     onhiden: true,
-    listimg: [
-      { src: '/images/notices/yansefenlei.png' },
-      { src: '/images/notices/yansefenlei.png' },
-      { src: '/images/notices/yansefenlei.png' },
-      { src: '/images/notices/yansefenlei.png' }
-    ],
-    _selData: {
-      logoUrl:
-        'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1088055381,270553227&fm=27&gp=0.jpg', //分享图
-      headIcon:
-        'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1557475058,916927548&fm=26&gp=0.jpg', //头像
-      codeLogo:
-        'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3091440975,3250070917&fm=27&gp=0.jpg' //小程序码
-    },
-    home_liat: [
-      {
-        pic:
-          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
-        oprice: 800,
-        price: 300
-      },
-      {
-        pic:
-          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
-        oprice: 800,
-        price: 300
-      },
-      {
-        pic:
-          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
-        oprice: 800,
-        price: 300
-      },
-      {
-        pic:
-          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
-        oprice: 800,
-        price: 300
-      }
-    ],
-    postlist: [
-      {
-        pic:
-          'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2888777689,2205122633&fm=26&gp=0.jpg',
-        name: '昵称昵称昵称1',
-        context:
-          '昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称'
-      },
-      {
-        pic:
-          'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2888777689,2205122633&fm=26&gp=0.jpg',
-        name: '昵称昵称昵称2',
-        context:
-          '昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称'
-      },
-      {
-        pic:
-          'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2888777689,2205122633&fm=26&gp=0.jpg',
-        name: '昵称昵称昵称3',
-        context:
-          '昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称'
-      },
-      {
-        pic:
-          'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2888777689,2205122633&fm=26&gp=0.jpg',
-        name: '昵称昵称昵称4',
-        context:
-          '昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称'
-      },
-      {
-        pic:
-          'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2888777689,2205122633&fm=26&gp=0.jpg',
-        name: '昵称昵称昵称5',
-        context:
-          '昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称昵称'
-      }
-    ],
-    up_text: [
-      { text: '银白色' },
-      { text: '酒红色' },
-      { text: '黑色' },
-      { text: '绿色' }
-    ],
-    up_texts: [
-      { text: '大号' },
-      { text: '中号' },
-      { text: '小号' },
-      { text: '迷你' }
-    ]
+    home_liat: [],
+    data_list: [], //重写商品属性尺码
+    name_list: [],
+    data_pric: [],
+    shareited:'',
   };
 
   computed = {};
@@ -417,7 +352,12 @@ export default class Detail extends wepy.page {
     click: function(e) {
       let ids = e.currentTarget.dataset.id;
       let name = e.currentTarget.dataset.name;
+      let exclusiveId = e.currentTarget.dataset.exclusiveid;
+      this.exclusiveId = exclusiveId;
       this.scolor = name;
+      this.idas = 1;
+      this.datacode = false;
+      this.sizeName = this.name_list[ids].sizeName;
       this.id = ids;
       if (this.ssexd == '') {
         this.sexcale = '尺码';
@@ -426,11 +366,48 @@ export default class Detail extends wepy.page {
         this.sexid = 2;
       }
     },
+    // clickdedf: function(e) {
+    //   let name = e.currentTarget.dataset.name;
+    //   let exclusiveId = e.currentTarget.dataset.exclusiveid;
+    //   this.exclusiveId = exclusiveId;
+    //   this.scolor = name;
+    //   this.idas = 1;
+    //   this.idasd = 0;
+    //   if (this.ssexd == '') {
+    //     this.sexcale = '尺码';
+    //     this.sexid = 1;
+    //   } else {
+    //     this.sexid = 2;
+    //   }
+    // },
     clicks: function(e) {
       let ids = e.currentTarget.dataset.id;
       let name = e.currentTarget.dataset.name;
+      this.datacodes = false;
+      this.idasd = 1;
       this.ssexd = name;
       this.ida = ids;
+      let colorName = [];
+      for (let i in this.name_list) {
+        if (this.name_list) {
+          let obj = {};
+          let data = this.name_list[i].colorName;
+          obj.data = data;
+          colorName.push(obj);
+        }
+      }
+      this.colorName = colorName;
+      if (this.scolor == '') {
+        this.sexcale = '颜色';
+        this.sexid = 1;
+      } else {
+        this.sexid = 2;
+      }
+    },
+    clicksdf: function(e) {
+      let name = e.currentTarget.dataset.name;
+      this.ssexd = name;
+      this.idas = 0;
       if (this.scolor == '') {
         this.sexcale = '颜色';
         this.sexid = 1;
@@ -450,34 +427,59 @@ export default class Detail extends wepy.page {
     clckhide() {
       this.onhidup = !this.onhidup;
     },
-    //点击显示商品属性弹框
-    gosho_pup() {
-      let that = this;
-      that.sod_up = 1;
+    jiaru_ups() {
+      this.sod_up = 1;
+    },
+    tap_playto(e) {
+        wx.navigateTo({
+          url: '/pages/index/detail',
+        });
+    },
+    jiaru_up() {
+      if (this.sexcale && this.scolor) {
+        this.sod_up = 0;
+      } else {
+        this.sod_up = 1;
+      }
     },
     //点击加入购车隐藏商品属性弹框
     jiashop_list() {
       let that = this;
       this.cont = 0;
-      let pay = this.phone_number;
-      if (pay == 1) {
-        this.phone_number = 1;
+      let a = {
+        goodsId: this.shop_detailsMethods.goods_id,
+        unionId: this.shop_detailsMethods.unionid,
+        exclusiveId: this.exclusiveId,
+        num: this.num
+      };
+      if (this.poat_List.isCart == 1) {
+        that.cosde = false;
+      }
+      if (that.ssexd && that.scolor) {
+        that.cosde = true;
+        that.sod_up = 0;
+        wepy.$Api.addshoplist(a).then(
+          res => {
+            if (res.data.code == 200) {
+              setTimeout(() => {
+                that.cosde = false;
+                that.$apply();
+              }, 2500);
+            } else {
+              wx.navigateTo({
+                url: '/pages/my/setting/phone'
+              });
+            }
+          },
+          err => {}
+        );
       } else {
-        if (that.ssexd && that.scolor) {
-          that.cosde = true;
-          that.sod_up = 0;
-          setTimeout(() => {
-            that.cosde = false;
-            that.$apply();
-          }, 2500);
-        } else {
-          wx.showToast({
-            title: '请选择商品属性',
-            icon: 'none',
-            duration: 2000
-          });
-          that.sod_up = 1;
-        }
+        wx.showToast({
+          title: '请选择商品属性',
+          icon: 'none',
+          duration: 2000
+        });
+        that.sod_up = 1;
       }
     },
     //购物车数量+
@@ -498,19 +500,60 @@ export default class Detail extends wepy.page {
     },
     //立即购买
     tap_play() {
-      let pay = this.phone_number;
-      if (pay == 1) {
-        this.phone_number = 1;
-      } else {
-        wx.navigateTo({
-          url: '/pages/index/order'
-        });
-      }
+      wx.navigateTo({
+        url: '/pages/index/order'
+      });
     },
     evaldetail() {
       wx.navigateTo({
-        url: '/pages/index/evaluation'
+        url: '/pages/index/evaluations'
       });
+    },
+    //收藏
+    Collection() {
+      let a = {
+        goodsId: this.shop_detailsMethods.goods_id,
+        unionId: this.shop_detailsMethods.unionid
+      };
+      if (this.poat_List.isCollection == 0) {
+        wepy.$Api.collection(a).then(
+          res => {
+            this.poat_List.isCollection = 1;
+          },
+          err => {}
+        );
+      } else {
+        //取消收藏
+        wepy.$Api.uncollection(a).then(
+          res => {
+            this.poat_List.isCollection = 0;
+          },
+          err => {}
+        );
+      }
+    },
+    //喜欢
+    uesrlike() {
+      let a = {
+        goodsId: this.shop_detailsMethods.goods_id,
+        unionId: this.shop_detailsMethods.unionid
+      };
+      if (this.poat_List.isCollection == 0) {
+        wepy.$Api.userlike(a).then(
+          res => {
+            this.poat_List.islike = 1;
+          },
+          err => {}
+        );
+      } else {
+        //取消
+        wepy.$Api.usernolike(a).then(
+          res => {
+            this.poat_List.islike = 0;
+          },
+          err => {}
+        );
+      }
     }
   };
   onShareAppMessage(res) {
@@ -561,12 +604,11 @@ export default class Detail extends wepy.page {
         });
     }
   }
-
   //获取头像
   getHead() {
     return new Promise((resolve, reject) => {
       wx.downloadFile({
-        url: this._selData.headIcon,
+        url: this.userinfo.avatar,
         success: res => {
           resolve(res.tempFilePath);
         }
@@ -578,13 +620,11 @@ export default class Detail extends wepy.page {
   getLogo() {
     return new Promise((resolve, reject) => {
       wx.downloadFile({
-        url: this._selData.logoUrl,
+        url: this.imgurls + this.imgurlsd[0],
         success: res => {
           resolve(res.tempFilePath);
         },
-        fail: err => {
-          console.log(er);
-        }
+        fail: err => {}
       });
     });
   }
@@ -592,16 +632,15 @@ export default class Detail extends wepy.page {
   //获取二维码
   getCode() {
     return new Promise((resolve, reject) => {
-      let tid = this._selData.tid;
+      // let tid = this._selData.tid;
 
       wx.downloadFile({
-        url: this._selData.codeLogo,
+        url:
+          'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3091440975,3250070917&fm=27&gp=0.jpg',
         success: res => {
           resolve(res.tempFilePath);
         },
-        fail: err => {
-          console.log(er);
-        }
+        fail: err => {}
       });
     });
   }
@@ -817,7 +856,80 @@ export default class Detail extends wepy.page {
       }
     });
   }
-  onLoad() {}
+  onLoad() {
+    this.imgurl = this.imgurls.imgurl;
+    this.deatil();
+    this.recommendations();
+    this.shareited=this.shop_detaiMethods
+
+  }
+  //轮播图
+  deatil() {
+    let a = {
+      goodsId: this.shop_detailsMethods.goods_id,
+      unionId: this.shop_detailsMethods.unionid
+    };
+    wepy.$Api.shopDetail(a).then(
+      res => {
+        let name_list = [];
+        if (res.data.data) {
+          if (res.data.data.goods_pic) {
+            this.imgurlsd = res.data.data.goods_pic.split(',');
+          }
+          this.poat_List = res.data.data;
+          this.data_list = res.data.data.JBXX;
+          this.data_pric = res.data.data.commentsMap.commentsList;
+          let love = res.data.data.description;
+          WxParse.wxParse('article', 'html', love, this, 5);
+          for (let i in res.data.data.JBXX) {
+            let name = res.data.data.JBXX[i].detail;
+            if (name.constructor == Array) {
+              for (let j in name) {
+                let names = name[j];
+                name_list.push(names);
+              }
+            }
+          }
+          this.name_list = name_list;
+        }
+      },
+      err => {}
+    );
+  }
+  //相似推荐
+  recommendations() {
+    let a = {
+      goodsId: this.shop_detailsMethods.goods_id,
+      limit: 10,
+      current: this.current
+    };
+    wepy.$Api.recommendation(a).then(
+      res => {
+        if (res.data.data) {
+          console.log(res);
+          this.home_liat = res.data.data;
+        }
+      },
+      err => {}
+    );
+  }
+  onReachBottom() {
+    let a = {
+      goodsId: this.shop_detailsMethods.goods_id,
+      limit: 10,
+      current: this.current++
+    };
+    wepy.$Api.recommendation(a).then(
+      res => {
+        if (res.data.data.length != 0) {
+          this.home_liat = res.data.data;
+        } else {
+          this.homelist = false;
+        }
+      },
+      err => {}
+    );
+  }
 }
 </script>
 
@@ -999,14 +1111,13 @@ export default class Detail extends wepy.page {
   width: 100%;
   height: 100rpx;
   background: white;
-  margin-top: 20rpx;
   display: flex;
-  line-height: 101rpx;
+  line-height: 99rpx;
 }
 .onho image {
   width: 47rpx;
   height: 40rpx;
-  margin: 35rpx;
+  margin: 30rpx 35rpx;
 }
 .onho text {
   font-size: 28rpx;
@@ -1018,9 +1129,8 @@ export default class Detail extends wepy.page {
 }
 .onhos {
   width: 100%;
-  height: 180rpx;
+  height: 190rpx;
   background: white;
-  margin-top: 20rpx;
 }
 .cuogai {
   width: 90%;
@@ -1034,7 +1144,7 @@ export default class Detail extends wepy.page {
   font-family: PingFang-SC-Medium;
   font-weight: 500;
   color: rgba(153, 153, 153, 1);
-  margin-top: 34rpx;
+  margin-top: 37rpx;
   letter-spacing: 2rpx;
 }
 .onhos_b {
@@ -1046,7 +1156,6 @@ export default class Detail extends wepy.page {
   display: flex;
 }
 .liatimg {
-  width: 280rpx;
   height: 60rpx;
   display: flex;
   margin-left: 10rpx;
@@ -1149,22 +1258,22 @@ export default class Detail extends wepy.page {
   margin-left: 21rpx;
   letter-spacing: 1rpx;
   position: relative;
-  top: 24rpx;
+  top: 36rpx;
 }
 .b_show view:nth-child(1) text:nth-child(2) {
   font-size: 28rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
   color: rgba(54, 54, 54, 1);
-  margin-left: 10rpx;
+  margin-left: 21rpx;
   position: relative;
-  top: 24rpx;
+  top: 36rpx;
   letter-spacing: 1rpx;
 }
 .b_show view image {
   width: 13rpx;
   height: 20rpx;
-  margin-top:47rpx;
+  margin-top: 47rpx;
 }
 .lsnull {
   width: 100%;
@@ -1241,6 +1350,7 @@ image.quiet {
 .liatflex {
   width: 100%;
   height: 100rpx;
+  background: #f2f2f2;
 }
 .fllist {
   width: 350rpx;
@@ -1269,9 +1379,10 @@ image.quiet {
 }
 .onlimng {
   width: 100%;
-  height: 2000rpx;
 }
-
+.WxEmojiView {
+  padding: 5rpx;
+}
 .onlimng image {
   width: 100%;
   height: 100%;
@@ -1285,7 +1396,6 @@ image.quiet {
   width: 100%;
   height: 100rpx;
   background: rgba(255, 255, 255, 1);
-  margin-top: 20rpx;
   line-height: 100rpx;
 }
 .ontn text {
@@ -1373,6 +1483,7 @@ image.quiet {
   font-size: 20rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
+  background: #f2f2f2;
   color: rgba(153, 153, 153, 1);
   text-align: center;
   line-height: 63rpx;
@@ -1624,7 +1735,8 @@ button::after {
   width: 100%;
   height: 90rpx;
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
+  justify-content: left;
   flex-wrap: wrap;
   margin-top: 28rpx;
 }
@@ -1636,10 +1748,14 @@ button::after {
   text-align: center;
   line-height: 58rpx;
   font-size: 24rpx;
+  margin-left: 30rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
   color: rgba(54, 54, 54, 1);
   letter-spacing: 1rpx;
+}
+.up_donwn view:nth-child(1) {
+  margin-left: 0;
 }
 .ontabs_numa {
   width: 700rpx;

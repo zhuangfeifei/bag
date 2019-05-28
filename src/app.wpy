@@ -38,7 +38,7 @@ export default class extends wepy.app {
       'pages/index/order',
       'pages/index/onplay',
       'pages/index/payment',
-      'pages/index/evaluation',
+      'pages/index/evaluations',
       'pages/my/wallet/bill',
       'pages/my/wallet/wallet',
       'pages/my/wallet/withdraw',
@@ -116,7 +116,6 @@ export default class extends wepy.app {
                       wepy.$store.dispatch({ type : 'userinfos', payload: res.data.data})
                     }
                   }, err => {
-                    
                   })
                 }
               })
