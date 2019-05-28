@@ -19,6 +19,7 @@ wepy.$Api = Api
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/index/index',
       'pages/cart/cart',
       'pages/my/my',
       'pages/my/membershipRules',
@@ -34,7 +35,6 @@ export default class extends wepy.app {
       'pages/my/order/evaluation',
       'pages/authorization/authorization',
       'pages/index/detail',
-      'pages/index/index',
       'pages/index/order',
       'pages/index/onplay',
       'pages/index/payment',
@@ -53,7 +53,6 @@ export default class extends wepy.app {
       'pages/my/Notice/commodity',
       'pages/my/Notice/announcement',
       'pages/my/sIgnRecord/record',
-      'pages/my/my'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -131,7 +130,5 @@ export default class extends wepy.app {
       }
     })
   }
-
-  onLaunch() {}
 }
 </script>

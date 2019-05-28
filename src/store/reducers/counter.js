@@ -5,8 +5,10 @@ import { ASYNC_INCREMENT } from '../types/counter'
 const Api = require('../../wxApi/api')
 
 const defaultState = {
+  userinfo:'',
   orderIndex: 3,
-  userinfo:''
+  imgUrl: 'http://192.168.0.109:8083/bag/static/modular/images',
+  editor:''
 }
 
 export default handleActions({
@@ -17,8 +19,9 @@ export default handleActions({
     }
   },
   userinfos(state, action){
-    
-    // console.log(a)
     return { ...state, userinfo: action.payload }
+  },
+  editorMethod(state, action){
+    return { ...state, editor: action.payload }
   },
 }, defaultState)
