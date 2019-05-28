@@ -1,18 +1,20 @@
 <template>
-  <view class="topclass">
-    <view class="t_lit">
-      <text>充值方式</text>
-      <text>微信钱包</text>
-    </view>
-    <view class="numchong">充值金额</view>
-    <view class="nun_ong">
-      <image src="/images/notices/renminbijk.png"></image>
-      <view class="inoutcls">
-        <input type="text" value="{{unbers}}" bindinput="uameInputs"></input>
+  <view>
+    <view class="topclass">
+      <view class="t_lit">
+        <text>充值方式</text>
+        <text>微信钱包</text>
       </view>
+      <view class="numchong">充值金额</view>
+      <view class="nun_ong">
+        <image src="/images/notices/renminbijk.png"></image>
+        <view class="inoutcls">
+          <input type="text" value="{{unbers}}" bindinput="uameInputs"></input>
+        </view>
+      </view>
+      <view class="donrtnim">最低充值金额为¥50</view>
+      <image src="/images/notices/querenchongzhis.png" class="clsimg" @tap="titapnext"></image>
     </view>
-    <view class="donrtnim">最低充值金额为¥50</view>
-    <image src="/images/notices/querenchongzhis.png" class="clsimg" @tap="titapnext"></image>
   </view>
 </template>
 

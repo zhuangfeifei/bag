@@ -124,7 +124,8 @@
 </style>
 
 <template>
-  <view class="topconert">
+  <view>
+    <view class="topconert">
     <repeat for="{{list}}">
       <view class="ontime" wx:if="{{item.time}}">
         <view >{{item.time}}</view>
@@ -145,6 +146,7 @@
         </view>
       </view>
     </repeat>
+  </view>
   </view>
 </template>
 

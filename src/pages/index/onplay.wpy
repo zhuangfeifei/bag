@@ -1,46 +1,48 @@
 <template>
-	<view class="ontop_play">
-		<text>订单金额：</text>
-		<view>
-			<text>￥</text>
-			<text>128</text>
-		</view>
-	</view>
-	<view class="colocumn">请选择支付方式</view>
-	<view class="play_omnd">
-		<view>
-			<image src="/images/notices/qb_xiaogeqianbao.png" />
-			<text>钱包支付</text>
-		</view>
-		<view @tap="secteds">
-			<text class="plain">余额不足</text>
-			<image wx:if="{{sreaidos}}" src="/images/notices/cxuanzhong.png" />
-			<image wx:else src="/images/notices/nnxuanzhong.png" />
-		</view>
-	</view>
-	<view class="play_omnd">
-		<view>
-			<image src="/images/notices/tbweixinqianbao.png" />
-			<text>微信支付</text>
-		</view>
-		<view @tap="sected_nt">
-			<image wx:if="{{sreaido}}" src="/images/notices/cxuanzhong.png" />
-			<image wx:else src="/images/notices/nnxuanzhong.png" />
-		</view>
-	</view>
-	<view class="btom_button" @tap="playnone">确认支付</view>
-	<view class="ondce" wx:if="{{codeiph==1}}"></view>
-	<view class="ontabc" wx:if="{{codeiph==1}}">
-		<view class="payword">设置支付密码</view>
-		<view class="word">您还未设置钱包支付密码</view>
-		<view class="settign" @tap="toplay">立即设置</view>
-	</view>
-	<view class="pamser" wx:if="{{cosde}}">
-		<view class="uuimg">
-			<image src="/images/notices/playcs.png" />
-		</view>
-		<view class="shibai">支付失败</view>
-	</view>
+  <view>
+    <view class="ontop_play">
+      <text>订单金额：</text>
+      <view>
+        <text>￥</text>
+        <text>128</text>
+      </view>
+    </view>
+    <view class="colocumn">请选择支付方式</view>
+    <view class="play_omnd">
+      <view>
+        <image src="/images/notices/qb_xiaogeqianbao.png" />
+        <text>钱包支付</text>
+      </view>
+      <view @tap="secteds">
+        <text class="plain">余额不足</text>
+        <image wx:if="{{sreaidos}}" src="/images/notices/cxuanzhong.png" />
+        <image wx:else src="/images/notices/nnxuanzhong.png" />
+      </view>
+    </view>
+    <view class="play_omnd">
+      <view>
+        <image src="/images/notices/tbweixinqianbao.png" />
+        <text>微信支付</text>
+      </view>
+      <view @tap="sected_nt">
+        <image wx:if="{{sreaido}}" src="/images/notices/cxuanzhong.png" />
+        <image wx:else src="/images/notices/nnxuanzhong.png" />
+      </view>
+    </view>
+    <view class="btom_button" @tap="playnone">确认支付</view>
+    <view class="ondce" wx:if="{{codeiph==1}}"></view>
+    <view class="ontabc" wx:if="{{codeiph==1}}">
+      <view class="payword">设置支付密码</view>
+      <view class="word">您还未设置钱包支付密码</view>
+      <view class="settign" @tap="toplay">立即设置</view>
+    </view>
+    <view class="pamser" wx:if="{{cosde}}">
+      <view class="uuimg">
+        <image src="/images/notices/playcs.png" />
+      </view>
+      <view class="shibai">支付失败</view>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -90,9 +92,9 @@ export default class Onplay extends wepy.page {
       setTimeout(() => {
         this.cosde = false;
         this.$apply();
-			}, 2000);
-			
-			// wx.navigateTo({
+      }, 2000);
+
+      // wx.navigateTo({
       //   url: '/pages/index/payment'
       // });
     }

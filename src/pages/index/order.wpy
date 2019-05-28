@@ -1,132 +1,134 @@
 <template>
-  <!--地址-->
-  <view class="top_addres">
-    <view class="addres" wx:if="{{addres==0}}">
-      <view class="addr">
-        <image src="/images/notices/dingwei.png" class="_imgas" />
-        <text>添加收货地址</text>
-      </view>
-      <view class="addrs">
-        <image src="/images/notices/jinru.png" class="_imgass" />
-      </view>
-    </view>
-    <view class="address" wx:if="{{addres==1}}">
-      <view class="addred">
-        <image src="/images/notices/dingwei.png" class="_imgas_a" />
-        <view class="adder_nan">
-          <text>王春刚</text>
-          <text>18298864760</text>
-          <view class="om_addres">收货地址收货地址收货地址收货地址收货地址收货地址收货地址</view>
+  <view>
+    <!--地址-->
+    <view class="top_addres">
+      <view class="addres" wx:if="{{addres==0}}">
+        <view class="addr">
+          <image src="/images/notices/dingwei.png" class="_imgas" />
+          <text>添加收货地址</text>
+        </view>
+        <view class="addrs">
+          <image src="/images/notices/jinru.png" class="_imgass" />
         </view>
       </view>
-      <view class="addrs">
-        <image src="/images/notices/jinru.png" class="_imgass_a" />
-      </view>
-    </view>
-  </view>
-  <!--订单属性-->
-  <view class="shop_detil">
-    <view class="_detil">
-      <view class="_detail_v">
-        <image src="http://img1.imgtn.bdimg.com/it/u=817252206,2157667651&fm=15&gp=0.jpg" />
-      </view>
-      <view class="_detail_vs">
-        <view class="_detail_sd">商品标题商品标题商品标题商品标题商品标题商品标题商品标...</view>
-        <view class="_detail_s">颜色(黑色）；尺码(大码)</view>
-        <view class="_detail_d">
-          <view class="_d_price">
-            <text>￥</text>
-            <text>{{sprice}}</text>
-          </view>
-          <view class="_d_num">
-            <view @tap="prnumj">-</view>
-            <view>{{num}}</view>
-            <view @tap="prnumz">+</view>
+      <view class="address" wx:if="{{addres==1}}">
+        <view class="addred">
+          <image src="/images/notices/dingwei.png" class="_imgas_a" />
+          <view class="adder_nan">
+            <text>王春刚</text>
+            <text>18298864760</text>
+            <view class="om_addres">收货地址收货地址收货地址收货地址收货地址收货地址收货地址</view>
           </view>
         </view>
-      </view>
-    </view>
-    <view class="on_price">
-      <view>商品金额</view>
-      <view>¥{{mprice}}</view>
-    </view>
-    <view class="on_price">
-      <view>会员折扣</view>
-      <view>{{discount}}折</view>
-    </view>
-    <view class="onclicp"></view>
-    <view class="on_prices">
-      <view>共计</view>
-      <view>¥{{gjprice}}</view>
-    </view>
-  </view>
-
-  <view class="pricde">
-    <view class="on_price">
-      <view>商家活动</view>
-      <view>无活动</view>
-    </view>
-    <view class="on_priced" @tap="seylist">
-      <view>选择优惠券</view>
-      <view>
-        <text style="color:red;" wx:if="{{cuprice}}">-{{cuprice}}元</text>
-        <text style="color:#999999;" wx:if="{{snum==''}}">无优惠券</text>
-        <text style="color:#363636;" wx:if="{{snum>1&&cuprice==''}}">{{snum}}张可用</text>
-        <image src="/images/notices/jinru.png" />
-      </view>
-    </view>
-    <view class="on_price">
-      <view>运费</view>
-      <view>￥{{freight}}</view>
-    </view>
-    <view class="on_price">
-      <view>会员包邮</view>
-      <view>-{{shipping}}</view>
-    </view>
-    <view class="on_price">
-      <view>订单备注</view>
-      <view>
-        <input type="text" placeholder="选填，请先和商家协商(50字以内)" maxlength="50" name="usernums" bindinput="userInputs" />
-      </view>
-    </view>
-  </view>
-  <view style="height:150rpx;"></view>
-  <view class="btnom">
-    <view class="omplay">
-      <view>
-        <text>共{{num}}件</text>
-        <text>合计:￥{{total_price}}</text>
-      </view>
-      <view>
-        <view>付款</view>
-      </view>
-    </view>
-  </view>
-  <view class="index-p" wx:if="{{sected}}"></view>
-  <view class="_p-index" wx:if="{{sected}}">
-    <view class="om_uy">
-      <view>选择优惠券</view>
-      <view>
-        <image src="/images/notices/sguanbi.png" @tap="seylist" />
-      </view>
-    </view>
-    <scroll-view scroll-y='true' style='height:550rpx'>
-      <view class="om" wx:for="{{conum_list}}" wx:key="{{conum_list}}" data-id="{{index}}" data-name="{{item.price}}" @tap="cuonpicr">
-        <image src="/images/notices/youhuibacki.png" />
-        <view class="onpricf">
-          <image src="/images/notices/renminbi.png"></image>
-          <text>{{item.price}}</text>
-          <view>【{{item.text}}】</view>
+        <view class="addrs">
+          <image src="/images/notices/jinru.png" class="_imgass_a" />
         </view>
-        <view class="wipics">有效期：{{item.ontime}}-{{item.untime}}</view>
       </view>
-      <view class="oms" @tap="pricnone">
-        <image src="/images/notices/youhuibacki.png" />
-        <view>不使用任何优惠券</view>
+    </view>
+    <!--订单属性-->
+    <view class="shop_detil">
+      <view class="_detil">
+        <view class="_detail_v">
+          <image src="http://img1.imgtn.bdimg.com/it/u=817252206,2157667651&fm=15&gp=0.jpg" />
+        </view>
+        <view class="_detail_vs">
+          <view class="_detail_sd">商品标题商品标题商品标题商品标题商品标题商品标题商品标...</view>
+          <view class="_detail_s">颜色(黑色）；尺码(大码)</view>
+          <view class="_detail_d">
+            <view class="_d_price">
+              <text>￥</text>
+              <text>{{sprice}}</text>
+            </view>
+            <view class="_d_num">
+              <view @tap="prnumj">-</view>
+              <view>{{num}}</view>
+              <view @tap="prnumz">+</view>
+            </view>
+          </view>
+        </view>
       </view>
-    </scroll-view>
-  </view>
+      <view class="on_price">
+        <view>商品金额</view>
+        <view>¥{{mprice}}</view>
+      </view>
+      <view class="on_price">
+        <view>会员折扣</view>
+        <view>{{discount}}折</view>
+      </view>
+      <view class="onclicp"></view>
+      <view class="on_prices">
+        <view>共计</view>
+        <view>¥{{gjprice}}</view>
+      </view>
+    </view>
 
+    <view class="pricde">
+      <view class="on_price">
+        <view>商家活动</view>
+        <view>无活动</view>
+      </view>
+      <view class="on_priced" @tap="seylist">
+        <view>选择优惠券</view>
+        <view>
+          <text style="color:red;" wx:if="{{cuprice}}">-{{cuprice}}元</text>
+          <text style="color:#999999;" wx:if="{{snum==''}}">无优惠券</text>
+          <text style="color:#363636;" wx:if="{{snum>1&&cuprice==''}}">{{snum}}张可用</text>
+          <image src="/images/notices/jinru.png" />
+        </view>
+      </view>
+      <view class="on_price">
+        <view>运费</view>
+        <view>￥{{freight}}</view>
+      </view>
+      <view class="on_price">
+        <view>会员包邮</view>
+        <view>-{{shipping}}</view>
+      </view>
+      <view class="on_price">
+        <view>订单备注</view>
+        <view>
+          <input type="text" placeholder="选填，请先和商家协商(50字以内)" maxlength="50" name="usernums" bindinput="userInputs" />
+        </view>
+      </view>
+    </view>
+    <view style="height:150rpx;"></view>
+    <view class="btnom">
+      <view class="omplay">
+        <view>
+          <text>共{{num}}件</text>
+          <text>合计:￥{{total_price}}</text>
+        </view>
+        <view>
+          <view>付款</view>
+        </view>
+      </view>
+    </view>
+    <view class="index-p" wx:if="{{sected}}"></view>
+    <view class="_p-index" wx:if="{{sected}}">
+      <view class="om_uy">
+        <view>选择优惠券</view>
+        <view>
+          <image src="/images/notices/sguanbi.png" @tap="seylist" />
+        </view>
+      </view>
+      <scroll-view scroll-y='true' style='height:550rpx'>
+        <view class="om" wx:for="{{conum_list}}" wx:key="{{conum_list}}" data-id="{{index}}" data-name="{{item.price}}" @tap="cuonpicr">
+          <image src="/images/notices/youhuibacki.png" />
+          <view class="onpricf">
+            <image src="/images/notices/renminbi.png"></image>
+            <text>{{item.price}}</text>
+            <view>【{{item.text}}】</view>
+          </view>
+          <view class="wipics">有效期：{{item.ontime}}-{{item.untime}}</view>
+        </view>
+        <view class="oms" @tap="pricnone">
+          <image src="/images/notices/youhuibacki.png" />
+          <view>不使用任何优惠券</view>
+        </view>
+      </scroll-view>
+    </view>
+
+  </view>
 </template>
 
 <script>
@@ -432,7 +434,7 @@ export default class Order extends wepy.page {
   font-weight: 500;
   color: rgba(54, 54, 54, 1);
   line-height: 40rpx;
-  margin-top:-5rpx;
+  margin-top: -5rpx;
 }
 ._d_price text:nth-child(2) {
   font-size: 24rpx;
@@ -440,7 +442,7 @@ export default class Order extends wepy.page {
   font-weight: 500;
   color: rgba(54, 54, 54, 1);
   line-height: 40rpx;
-  margin-top:-5rpx;
+  margin-top: -5rpx;
 }
 ._d_num {
   width: 50%;
@@ -624,7 +626,7 @@ export default class Order extends wepy.page {
   color: rgba(153, 153, 153, 1);
   line-height: 105rpx;
   letter-spacing: 1.5rpx;
-  margin-right:20rpx;
+  margin-right: 20rpx;
 }
 .omplay view:nth-child(1) text:nth-child(2) {
   font-size: 34rpx;
@@ -633,7 +635,7 @@ export default class Order extends wepy.page {
   color: rgba(153, 153, 153, 1);
   letter-spacing: 1.5rpx;
   line-height: 100rpx;
-  margin-right:48rpx;
+  margin-right: 48rpx;
 }
 .omplay view:nth-child(2) {
   width: 28%;

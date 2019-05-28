@@ -1,95 +1,97 @@
 <template>
-  <view class="home_swimg">
-    <image mode="aspectFill" lazy-load="true" src="{{shareitMethods+'/my/shareIt.png'}}"></image>
-    <view class="swimg_v">
-      <image mode="aspectFill" lazy-load="true" src="{{userinfo.avatar}}"></image>
-      <text>{{userinfo.nickname}}</text>
-      <view>积分+{{userinfo.experienceValue}}</view>
+  <view>
+    <view class="home_swimg">
+      <image mode="aspectFill" lazy-load="true" src="{{shareitMethods+'/my/shareIt.png'}}"></image>
+      <view class="swimg_v">
+        <image mode="aspectFill" lazy-load="true" src="{{userinfo.avatar}}"></image>
+        <text>{{userinfo.nickname}}</text>
+        <view>积分+{{userinfo.experienceValue}}</view>
+      </view>
     </view>
-  </view>
 
-  <view class="btnoom">
-    <view class="btnom_ilg">
-      <image mode="aspectFill" lazy-load="true" src="/images/notices/mokuai1.png"></image>
-    </view>
-    <view class="btn_list">
-      <view class="ontab_list">
-        <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-          <image wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}">
-          </image>
-          <view class="ontbnt">
-            <text>￥{{item.original_price}}</text>
-            <text>￥{{item.market_price}}</text>
+    <view class="btnoom">
+      <view class="btnom_ilg">
+        <image mode="aspectFill" lazy-load="true" src="/images/notices/mokuai1.png"></image>
+      </view>
+      <view class="btn_list">
+        <view class="ontab_list">
+          <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
+            <image wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}">
+            </image>
+            <view class="ontbnt">
+              <text>￥{{item.original_price}}</text>
+              <text>￥{{item.market_price}}</text>
+            </view>
+            <view class="btnbuton" @tap="tapondetil" data-goods_id='{{item.id}}'>立即购买</view>
           </view>
-          <view class="btnbuton" @tap="tapondetil" data-goods_id='{{item.id}}'>立即购买</view>
         </view>
       </view>
+      <view style="height:100rpx"></view>
     </view>
-    <view style="height:100rpx"></view>
-  </view>
-  <view class="fixeds">
-    <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiang.png" @tap="clckhide"></image>
-  </view>
-  <view class="fenx">分享</view>
-  <view class="fixedsd">
-    <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop"></image>
-  </view>
-  <view class="fenxs">返回顶部</view>
-  <view class="onnone" wx:if="{{onhiden==false}}">没有更多了哦~</view>
-  <view class="cbtndown" wx:if="{{onhidup==false}}"></view>
-  <view class="cla_view" wx:if="{{onhidup==false}}">
-    <view class="hlpelist">
-      <view class="onm">
-        <view class="hlpelist_list">
-          <button open-type="share">
-            <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png"></image>
-          </button>
-        </view>
-        <view class="on" style="width:100%">分享给好友和微信群</view>
-      </view>
-      <view class="onm">
-        <view class="hlpelist_list">
-          <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics'></image>
-        </view>
-        <view class="on" style="width:100%">生成海报 保存分享</view>
-      </view>
+    <view class="fixeds">
+      <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiang.png" @tap="clckhide"></image>
     </view>
-    <view class="back_tops" @tap="clckhide">取消</view>
-  </view>
+    <view class="fenx">分享</view>
+    <view class="fixedsd">
+      <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop"></image>
+    </view>
+    <view class="fenxs">返回顶部</view>
+    <view class="onnone" wx:if="{{onhiden==false}}">没有更多了哦~</view>
+    <view class="cbtndown" wx:if="{{onhidup==false}}"></view>
+    <view class="cla_view" wx:if="{{onhidup==false}}">
+      <view class="hlpelist">
+        <view class="onm">
+          <view class="hlpelist_list">
+            <button open-type="share">
+              <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png"></image>
+            </button>
+          </view>
+          <view class="on" style="width:100%">分享给好友和微信群</view>
+        </view>
+        <view class="onm">
+          <view class="hlpelist_list">
+            <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics'></image>
+          </view>
+          <view class="on" style="width:100%">生成海报 保存分享</view>
+        </view>
+      </view>
+      <view class="back_tops" @tap="clckhide">取消</view>
+    </view>
 
-  <view class="ball_bil" wx:if="{{bulletbox==0}}"></view>
-  <view class="onback_img" wx:if="{{bulletbox==0}}">
-    <view class="ontab">会员等级优势</view>
-    <image mode="aspectFill" lazy-load="true" src="/images/notices/bulletbox.png"></image>
-    <view class="ontabs">商城不同等级会员在商品结算时享有不同折扣，此折扣不可用于活动商品。会员等级享有折扣如下：</view>
-    <view class="text_li">
-      <view class="text_list" wx:for="{{bullet}}" wx:key="{{bullet}}">
-        <view class="on"></view>
-        <view class="ona">{{item.context}}</view>
-        <view class="ons">{{item.text}}</view>
+    <view class="ball_bil" wx:if="{{bulletbox==0}}"></view>
+    <view class="onback_img" wx:if="{{bulletbox==0}}">
+      <view class="ontab">会员等级优势</view>
+      <image mode="aspectFill" lazy-load="true" src="/images/notices/bulletbox.png"></image>
+      <view class="ontabs">商城不同等级会员在商品结算时享有不同折扣，此折扣不可用于活动商品。会员等级享有折扣如下：</view>
+      <view class="text_li">
+        <view class="text_list" wx:for="{{bullet}}" wx:key="{{bullet}}">
+          <view class="on"></view>
+          <view class="ona">{{item.context}}</view>
+          <view class="ons">{{item.text}}</view>
+        </view>
       </view>
     </view>
-  </view>
-  <view class="on_stop" wx:if="{{bulletbox==0}}">
-    <image mode="aspectFill" lazy-load="true" @tap="hibulletbox" src="/images/notices/index_stop.png" />
-  </view>
-  <!--创建分享卡片-->
-  <!-- 分享 S -->
-  <view class="share-cover" wx:if="{{showSharePic}}" catchtouchmove='true' style="display:{{hinde}}">
-    <scroll-view scroll-y="true" style="height:1300rpx;">
-      <view class="topimg_sd">
-        <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden"></image>
-      </view>
-      <view class="share-pic-box">
-        <view class="share-pic">
-          <image src="{{sharePicUrl}}" class="sharePic"></image>
+    <view class="on_stop" wx:if="{{bulletbox==0}}">
+      <image mode="aspectFill" lazy-load="true" @tap="hibulletbox" src="/images/notices/index_stop.png" />
+    </view>
+    <!--创建分享卡片-->
+    <!-- 分享 S -->
+    <view class="share-cover" wx:if="{{showSharePic}}" catchtouchmove='true' style="display:{{hinde}}">
+      <scroll-view scroll-y="true" style="height:1300rpx;">
+        <view class="topimg_sd">
+          <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden"></image>
         </view>
-        <button class="share-tips" @tap='savePicsd'>保存图片到相册</button>
-      </view>
-    </scroll-view>
+        <view class="share-pic-box">
+          <view class="share-pic">
+            <image src="{{sharePicUrl}}" class="sharePic"></image>
+          </view>
+          <button class="share-tips" @tap='savePicsd'>保存图片到相册</button>
+        </view>
+      </scroll-view>
+    </view>
+    <canvas canvas-id="shareFrends" class="canvas"></canvas>
+    <!-- canvas E -->
   </view>
-  <canvas canvas-id="shareFrends" class="canvas"></canvas>
-  <!-- canvas E -->
 </template>
 
 <script>
@@ -118,7 +120,7 @@ export default class Index extends wepy.page {
   data = {
     onhiden: true,
     onhidup: true,
-    current:1,//分页参数
+    current: 1, //分页参数
     bulletbox: 1,
     imgurl: '',
     home_liat: [],
@@ -258,7 +260,7 @@ export default class Index extends wepy.page {
   getLogo() {
     return new Promise((resolve, reject) => {
       wx.downloadFile({
-        url: this.shareitMethods+'/my/shareIt.png',
+        url: this.shareitMethods + '/my/shareIt.png',
         success: res => {
           resolve(res.tempFilePath);
         },
@@ -273,7 +275,8 @@ export default class Index extends wepy.page {
       // let tid = this._selData.tid;
 
       wx.downloadFile({
-        url: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3091440975,3250070917&fm=27&gp=0.jpg',
+        url:
+          'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3091440975,3250070917&fm=27&gp=0.jpg',
         success: res => {
           resolve(res.tempFilePath);
         },
@@ -513,7 +516,7 @@ export default class Index extends wepy.page {
     this.goodsLisd();
     this.imgurl = this.imgurls.imgurl;
   }
-  onShow(){
+  onShow() {
     this.goodsLisd();
   }
   onReachBottom() {
@@ -524,7 +527,7 @@ export default class Index extends wepy.page {
     };
     wepy.$Api.goodsLis(a).then(
       res => {
-        if (res.data.data.length!=0) {
+        if (res.data.data.length != 0) {
           this.home_liat = res.data.data;
         } else {
           this.onhiden = false;

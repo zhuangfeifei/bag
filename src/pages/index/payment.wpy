@@ -1,13 +1,15 @@
 <template>
-	<view class="payment">
-		<image mode="aspectFill" lazy-load="true" src='/images/notices/playment.png' />
-	</view>
-	<view class="pay_ment">订单支付成功￥158.44</view>
-	<view class="pay_menta">恭喜您此次支付获得158积分</view>
-	<view class="btn_liat">
-		<view>查看订单</view>
-		<view @tap="backindexs">返回首页</view>
-	</view>
+  <view>
+    <view class="payment">
+      <image mode="aspectFill" lazy-load="true" src='/images/notices/playment.png' />
+    </view>
+    <view class="pay_ment">订单支付成功￥158.44</view>
+    <view class="pay_menta">恭喜您此次支付获得158积分</view>
+    <view class="btn_liat">
+      <view>查看订单</view>
+      <view @tap="backindexs">返回首页</view>
+    </view>
+  </view>
 </template>
 
 <script>

@@ -1,40 +1,24 @@
 <template>
-  <view class="bchd">
-    <image src="/images/notices/bg-5.png"></image>
-    <view class="dort">
-      <image src="/images/notices/zhangdan.png" @tap="nextbill"></image>
-      <text @tap="nextbill">账单</text>
+  <view>
+    <view class="bchd">
+      <image src="/images/notices/bg-5.png"></image>
+      <view class="dort">
+        <image src="/images/notices/zhangdan.png" @tap="nextbill"></image>
+        <text @tap="nextbill">账单</text>
+      </view>
+      <view class="playnumb">450.50</view>
+      <view class="playnumbs">钱包余额</view>
     </view>
-    <view class="playnumb">450.50</view>
-    <view class="playnumbs">钱包余额</view>
-  </view>
-  <view
-    class="ontliat"
-    @tap="regularto"
-  >
-    <image
-      src='/images/notices/chongzhi.png'
-      class="onliimg"
-    ></image>
-    <text class="cltextsdf">充值</text>
-    <image
-      src='/images/notices/jinru.png'
-      class="onliimged"
-    ></image>
-  </view>
-  <view class="ontliats">
-    <image
-      src='/images/notices/tixian.png'
-      class="onliimg"
-    ></image>
-    <text
-      class="cltextsdf"
-      @tap="withdraw"
-    >提现</text>
-    <image
-      src='/images/notices/jinru.png'
-      class="onliimged"
-    ></image>
+    <view class="ontliat" @tap="regularto">
+      <image src='/images/notices/chongzhi.png' class="onliimg"></image>
+      <text class="cltextsdf">充值</text>
+      <image src='/images/notices/jinru.png' class="onliimged"></image>
+    </view>
+    <view class="ontliats">
+      <image src='/images/notices/tixian.png' class="onliimg"></image>
+      <text class="cltextsdf" @tap="withdraw">提现</text>
+      <image src='/images/notices/jinru.png' class="onliimged"></image>
+    </view>
   </view>
 </template>
 
@@ -66,7 +50,7 @@ export default class Wallet extends wepy.page {
         url: '/pages/my/wallet/withdraw'
       });
     },
-    nextbill(){
+    nextbill() {
       wx.navigateTo({
         url: '/pages/my/wallet/bill'
       });

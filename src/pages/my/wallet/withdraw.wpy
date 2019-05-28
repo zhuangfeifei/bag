@@ -1,26 +1,18 @@
 <template>
-	<view class="topclass">
-		<view class="t_lit">
-			<text>提现方式</text>
-			<text>微信钱包</text>
-		</view>
-		<view class="numchong">提现金额（可提现余额¥{{picks}}）</view>
-		<view class="podtlist">
-			<view
-			 wx:for="{{postlist}}"
-			 wx:key="{{postlist}}"
-			 data-id="{{index}}"
-			 data-pick="{{item.title}}"
-			 style="{{index == id?'background: rgba(244, 105, 95, 1)':'background:rgba(206,206,206,1)'}}"
-			 @tap="click"
-			>￥{{item.title}}</view>
-		</view>
-		<view class="numchongs">每日最多可提现一次</view>
-		<view
-		 class="clsimg"
-		 @tap="titapnext"
-		>确认提现</view>
-	</view>
+  <view>
+    <view class="topclass">
+      <view class="t_lit">
+        <text>提现方式</text>
+        <text>微信钱包</text>
+      </view>
+      <view class="numchong">提现金额（可提现余额¥{{picks}}）</view>
+      <view class="podtlist">
+        <view wx:for="{{postlist}}" wx:key="{{postlist}}" data-id="{{index}}" data-pick="{{item.title}}" style="{{index == id?'background: rgba(244, 105, 95, 1)':'background:rgba(206,206,206,1)'}}" @tap="click">￥{{item.title}}</view>
+      </view>
+      <view class="numchongs">每日最多可提现一次</view>
+      <view class="clsimg" @tap="titapnext">确认提现</view>
+    </view>
+  </view>
 </template>
 
 <script>

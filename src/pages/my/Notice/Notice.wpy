@@ -58,76 +58,54 @@
 
 
 <template>
-	<view
-	 class="topcotarin"
-	 @tap="nextpage"
-	>
-		<view class="tarind">
-			<view class="tpimgleft">
-				<image src="/images/notices/gonggaotubiao.png"></image>
+	<view>
+		<view class="topcotarin" @tap="nextpage">
+			<view class="tarind">
+				<view class="tpimgleft">
+					<image src="/images/notices/gonggaotubiao.png"></image>
+				</view>
+				<view class="tpimgright">
+					<view class="tittext">公告</view>
+					<view class="text">你想知道的小程序公告都在这里哦</view>
+				</view>
+				<image src="/images/notices/jinru.png" class="jinru"></image>
 			</view>
-			<view class="tpimgright">
-				<view class="tittext">公告</view>
-				<view class="text">你想知道的小程序公告都在这里哦</view>
-			</view>
-			<image
-			 src="/images/notices/jinru.png"
-			 class="jinru"
-			></image>
 		</view>
-	</view>
-	<view
-	 class="topcotarin"
-	 @tap="commission"
-	>
-		<view class="tarind">
-			<view class="tpimgleft">
-				<image src="/images/notices/yongjinxiaoxitubiao.png"></image>
+		<view class="topcotarin" @tap="commission">
+			<view class="tarind">
+				<view class="tpimgleft">
+					<image src="/images/notices/yongjinxiaoxitubiao.png"></image>
+				</view>
+				<view class="tpimgright">
+					<view class="tittext">佣金消息</view>
+					<view class="text">暂时没有佣金消息</view>
+				</view>
+				<image src="/images/notices/jinru.png" class="jinru"></image>
 			</view>
-			<view class="tpimgright">
-				<view class="tittext">佣金消息</view>
-				<view class="text">暂时没有佣金消息</view>
-			</view>
-			<image
-			 src="/images/notices/jinru.png"
-			 class="jinru"
-			></image>
 		</view>
-	</view>
-	<view
-	 class="topcotarin"
-	 @tap="commodity"
-	>
-		<view class="tarind">
-			<view class="tpimgleft">
-				<image src="/images/notices/shangpintixingtubiao.png"></image>
+		<view class="topcotarin" @tap="commodity">
+			<view class="tarind">
+				<view class="tpimgleft">
+					<image src="/images/notices/shangpintixingtubiao.png"></image>
+				</view>
+				<view class="tpimgright">
+					<view class="tittext">商品提醒</view>
+					<view class="text">暂时没有商品提醒</view>
+				</view>
+				<image src="/images/notices/jinru.png" class="jinru"></image>
 			</view>
-			<view class="tpimgright">
-				<view class="tittext">商品提醒</view>
-				<view class="text">暂时没有商品提醒</view>
-			</view>
-			<image
-			 src="/images/notices/jinru.png"
-			 class="jinru"
-			></image>
 		</view>
-	</view>
-	<view
-	 class="topcotarin"
-	 @tap="Logistics"
-	>
-		<view class="tarind">
-			<view class="tpimgleft">
-				<image src="/images/notices/wuliuxiaoxitubiao.png"></image>
+		<view class="topcotarin" @tap="Logistics">
+			<view class="tarind">
+				<view class="tpimgleft">
+					<image src="/images/notices/wuliuxiaoxitubiao.png"></image>
+				</view>
+				<view class="tpimgright">
+					<view class="tittext">物流消息</view>
+					<view class="text">暂时没有商品提醒</view>
+				</view>
+				<image src="/images/notices/jinru.png" class="jinru"></image>
 			</view>
-			<view class="tpimgright">
-				<view class="tittext">物流消息</view>
-				<view class="text">暂时没有商品提醒</view>
-			</view>
-			<image
-			 src="/images/notices/jinru.png"
-			 class="jinru"
-			></image>
 		</view>
 	</view>
 </template>
@@ -161,7 +139,7 @@ export default class Notice extends wepy.page {
       wepy.navigateTo({
         url: '/pages/my/Notice/commodity'
       });
-    },
+    }
   };
 
   onLoad() {}

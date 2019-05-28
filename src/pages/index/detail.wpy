@@ -1,6 +1,7 @@
 
 <template>
-  <import src="../../wxParse/wxParse.wxml" />
+  <view>
+    <import src="../../wxParse/wxParse.wxml" />
   <view class="swprice">
     <swiper class="topswiper" indicator-dots="{{indicatorDots}}" circular="true" indicator-active-color="white" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
       <block wx:for="{{imgurlsd}}" wx:key="{{imgurlsd}}">
@@ -260,6 +261,7 @@
     </scroll-view>
   </view>
   <canvas canvas-id="shareFrends" class="canvas"></canvas>
+  </view>
 </template>
 
 <script>
@@ -430,11 +432,11 @@ export default class Detail extends wepy.page {
     jiaru_ups() {
       this.sod_up = 1;
     },
-    tap_playto(e) {
-        wx.navigateTo({
-          url: '/pages/index/detail',
-        });
-    },
+    // tap_playto(e) {
+    //     wx.navigateTo({
+    //       url: '/pages/index/detail',
+    //     });
+    // },
     jiaru_up() {
       if (this.sexcale && this.scolor) {
         this.sod_up = 0;
