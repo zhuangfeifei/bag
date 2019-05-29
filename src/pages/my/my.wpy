@@ -79,7 +79,7 @@ export default class My extends wepy.page {
         level:['普卡','银卡','金卡','翠玉卡','钻石卡'],
         service:[
             {title:'收藏夹', img:'../../images/my/HYZX_shoucangjia.png', url:'./favorites/favorites'},
-            {title:'优惠券', img:'../../images/my/HYZX_youhuiquan.png'},
+            {title:'优惠券', img:'../../images/my/HYZX_youhuiquan.png', url:'./coupon/coupon'},
             {title:'钱包', img:'../../images/my/HYZX_qianbao.png'},
             {title:'客户服务', img:'../../images/my/HYZX_kehufuwu.png'},
         ],
