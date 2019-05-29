@@ -686,35 +686,35 @@ export default class Index extends wepy.page {
   letter-spacing: 1rpx;
 }
 .fixeds {
-  width: 100%;
+  width: 80rpx;
   height: 80rpx;
   position: fixed;
   top: 718rpx;
+  right: 30rpx;
   text-align: right;
 }
 .fixedsd {
-  width: 100%;
+  width: 80rpx;
   height: 80rpx;
   position: fixed;
   top: 881rpx;
+  right: 30rpx;
   text-align: right;
 }
 .fixeds image {
   width: 80rpx;
   height: 80rpx;
-  margin-right: 30rpx;
 }
 
 .fixedsd image {
   width: 80rpx;
   height: 80rpx;
-  margin-right: 30rpx;
 }
 
 .fenx {
   position: fixed;
   top: 819rpx;
-  width: 94%;
+  right:46rpx;
   height: 24rpx;
   text-align: right;
   line-height: 21rpx;
@@ -726,7 +726,7 @@ export default class Index extends wepy.page {
 .fenxs {
   position: fixed;
   top: 982rpx;
-  width: 97%;
+  right:23rpx;
   height: 24rpx;
   text-align: right;
   line-height: 21rpx;

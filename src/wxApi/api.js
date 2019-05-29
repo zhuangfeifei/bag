@@ -37,5 +37,8 @@ module.exports = {
   },
   userlike:(data)=>{//猜你喜欢
     return api.request('/bag/api/similarLike/likeList', 'post', data)
+  },
+  addcoupon:(data)=>{//领取优惠券(待领取)
+    return api.request('/bag/api/coupon/getCouponList', 'post', data)
   }
 }
