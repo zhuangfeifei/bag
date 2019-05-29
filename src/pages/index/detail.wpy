@@ -900,7 +900,6 @@ export default class Detail extends wepy.page {
     wepy.$Api.shopDetail(a).then(
       res => {
         if (res.data.data) {
-          console.log(res);
           let sizeNames = [];
           if (res.data.data.goods_pic) {
             this.imgurlsd = res.data.data.goods_pic.split(',');
@@ -911,7 +910,6 @@ export default class Detail extends wepy.page {
           let love = res.data.data.description;
           WxParse.wxParse('article', 'html', love, this, 5);
         }
-
         this.$apply();
       },
       err => {}

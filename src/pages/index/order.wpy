@@ -115,7 +115,7 @@
         <view class="om" wx:for="{{conum_list}}" wx:key="{{conum_list}}" data-id="{{index}}" data-name="{{item.price}}" @tap="cuonpicr">
           <image src="/images/notices/youhuibacki.png" />
           <view class="onpricf">
-            <image src="/images/notices/renminbi.png"></image>
+            <image src="/images/notices/renminbi.png"/>
             <text>{{item.price}}</text>
             <view>【{{item.text}}】</view>
           </view>

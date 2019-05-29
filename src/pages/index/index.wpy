@@ -1,9 +1,9 @@
 <template>
   <view>
     <view class="home_swimg">
-      <image mode="aspectFill" lazy-load="true" src="{{shareitMethods+'/my/shareIt.png'}}"></image>
+      <image mode="aspectFill" lazy-load="true" src="{{shareitMethods+'/my/shareIt.png'}}"/>
       <view class="swimg_v">
-        <image mode="aspectFill" lazy-load="true" src="{{userinfo.avatar}}"></image>
+        <image mode="aspectFill" lazy-load="true" src="{{userinfo.avatar}}"/>
         <text>{{userinfo.nickname}}</text>
         <view>积分+{{userinfo.experienceValue}}</view>
       </view>
@@ -11,13 +11,12 @@
 
     <view class="btnoom">
       <view class="btnom_ilg">
-        <image mode="aspectFill" lazy-load="true" src="/images/notices/mokuai1.png"></image>
+        <image mode="aspectFill" lazy-load="true" src="/images/notices/mokuai1.png"/>
       </view>
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}">
-            </image>
+            <image wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}"/>
             <view class="ontbnt">
               <text>￥{{item.original_price}}</text>
               <text>￥{{item.market_price}}</text>
@@ -29,11 +28,11 @@
       <view style="height:100rpx"></view>
     </view>
     <view class="fixeds">
-      <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiang.png" @tap="clckhide"></image>
+      <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiang.png" @tap="clckhide"/>
     </view>
     <view class="fenx">分享</view>
     <view class="fixedsd">
-      <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop"></image>
+      <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop"/>
     </view>
     <view class="fenxs">返回顶部</view>
     <view class="onnone" wx:if="{{onhiden==false}}">没有更多了哦~</view>
@@ -43,14 +42,14 @@
         <view class="onm">
           <view class="hlpelist_list">
             <button open-type="share">
-              <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png"></image>
+              <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png"/>
             </button>
           </view>
           <view class="on" style="width:100%">分享给好友和微信群</view>
         </view>
         <view class="onm">
           <view class="hlpelist_list">
-            <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics'></image>
+            <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics'/>
           </view>
           <view class="on" style="width:100%">生成海报 保存分享</view>
         </view>
@@ -61,7 +60,7 @@
     <view class="ball_bil" wx:if="{{bulletbox==0}}"></view>
     <view class="onback_img" wx:if="{{bulletbox==0}}">
       <view class="ontab">会员等级优势</view>
-      <image mode="aspectFill" lazy-load="true" src="/images/notices/bulletbox.png"></image>
+      <image mode="aspectFill" lazy-load="true" src="/images/notices/bulletbox.png"/>
       <view class="ontabs">商城不同等级会员在商品结算时享有不同折扣，此折扣不可用于活动商品。会员等级享有折扣如下：</view>
       <view class="text_li">
         <view class="text_list" wx:for="{{bullet}}" wx:key="{{bullet}}">
@@ -79,11 +78,11 @@
     <view class="share-cover" wx:if="{{showSharePic}}" catchtouchmove='true' style="display:{{hinde}}">
       <scroll-view scroll-y="true" style="height:1300rpx;">
         <view class="topimg_sd">
-          <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden"></image>
+          <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden"/>
         </view>
         <view class="share-pic-box">
           <view class="share-pic">
-            <image src="{{sharePicUrl}}" class="sharePic"></image>
+            <image src="{{sharePicUrl}}" class="sharePic"/>
           </view>
           <button class="share-tips" @tap='savePicsd'>保存图片到相册</button>
         </view>

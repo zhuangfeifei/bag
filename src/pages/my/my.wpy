@@ -1,12 +1,12 @@
 <template>
-    <view id="my">
+    <view id="my" wx:if="{{imgUrl}}">
 
         <view class="nav_bak">
-            <image src="../../images/my/bg_1.png" />
+            <image src="{{imgUrl+'/my/bg_1.png'}}" />
         </view>
         <view class="nav">
             <view>
-                <image class="HYZX_xiaoxi" src="../../images/my/HYZX_xiaoxi.png" mode="scaleToFill" lazy-load="false" />
+                <image class="HYZX_xiaoxi" src="{{imgUrl+'/my/HYZX_xiaoxi.png'}}" mode="scaleToFill" lazy-load="false" />
                 <text>\n通知</text>
             </view>
             <view>
@@ -14,13 +14,13 @@
                 <text class="touxiang_name">\n{{userinfo.nickname}}</text>
             </view>
             <view @tap="linkTo" data-url="./address/address">
-                <image class="HYZX_xiaoxi" src="../../images/my/HYZX_shezhi.png" mode="scaleToFill" lazy-load="false" />
+                <image class="HYZX_xiaoxi" src="/images/my/HYZX_shezhi.png" mode="scaleToFill" lazy-load="false" />
                 <text>\n设置</text>
             </view>
-            <image class="sign" src="../../images/my/HYZX_qiandao.png" />
+            <image class="sign" src="/images/my/HYZX_qiandao.png" />
         </view>
         <view class="vip_level">
-            <image src="../../images/my/bg_2.png" />
+            <image src="/images/my/bg_2.png" />
             <view class="vip_rules" @tap="linkTo" data-url="./membershipRules">您是普卡会员，查看折扣权限>></view>
             <view class="vip_level_bar"><view style="width:{{20}}%"></view></view>
             <view class="vip_level_list"><text wx:for="{{level}}" wx:key="{{index}}">{{item}}</text></view>
@@ -43,7 +43,7 @@
             <navigator url="./order/myOrder">
                 <view class="My_allOrder">
                     全部订单
-                    <image src="../../images/my/QBDD_tubiao.png" />
+                    <image src="/images/my/QBDD_tubiao.png" />
                 </view>
             </navigator>
         </view>
@@ -59,7 +59,10 @@ import 'wepy-async-function'
 @connect({
     userinfo(state){
         return state.counter.userinfo
-    }
+    },
+    imgUrl(state){
+        return state.counter.imgUrl
+    },
 })
     
 export default class My extends wepy.page {
@@ -75,7 +78,7 @@ export default class My extends wepy.page {
         level:['普卡','银卡','金卡','翠玉卡','钻石卡'],
         service:[
             {title:'收藏夹', img:'../../images/my/HYZX_shoucangjia.png', url:'./favorites/favorites'},
-            {title:'优惠券', img:'../../images/my/HYZX_youhuiquan.png',url:'./coupon/coupon'},
+            {title:'优惠券', img:'../../images/my/HYZX_youhuiquan.png', url:'./coupon/coupon'},
             {title:'钱包', img:'../../images/my/HYZX_qianbao.png'},
             {title:'客户服务', img:'../../images/my/HYZX_kehufuwu.png'},
         ],
@@ -86,10 +89,8 @@ export default class My extends wepy.page {
     methods = {
         linkTo(e){
             this.$navigate({url: e.currentTarget.dataset.url})
-            
         }
     }
-    
     onLoad() {
         // console.log(this.userinfo)
     }

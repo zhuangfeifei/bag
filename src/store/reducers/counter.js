@@ -5,8 +5,10 @@ import { ASYNC_INCREMENT } from '../types/counter'
 const Api = require('../../wxApi/api')
 
 const defaultState = {
-  orderIndex: 3,
   userinfo:'',
+  orderIndex: 3,
+  imgUrl: 'http://192.168.0.109:8083/bag/static/modular/images',
+  editor:'',
   shop_detail:'',//首页跳转详情参数
   shareit: Api.imgUrl+'/bag/static/modular/images',//分享卡片图
   imgurl:Api.imgUrl+'/bag/kaptcha/file/gallery/' ,//首页图片地址
@@ -23,6 +25,9 @@ export default handleActions({
   },
   userinfos(state, action){
     return { ...state, userinfo: action.payload }
+  },
+  editorMethod(state, action){
+    return { ...state, editor: action.payload }
   },
   imgurls(state, action){
     return { ...state,imgurl:action.payload}

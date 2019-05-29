@@ -2,12 +2,12 @@
     <view id="address" class="{{true ? 'isAddress' : ''}}">
 
         <view wx:if="{{true}}" class="addressList">
-            <view wx:for="{{2}}" wx:key="{{index}}" class="addressList_content">
-                <h5>王小刚<text>13488884444</text></h5>
-                <view class="addressList_address">江苏省 苏州市 工业园区  斜塘街道 莲香新村南区18号楼2单元1802</view>
+            <view wx:for="{{addressList}}" wx:key="{{index}}" class="addressList_content">
+                <h5>{{item.ship_name}}<text>{{item.phone_num}}</text></h5>
+                <view class="addressList_address">{{item.province+' '+item.city+' '+item.area+' '+item.address}}</view>
                 <view class="addressList_Modify">
-                    <view @tap="change" data-index="{{index}}"><image src="{{checked[index == isDefault ? 1 : 0]}}" />设为默认地址</view>
-                    <view><text>编辑</text><text>删除</text></view>
+                    <view @tap="change" data-id="{{index}}"><image src="{{checked[item.isdefault == 1 ? 1 : 0]}}" />设为默认地址</view>
+                    <view><text @tap="editor" data-item="{{item}}">编辑</text><text @tap="deladress" data-id="{{item.id}}">删除</text></view>
                 </view>
             </view>
         </view> 
@@ -29,7 +29,9 @@ import { connect } from 'wepy-redux'
 import 'wepy-async-function'
 
 @connect({
-    
+    userinfo(state){
+        return state.counter.userinfo
+    },
 })
     
 export default class Address extends wepy.page {
@@ -44,7 +46,8 @@ export default class Address extends wepy.page {
     
     data = {
         isDefault: 0,
-        checked:['/images/my/AN_weigouxuan.png','/images/my/AN_weigouxuans.png']
+        checked:['/images/my/AN_weigouxuan.png','/images/my/AN_weigouxuans.png'],
+        addressList:[]
     }
     
     computed = {
@@ -53,16 +56,54 @@ export default class Address extends wepy.page {
     
     methods = {
         change(e){
-            this.isDefault = e.currentTarget.dataset.index
-            this.$apply()
+            wepy.$Api.defaultById({ unionId: this.userinfo.unionid, id: e.currentTarget.dataset.id, }).then(res => { 
+                // console.log(res.data)
+                if (res.data.code == 200) {
+                    wepy.showToast({
+                        title: '设置成功',
+                        icon: 'success',
+                        duration: 2000
+                    })
+                    this.onShow()
+                }
+            }, err => {
+                
+            })
         },
         linkTo(){
             this.$navigate({url:"./addAddress"})
+        },
+        editor(e){
+            wepy.$store.dispatch({type:'editorMethod', payload: e.currentTarget.dataset.item})
+            this.$navigate({url:"./addAddress"})
+        },
+        deladress(e){
+            wepy.$Api.deladress({ unionId: this.userinfo.unionid, id: e.currentTarget.dataset.id, }).then(res => { 
+                // console.log(res.data)
+                if (res.data.code == 200) {
+                    wepy.showToast({
+                        title: '删除成功',
+                        icon: 'success',
+                        duration: 2000
+                    })
+                    this.onShow()
+                }
+            }, err => {
+                
+            })
         }
     }
     
-    onLoad() {
-    
+    onShow() {
+        wepy.$Api.listadress({ unionId: this.userinfo.unionid, limit: 50, current: 1 }).then(res => { 
+            // console.log(res.data)
+            if (res.data.code == 200) {
+                this.addressList = res.data.data
+                this.$apply()
+            }
+        }, err => {
+            
+        })
     }
 }
 </script>
