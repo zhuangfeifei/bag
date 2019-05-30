@@ -9,6 +9,12 @@ const defaultState = {
   orderIndex: 3,
   imgUrl: 'http://192.168.0.109:8083/bag/static/modular/images',
   editor:'',
+  category:'', // 收藏夹
+  favoritesList:'', // 收藏夹
+  categoryId: {// 收藏夹ids
+      categoryId: '', smallCategoryId: ''
+  }, 
+  stateId:'',
   shop_detail:'',//首页跳转详情参数
   shareit: Api.imgUrl+'/bag/static/modular/images',//分享卡片图
   imgurl:Api.imgUrl+'/bag/kaptcha/file/gallery/' ,//首页图片地址
@@ -29,6 +35,19 @@ export default handleActions({
   editorMethod(state, action){
     return { ...state, editor: action.payload }
   },
+  categoryMethod(state, action){
+    return { ...state, category: action.payload }
+  },
+  favoritesMethod(state, action){
+    return { ...state, favoritesList: action.payload }
+  },
+  categoryIdMethod(state, action){
+    return { ...state, categoryId: action.payload }
+  },
+  stateIdMethod(state, action){
+    return { ...state, stateId: action.payload }
+  },
+
   imgurls(state, action){
     return { ...state,imgurl:action.payload}
   },

@@ -21,6 +21,18 @@ module.exports = {
   deladress: (data) => { // 删除地址
     return api.request('/bag/api/address/deladress', 'post', data)
   },
+  collotionCategory: (data) => { // 获取所有的服装分类及各分类收藏数量
+    return api.request('/bag/api/boutique/collotionCategory', 'post', data)
+  },
+  collotionStatus: (data) => { // 收藏全部状态及数量
+    return api.request('/bag/api/boutique/collotionStatus', 'post', data)
+  },
+  collotionCloth: (data) => { // 根据大类，小类，全部分类获取收藏服装数据
+    return api.request('/bag/api/boutique/collotionCloth', 'post', data)
+  },
+  collotionStatusCloth: (data) => { // 获取各状态下收藏服装列表
+    return api.request('/bag/api/boutique/collotionStatusCloth', 'post', data)
+  },
 
 
   goodsLis:(data)=>{//首页商品展示
@@ -32,7 +44,7 @@ module.exports = {
   collection:(data)=>{//商品收藏
     return api.request('/bag/api/boutique/clickColltion', 'post', data)
   },
-  uncollection:(data)=>{//取消商品收藏
+  uncollection:(data)=>{//取消商品收藏 删除收藏
     return api.request('/bag/api/boutique/deleteCollotion', 'post', data)
   },
   userlike:(data)=>{//商品喜欢

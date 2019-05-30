@@ -1,18 +1,18 @@
 <template>
-    <view id="favorites">
+    <view id="favorites" class="{{allCategory || allState ? 'scroll' : ''}}" style="padding-bottom: {{!isAnimation ? '60rpx' : '0'}}">
 
 
-        <view id='favorites' style="padding-bottom: {{!isAnimation ? '98rpx' : '20rpx'}}" class="{{allCategory || allState ? 'scroll' : ''}}">
+        <view>
             <view class='favorites'>
                 <view class='favorites_nav'>
                 <view>
-                    <text @tap='allCategory'>全部类目</text>
-                    <image @tap='allCategory' src="/images/my/{{allCategory ? 'up' : 'down'}}.png"/>
-                    <text @tap='allState'>全部状态</text>
-                    <image @tap='allState' src="/images/my/{{allState ? 'up' : 'down'}}.png"/>
+                    <text @tap='allCategory' class="{{allCategory ? 'active' : ''}}">全部类目</text>
+                    <image @tap='allCategory' src="/images/my/{{allCategory ? 'down' : 'up'}}.png"/>
+                    <text @tap='allState' class="{{allState ? 'active' : ''}}">全部状态</text>
+                    <image @tap='allState' src="/images/my/{{allState ? 'down' : 'up'}}.png"/>
                 </view>
                 <view>
-                    <image @tap="change" src="/images/my/SCJ_guanli.png" />
+                    <image src="/images/my/SCJ_guanli.png" />
                     <text @tap='management' class="{{!isAnimation ? 'complete' : ''}}">{{isAnimation ? '管理' : '完成'}}</text>
                 </view>
                 </view>
@@ -20,14 +20,23 @@
             </view>
         </view>
 
+        <!-- 全部分类 -->
+        <view class="allCategory" wx:if="{{allCategory}}">
+            <category :category.sync="category"></category>
+        </view>
+        <!-- 全部状态 -->
+        <view class="allCategory" wx:if="{{allState}}">
+            <allState :category.sync="category"></allState>
+        </view>
+
         <view class='favorites_list'>
             <view wx:if="{{isChange}}" class='goodsList_checked' animation="{{animationRight}}">
-                <view class='goodsList_checked_' wx:for="{{20}}" wx:key="{{index}}" bindtap='checke' data-data="{{item}}" data-index="{{index}}">
-                    <view><image wx:if="{{true}}" src='/images/my/checked.png'/></view>
+                <view class='goodsList_checked_' wx:for="{{favoritesList}}" wx:key="{{index}}" @tap='checke' data-data="{{item}}" data-index="{{index}}">
+                    <view><image wx:if="{{item.checked}}" src='/images/my/checked.png'/></view>
                 </view>
             </view>
             <view wx:if="{{isChange}}" class='goodsList' animation="{{animationLeft}}" style="min-height: {{screenHeight+'px'}};">
-                <favoritesGoodsList></favoritesGoodsList>
+                <favoritesGoodsList :favoritesList.sync="favoritesList"></favoritesGoodsList>
             </view>
             <view wx:else class='goodsList_' animation="{{animationLeft}}">
                 <segmentation></segmentation>
@@ -35,14 +44,20 @@
         </view>
 
 
+        <view class='noMore'>
+          <image wx:if="{{!isMore}}" src="/images/my/loading.png" animation="{{animationRound}}" />
+          <text wx:if="{{!isMore}}">正在加载...</text>
+          <text wx:if="{{favoritesList.length >= 10 && isMore}}">~没有更多了~</text>
+        </view>
+
 
         <view class='management' wx:if="{{!isAnimation}}">
-          <view bindtap='checkedAll'>
-            <view><image wx:if="{{checkedAll}}" src='/images/my/checked.png'/></view><text>全选</text>
+          <view @tap='checkedAll'>
+            <view><image wx:if="{{isCheckedAll}}" src='/images/my/checked.png'/></view><text>全选</text>
           </view>
           <view>
             <button bindtap="emptyShelves">清空下架</button>
-            <button bindtap="deleteCollotion">删除</button>
+            <button @tap="deleteCollotion">删除</button>
           </view>
         </view>
 
@@ -55,9 +70,25 @@ import { connect } from 'wepy-redux'
 import 'wepy-async-function'
 import favoritesGoodsList from '../../../components/favoritesGoodsList'
 import segmentation from '../../../components/segmentation'
+import category from '../../../components/category'
+import allState from '../../../components/allState'
 
 @connect({
-    
+    userinfo(state){
+        return state.counter.userinfo
+    },
+    category(state){
+        return state.counter.category
+    },
+    favoritesList(state){
+        return state.counter.favoritesList
+    },
+    categoryIds(state){
+        return state.counter.categoryId
+    },
+    stateId(state){
+        return state.counter.stateId
+    },
 })
     
 export default class Favorites extends wepy.page {
@@ -68,16 +99,28 @@ export default class Favorites extends wepy.page {
     
     components = {
         favoritesGoodsList,
-        segmentation
+        segmentation,
+        category,
+        allState
     }
     
     data = {
-        allCategory: true, isChange: true,
-        animationLeft: '', animationRight: '', isAnimation: true
+        screenHeight: '', allCategory: false, allState: false, isChange: true,
+        animationLeft: '', animationRight: '', isAnimation: true,
+        isCheckedAll: false, animationRound:'',
+        // favoritesLists:[],
+        current:1, isMore: false, isState: false
     }
     
     computed = {
-    
+        // favoritesList(){
+        //     let list = []
+        //     for(let val of this.favoritesLists){
+        //       val.checked = false
+        //       list.push(val)
+        //     }
+        //     return list
+        // }
     }
     
     methods = {
@@ -97,8 +140,8 @@ export default class Favorites extends wepy.page {
             timingFunction: 'ease',
           })
 
-          animationLeft.translate(this.isAnimation ? this.methods.px(100) : 0).step({ duration: 500 })
-          animationRight.translate(this.isAnimation ? this.methods.px(120) : 0).step({ duration: 500 })
+          animationLeft.translate(this.isAnimation ? this.px(100) : 0).step({ duration: 500 })
+          animationRight.translate(this.isAnimation ? this.px(120) : 0).step({ duration: 500 })
 
           this.animationLeft = animationLeft.export()
           this.animationRight = animationRight.export()
@@ -106,29 +149,187 @@ export default class Favorites extends wepy.page {
         this.isAnimation = !this.isAnimation
         this.$apply()
       },
-      // rpx转px
-      px(rpx) {
-        var systemInfo = wx.getSystemInfoSync()
-        return rpx / 750 * systemInfo.windowWidth
+      // 全部类目
+      allCategory() {
+        if (this.isAnimation) {
+          this.allCategory = !this.data.allCategory
+          this.allState = false
+        }
       },
+      // 全部状态
+      allState() {
+        if (this.isAnimation) {
+          this.allCategory = false
+          this.allState = !this.data.allState
+        }
+      },
+      checke(e){
+         this.favoritesList[e.currentTarget.dataset.index].checked = !this.favoritesList[e.currentTarget.dataset.index].checked
+        //  console.log(this.favoritesList)
+         this.$apply()
+      },
+      checkedAll(){
+        this.isCheckedAll = !this.isCheckedAll
+        for(let val of this.favoritesList){
+          val.checked = this.isCheckedAll
+        }
+      },
+      deleteCollotion(){
+        let arr = []
+        for(let val of this.favoritesList){
+          val.checked ? arr.push(val.id) : ''
+        }
+        if(arr.length > 0){
+          wepy.$Api.uncollection({ unionId: this.userinfo.unionid, clothIds: arr.join(','), }).then(res => { 
+              // console.log(res.data)
+              if (res.data.code == 200) {
+                  wepy.showToast({
+                      title: '删除成功',
+                      icon: 'success',
+                      duration: 2000
+                  })
+                  this.onReachBottom()
+              }
+          }, err => {
+              
+          })
+        }
+      }
+    }
+
+    // rpx转px
+    px(rpx) {
+      var systemInfo = wx.getSystemInfoSync()
+      return rpx / 750 * systemInfo.windowWidth
     }
     
     onLoad() {
+        let screenHeight = wx.getSystemInfoSync().windowHeight
+        this.screenHeight = screenHeight - this.px(120)
+
+        this.onReachBottom()
+
+        // 分类
+        wepy.$Api.collotionCategory({ unionId: this.userinfo.unionid }).then(res => { 
+            // console.log(res.data)
+            if (res.data.code == 200) {
+                wepy.$store.dispatch({type:'categoryMethod', payload: res.data.data})
+            }
+        }, err => {
+            
+        })
+        // 状态
+        wepy.$Api.collotionStatus({ unionId: this.userinfo.unionid }).then(res => { 
+            // console.log(res.data)
+            if (res.data.code == 200) {
+                // wepy.$store.dispatch({type:'categoryMethod', payload: res.data.data})
+            }
+        }, err => {
+            
+        })
+    }
+
+    watch = {
+      favoritesList(value) {
+        let isChecked = true
+        for (let val of value) {
+          if (!val.checked) isChecked = false
+        }
+        this.isCheckedAll = isChecked
+      },
+      categoryIds(value){
+        this.isState = false
+        this.isMore = false
+        this.allCategory = false
+        this.current = 1
+        this.onReachBottom()
+        this.$apply()
+      },
+      stateId(value){
+        this.isState = true
+        this.isMore = false
+        this.allState = false
+        this.current = 1
+        this.onReachBottom()
+        this.$apply()
+      }
+    }
+
+
+    onReachBottom(){
+        if(!this.isMore){
+            if(!this.isState){
+                let list = { unionId: this.userinfo.unionid, 
+                  categoryId: this.categoryIds.categoryId || '', smallCategoryId: this.categoryIds.smallCategoryId || '', limit: 10, current: this.current }
+                wepy.$Api.collotionCloth(list).then(res => { 
+                    // console.log(res.data)
+                    if (res.data.code == 200) {
+                        this.getMore(res)
+                    }
+                }, err => {
+                    
+                })
+            }else{
+                let list = { unionId: this.userinfo.unionid, statusType: this.stateId, limit: 10, current: this.current }
+                wepy.$Api.collotionStatusCloth(list).then(res => { 
+                    // console.log(res.data)
+                    if (res.data.code == 200) {
+                        this.getMore(res)
+                    }
+                }, err => {
+                    
+                })
+            }
+        }
+    }
+
+    getMore(res){
+      let list = []
+      for(let val of res.data.data){
+        val.checked = false
+        list.push(val)
+      }
+      wepy.$store.dispatch({type:'favoritesMethod', payload: this.current > 1 ? this.favoritesList.concat(list) : list})
+      this.current ++
+      res.data.data.length == 0 ? this.isMore = true : this.isMore = false
+      this.$apply()
+    }
     
+
+    onUnload(){
+      wepy.$store.dispatch({type:'categoryIdMethod', payload: ''})
+      wepy.$store.dispatch({type:'stateIdMethod', payload: ''})
+    }
+
+    onReady () {
+      this.animationRound()
+    }
+    animationRound(){ //加载更多动画
+      const animation = wx.createAnimation({
+        duration: 500,
+        timingFunction: 'linear',
+      })
+
+      var n = 0;
+      setInterval(()=>{
+        n=n+1;
+        animation.rotate(180 * (n)).step()
+        this.animationRound = animation.export()
+      }, 500)
     }
 }
 </script>
 
 <style lang='less'>
 #favorites{
-    width: 100%; min-height: 100%; background-color: #F2F2F2;
+    width: 100%; min-height: 100%; background-color: #F2F2F2; box-sizing: border-box;
 }
+.scroll{ position: fixed; }
 
 
 #favorites{
-  width: 100%; min-height: 100%; background:rgba(246,246,246,1); box-sizing: border-box; overflow: hidden; padding-top: 60rpx; padding-bottom: 0!important;
+  width: 100%; min-height: 100%; background:rgba(246,246,246,1); box-sizing: border-box; overflow: hidden; padding-top: 120rpx; 
 }
-// .scroll{ position: fixed; }
 
 
 .favorites{
@@ -155,11 +356,13 @@ export default class Favorites extends wepy.page {
   border-left: 2rpx solid #E8E8E8; padding-left: 20rpx;
 }
 .complete{ color: #C15356; }
+.active{ color: #F4695F; }
 
 
 
 .favorites_list{
-  width: 100%; display: flex; background-color: #FFFFFF; padding-bottom: 100rpx;
+  width: 100%; display: flex; background-color: #FFFFFF; 
+  // padding-bottom: 100rpx;
 }
 .goodsList{
   width: 100%; padding: 0 40rpx; box-sizing: border-box;
@@ -173,19 +376,25 @@ export default class Favorites extends wepy.page {
 }
 .goodsList_checked_{
   width: 120rpx; height: 180rpx; display: flex; align-items: center; justify-content: center;
-  //  border-bottom: 1px solid black;
 }
 .goodsList_checked_:last-child{
   margin-bottom: 0;
 }
 .goodsList_checked_ view{
-  width: 40rpx; height: 40rpx;
+  width: 40rpx; height: 40rpx; border:1px solid rgba(232,232,232,1); border-radius:50%; background-color: #FFFFFF;
 }
 .goodsList_checked_ view image{
   width: 100%; height: 100%;
 }
 
 
+
+.noMore{
+  width: 100%; height: 48rpx; font-size: 20rpx; color: #808080; display: flex; justify-content: center; align-items: center;
+}
+.noMore image{
+  width: 28rpx; height: 28rpx; margin-right: 20rpx; 
+}
 
 
 
@@ -213,6 +422,11 @@ export default class Favorites extends wepy.page {
   background-color: #C15356; color: #FFFFFF; margin-left: 20rpx;
 }
 
+
+
+.allCategory{
+  width: 100%; position: fixed; top: 120rpx; left: 0; z-index: 2;
+}
 
 
 </style>

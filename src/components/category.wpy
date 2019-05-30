@@ -1,0 +1,107 @@
+<template>
+    <scroll-view scroll-y id='category' style="height: {{screenHeight+'px'}};">
+        <!-- <view class='category_nav' bindtap="allcategoryDetails"><text>全部类目</text><text>{{$state.collotionCategory.totalCount}}</text></view> -->
+        <block wx:for="{{category}}" wx:key="{{index}}">
+            <h3>{{item.categoryName}}</h3>
+            <view class='category_list'>
+                <view class='category_nav' wx:for="{{item.listSmall}}" wx:for-item="itemName" wx:for-index="indexItem" wx:key="{{indexItem}}" 
+                @tap='categoryDetails' data-smallCategoryId="{{itemName.smallCategoryId}}" data-categoryId="{{item.categoryId}}">
+                <text>{{itemName.categoryNameSmall}}</text>
+                <!-- <text>{{itemName.clothCount}}</text> -->
+                </view>
+            </view>
+        </block>
+    </scroll-view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import 'wepy-async-function'
+
+@connect({
+    
+})
+    
+export default class Card extends wepy.component {
+    props = {
+        category: {
+            type: Object,
+            default: 'nothing',
+            twoWay: true
+        }
+    }
+    
+    data = {
+        screenHeight:''
+    }
+    
+    computed = {
+    
+    }
+    
+    methods = {
+        linkTo(e){
+            wx.navigateTo({url: e.currentTarget.dataset.url});
+        },
+        categoryDetails(e){
+            let list = {
+                categoryId: e.currentTarget.dataset.categoryid, smallCategoryId: e.currentTarget.dataset.smallcategoryid
+            }
+            wepy.$store.dispatch({type:'categoryIdMethod', payload: list})
+        }
+    }
+
+    onLoad () {
+        console.log(this.category); 
+        let screenHeight = wx.getSystemInfoSync().windowHeight
+        this.screenHeight = screenHeight - this.px(120)
+        this.$apply()
+    }
+
+    // rpx转px
+    px(rpx) {
+        var systemInfo = wx.getSystemInfoSync()
+        return rpx / 750 * systemInfo.windowWidth
+    }
+}
+</script>
+
+<style lang='less'>
+.font{
+    font-family:PingFang-SC-Medium; font-weight:500;
+}
+.displays{
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal !important;
+    -webkit-box-orient: vertical;
+}
+
+
+#category{
+  width: 100%; background-color: #FFFFFF;
+}
+
+h3{
+  font-size: 30rpx; color: #4B4B4B; margin-left: 40rpx; font-family:PingFang-SC-Medium; font-weight:500; 
+  line-height: 100rpx;
+}
+.category_nav{
+  width: 150rpx; height: 64rpx; font-size: 24rpx; color: #2B2B2B; line-height: 64rpx; box-sizing: border-box; margin-bottom: 20rpx;
+  background-color: #F6F6F6; text-align: center;
+}
+.category_nav text:nth-child(2){
+  font-size: 20rpx; color: #808080;
+}
+
+
+.category_list{
+  width: 100%; display: flex; flex-wrap: wrap; padding-left: 40rpx; box-sizing: border-box;
+}
+.category_list .category_nav{
+  margin: 0; margin-right: 20rpx; margin-bottom: 20rpx;
+}
+</style>

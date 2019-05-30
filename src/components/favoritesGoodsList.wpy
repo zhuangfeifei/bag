@@ -1,23 +1,23 @@
 <template>
     <view id="favoritesGoodsList">
 
-        <block wx:for="{{20}}" wx:key="{{index}}">
+        <block wx:for="{{favoritesList}}" wx:key="{{index}}">
             <view class='recommended_list'>
-              <image src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1289418334,1328502731&fm=26&gp=0.jpg"/>
+              <image src="{{imgurl + item.thumbnail_pic}}"/>
               <view class='recommended_list_content'>
-                  <view>ins小包包女2019新款潮韩版百搭春秋女包时尚手提斜挎包</view>
+                  <view>{{item.goods_name}}</view>
                   <view class='price'>
-                    <text>￥1280</text>
-                    <text>2888人收藏</text>
+                    <text>￥{{item.market_price}}</text>
+                    <text>{{item.collection_num}}人收藏</text>
                   </view>
               </view>
             </view>
         </block>
 
-        <!-- <view wx:if="{{false}}" class='no_favorites_goodsList'>
-            <image src='/images/my/no_favorites.png'/>
-            <view>您还没有收藏哦</view>
-        </view> -->
+        <view wx:if="{{favoritesList.length == 0}}" class='no_favorites_goodsList'>
+            <image src='/images/my/TB_zanwudizhi.png'/>
+            <view>亲，你还没有收藏哦～</view>
+        </view>
 
     </view>
 </template>
@@ -28,11 +28,19 @@ import { connect } from 'wepy-redux'
 import 'wepy-async-function'
 
 @connect({
-    
+    imgurl(state){
+        return state.counter.imgurl
+    },
 })
     
 export default class FavoritesGoodsList extends wepy.component {
-    
+    props = {
+        favoritesList: {
+            type: Object,
+            default: 'nothing',
+            twoWay: true
+        }
+    }
     
     data = {
       
@@ -62,7 +70,7 @@ export default class FavoritesGoodsList extends wepy.component {
   padding: 24rpx 0;
   color: #2b2b2b;
 }
-.recommended_list:last-child{ margin-bottom: 0; }
+.recommended_list:last-child{ margin-bottom: 0; border: 0; }
 .recommended_list image{
   width: 130rpx; height: 130rpx; border-radius: 10rpx;
 }
@@ -108,5 +116,5 @@ export default class FavoritesGoodsList extends wepy.component {
   width: 100%; height: 100%; background-color: #FFFFFF; text-align: center; box-sizing: border-box;
   padding-top: 200rpx; color: #2A2A2A; font-size: 24rpx; font-family:PingFang-SC-Medium; font-weight:500;
 }
-.no_favorites_goodsList image{ width: 159rpx; height: 159rpx; margin-bottom: 30rpx; }
+.no_favorites_goodsList image{ width: 342rpx; height: 255rpx; margin-bottom: 30rpx; }
 </style>
