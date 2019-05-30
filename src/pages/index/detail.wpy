@@ -2,264 +2,267 @@
 <template>
   <view>
     <import src="../../wxParse/wxParse.wxml" />
-  <view class="swprice">
-    <swiper class="topswiper" indicator-dots="{{indicatorDots}}" circular="true" indicator-active-color="white" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-      <block wx:for="{{imgurlsd}}" wx:key="{{imgurlsd}}">
-        <swiper-item>
-          <image mode="aspectFill" lazy-load="true" src="{{imgurls+item}}" />
-        </swiper-item>
-      </block>
-    </swiper>
-    <view class="rightbtom">
-      <text> 开业酬宾疯狂抢购中</text>
-    </view>
-    <view class="onconter">
-      <view class="onma">
-        <text class="oma_a">￥</text>
-        <text class="oma_b">{{poat_List.market_price}}</text>
-        <text class="oma_c">￥</text>
-        <text class="oma_d">{{poat_List.original_price}}</text>
-        <text class="oma_e">销量\t {{poat_List.virtual_sales}}</text>
-      </view>
-      <view class="onmb">
-        <view class="omnb_text">{{poat_List.goods_name}}
-        </view>
-        <view class="fenxi" @tap="clckhide">
-          <image src="/images/notices/fenxiangsk.png" />
-          <text>分享</text>
-        </view>
-      </view>
-    </view>
-    <view class="onters">
-      <view class="fenxia">
-        <image wx:if="{{poat_List.isCollection==0}}" @tap="Collection" src="/images/notices/shoucang.png" />
-        <image wx:else @tap="Collection" src="/images/notices/yishoucang.png" />
-        <text>收藏</text>
-      </view>
-      <view class="fenxib">
-        <image wx:if="{{poat_List.islike==0}}" @tap="uesrlike" src="/images/notices/xihaun.png" />
-        <image wx:else @tap="uesrlike" src="/images/notices/yixihuan.png" />
-        <text>喜欢</text>
-      </view>
-    </view>
-  </view>
-  <view style="height:20rpx;background:#f2f2f2"></view>
-  <view class="onho">
-    <image src="/images/notices/labaimg.png" />
-    <text>暂无活动~</text>
-  </view>
-  <view style="height:20rpx;background:#f2f2f2"></view>
-  <view class="onhos">
-    <view class="cuogai" @tap="jiaru_ups">
-      <view class="onhos_a">选择</view>
-      <view class="onhos_b">
-        <view class="b_show">
-          <view wx:if="{{cont==1}}">
-            <text>请选择</text>
-            <text>颜色分类</text>
-          </view>
-          <view>
-            <text wx:if="{{cont==0&&scolor}}">已选："{{scolor}}"</text>
-          </view>
-          <view style="text-align: right;">
-            <image src="/images/notices/jinruop.png" />
-          </view>
-        </view>
-        <view class="onbtn">
-          <view class="liatimg">
-            <view wx:for="{{imgurlsd}}" wx:key="{{imgurlsd}}">
-              <image data-id="{{index}}" mode="aspectFill" wx:if="{{index<name_list.length}}" lazy-load="true" src="{{imgurls+item}}" />
-            </view>
-          </view>
-          <view class="lait">共{{name_list.length}}种颜色分类可选</view>
-        </view>
-      </view>
-    </view>
-  </view>
-  <view style="height:20rpx;background:#f2f2f2"></view>
-  <view class="onhosd" wx:if="{{poat_List.commentsMap.commentsList!=''}}">
-    <view class="ondise">
-      <view>
-        <text>商品评价</text>
-        <text>（{{poat_List.commentsMap.count}}）</text>
-      </view>
-      <view @tap="evaldetail">
-        <text>查看全部</text>
-        <image src="/images/notices/jinruhong.png" />
-      </view>
-    </view>
-    <view class="lsnull">
-      <swiper class="tops" bindchange="bindchange" next-margin="230rpx">
-        <block wx:for="{{data_pric}}" wx:key="{{data_pric}}" data-id="{{index}}" wx:if="{{index<5}}">
-          <swiper-item class="onswiper">
-            <view class="slide-image {{swiperIndex == index ? 'active' : 'quiet'}}">
-              <view class="name_list">
-                <image src="{{data_pric[index].headicon}}"/>
-                <view>{{data_pric[index].realname}}</view>
-              </view>
-              <view class="ontetx">{{data_pric[index].content}}</view>
-            </view>
+    <view class="swprice">
+      <swiper class="topswiper" indicator-dots="{{indicatorDots}}" circular="true" indicator-active-color="white" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+        <block wx:for="{{imgurlsd}}" wx:key="{{imgurlsd}}">
+          <swiper-item>
+            <image mode="aspectFill" lazy-load="true" src="{{imgurls+item}}" />
           </swiper-item>
         </block>
       </swiper>
-    </view>
-  </view>
-  <view class="ontn" wx:else>
-    <text>暂无商品评价</text>
-  </view>
-  <view class="liatflex">
-    <view class="fllist">
-      <view class="ona"></view>
-      <text>商品详情</text>
-      <view class="onb"></view>
-    </view>
-  </view>
-  <!--详情图片-->
-  <view class="onlimng">
-    <view class="container" style='font-size:28rpx;'>
-      <template is="wxParse" data="{{wxParseData:article.nodes}}" />
-    </view>
-  </view>
-  <view class="liatflex">
-    <view class="fllist">
-      <view class="ona"></view>
-      <text>相似推荐</text>
-      <view class="onb"></view>
-    </view>
-  </view>
-  <view class="btnoom">
-    <view class="btn_list">
-      <view class="ontab_list">
-        <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-          <image src="{{imgurls+home_liat[index].thumbnail_pic}}"/>
-          <view class="ontbnt">
-            <text>￥{{home_liat[index].original_price}}</text>
-            <text>￥{{home_liat[index].fall_price}}</text>
+      <view class="rightbtom">
+        <text> 开业酬宾疯狂抢购中</text>
+      </view>
+      <view class="onconter">
+        <view class="onma">
+          <text class="oma_a">￥</text>
+          <text class="oma_b">{{poat_List.market_price}}</text>
+          <text class="oma_c">￥</text>
+          <text class="oma_d">{{poat_List.original_price}}</text>
+          <text class="oma_e">销量\t {{poat_List.virtual_sales}}</text>
+        </view>
+        <view class="onmb">
+          <view class="omnb_text">{{poat_List.goods_name}}
           </view>
-          <view class="btnbuton" @tap="tap_playto" data-id="{{home_liat[index].id}}">立即购买</view>
+          <view class="fenxi" @tap="clckhide">
+            <image src="/images/notices/fenxiangsk.png" />
+            <text>分享</text>
+          </view>
+        </view>
+      </view>
+      <view class="onters">
+        <view class="fenxia">
+          <image wx:if="{{poat_List.isCollection==0}}" @tap="Collection" src="/images/notices/shoucang.png" />
+          <image wx:else @tap="Collection" src="/images/notices/yishoucang.png" />
+          <text>收藏</text>
+        </view>
+        <view class="fenxib">
+          <image wx:if="{{poat_List.islike==0}}" @tap="uesrlike" src="/images/notices/xihaun.png" />
+          <image wx:else @tap="uesrlike" src="/images/notices/yixihuan.png" />
+          <text>喜欢</text>
         </view>
       </view>
     </view>
-    <view style="height:60rpx"></view>
-  </view>
-  <view class="onnone" wx:if="{{homelist==false}}">没有更多了哦~</view>
-  <view style="height:100rpx"></view>
-  <view class="ontabbtn">
-    <view>
+    <view style="height:20rpx;background:#f2f2f2"></view>
+    <view class="onho">
+      <image src="/images/notices/labaimg.png" />
+      <text>暂无活动~</text>
+    </view>
+    <view style="height:20rpx;background:#f2f2f2"></view>
+    <view class="onhos">
+      <view class="cuogai" @tap="jiaru_ups">
+        <view class="onhos_a">选择</view>
+        <view class="onhos_b">
+          <view class="b_show">
+            <view wx:if="{{cont==1}}">
+              <text>请选择</text>
+              <text>颜色分类</text>
+            </view>
+            <view>
+              <text wx:if="{{cont==0&&scolor}}">已选："{{scolor}}"</text>
+            </view>
+            <view style="text-align: right;">
+              <image src="/images/notices/jinruop.png" />
+            </view>
+          </view>
+          <view class="onbtn">
+            <view class="liatimg">
+              <view wx:for="{{imgurlsd}}" wx:key="{{imgurlsd}}">
+                <image data-id="{{index}}" mode="aspectFill" wx:if="{{index<imgurlsd.length}}" lazy-load="true" src="{{imgurls+item}}" />
+              </view>
+            </view>
+            <view class="lait">共{{data_list.length}}种颜色分类可选</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view style="height:20rpx;background:#f2f2f2"></view>
+    <view class="onhosd" wx:if="{{poat_List.commentsMap.commentsList!=''}}">
+      <view class="ondise">
+        <view>
+          <text>商品评价</text>
+          <text>（{{poat_List.commentsMap.count}}）</text>
+        </view>
+        <view @tap="evaldetail">
+          <text>查看全部</text>
+          <image src="/images/notices/jinruhong.png" />
+        </view>
+      </view>
+      <view class="lsnull">
+        <swiper class="tops" bindchange="bindchange" next-margin="230rpx">
+          <block wx:for="{{data_pric}}" wx:key="{{data_pric}}" data-id="{{index}}" wx:if="{{index<5}}">
+            <swiper-item class="onswiper">
+              <view class="slide-image {{swiperIndex == index ? 'active' : 'quiet'}}">
+                <view class="name_list">
+                  <image src="{{data_pric[index].headicon}}"></image>
+                  <view>{{data_pric[index].realname}}</view>
+                </view>
+                <view class="ontetx">{{data_pric[index].content}}</view>
+              </view>
+            </swiper-item>
+          </block>
+        </swiper>
+      </view>
+    </view>
+    <view class="ontn" wx:else>
+      <text>暂无商品评价</text>
+    </view>
+    <view class="liatflex">
+      <view class="fllist">
+        <view class="ona"></view>
+        <text>商品详情</text>
+        <view class="onb"></view>
+      </view>
+    </view>
+    <!--详情图片-->
+    <view class="onlimng">
+      <view class="container" style='font-size:28rpx;'>
+        <template is="wxParse" data="{{wxParseData:article.nodes}}" />
+      </view>
+    </view>
+    <view class="liatflex">
+      <view class="fllist">
+        <view class="ona"></view>
+        <text>相似推荐</text>
+        <view class="onb"></view>
+      </view>
+    </view>
+    <view class="btnoom">
+      <view class="btn_list">
+        <view class="ontab_list">
+          <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
+            <image src="{{imgurls+home_liat[index].thumbnail_pic}}">
+            </image>
+            <view class="ontbnt">
+              <text>￥{{home_liat[index].original_price}}</text>
+              <text>￥{{home_liat[index].fall_price}}</text>
+            </view>
+            <view class="btnbuton" @tap="tap_playto" data-id="{{home_liat[index].id}}">立即购买</view>
+          </view>
+        </view>
+      </view>
+      <view style="height:60rpx"></view>
+    </view>
+    <view class="onnone" wx:if="{{homelist==false}}">没有更多了哦~</view>
+    <view style="height:100rpx"></view>
+    <view class="ontabbtn">
       <view>
-        <image src='/images/notices/tab_shouye.png'/>
-        <text>首页</text>
-      </view>
-      <view>
-        <button open-type='contact'>
-          <image src='/images/notices/tab_kefu.png'/>
-        </button>
-        <text>客服</text>
-      </view>
-      <view>
-        <image src='/images/notices/tab_gouwuche.png'/>
-        <text>购物车</text>
-      </view>
-    </view>
-    <view>
-      <view @tap="jiaru_up">
-        <text>加入购物车</text>
-      </view>
-      <view>
-        <text @tap="tap_play">立即购买</text>
-      </view>
-    </view>
-  </view>
-  <view class="bomtrnfxid" wx:if="{{cosde}}">
-    <image src='/images/notices/tab_tanjiangc.png'/>
-    <text>添加成功，在购物车等你哦~</text>
-  </view>
-  <view class="fixedsd">
-    <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop"/>
-  </view>
-  <view class="fenxs">返回顶部</view>
-  <!--底部属性弹窗-->
-  <view class="btn_tab_uo" wx:if="{{sod_up==1}}"></view>
-  <view class="ontabbtnsfdg" wx:if="{{sod_up==1}}">
-    <view class="up_top">
-      <view class="om">
-        <image mode="aspectFill" lazy-load="true" src="{{imgurls+poat_List.thumbnail_pic}}"/>
-      </view>
-      <view class="oms">
-        <view>￥{{poat_List.market_price}}</view>
-        <view wx:if="{{sexid==0}}">选择 颜色 尺码</view>
-        <view wx:if="{{sexid==1}}">选择 {{sexcale}}</view>
-        <view wx:if="{{sexid==2}}" style="width:350rpx;">已选："{{scolor}}" "{{ssexd}}"</view>
-      </view>
-    </view>
-    <view class="zws_list"></view>
-    <view class="up_cont_tap">
-      <text>颜色</text>
-      <view class="up_donwn">
-        <view wx:for="{{name_list}}" wx:key="{{name_list}}" data-exclusiveId="{{name_list[index].id}}" data-name="{{name_list[index].colorName}}" data-id="{{index}}" style="{{index == id?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" wx:if="{{name_list[index].colorName}}" @tap="click">{{name_list[index].colorName}}</view>
-        <!-- <view wx:if="{{datacodes==false}}" data-name="{{colorName}}" style="{{idasd==0?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="clickdedf">{{colorName}}</view> -->
-      </view>
-    </view>
-    <view class="up_cont_tap" style="margin-top:55rpx;">
-      <text>尺码</text>
-      <view class="up_donwn">
-        <view wx:for="{{data_list}}" wx:key="{{data_list}}" wx:if="{{data_list[index].name&&datacode==true}}" data-name="{{data_list[index].name}}" data-id="{{index}}" style="{{index == ida?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="clicks">{{data_list[index].name}}</view>
-        <view wx:if="{{datacode==false}}" data-name="{{sizeName}}" style="{{idas==0?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="clicksdf">{{sizeName}}</view>
-      </view>
-    </view>
-    <view class="ontabs_numa">
-      <view class="_numa_text">
-        <text>购买数量</text>
-      </view>
-      <view class="_numa_numt">
-        <view class="_inputas" wx:if="{{num==1}}">-</view>
-        <view class="_inputa" wx:else @tap="shopnumdown">-</view>
-        <input type="text" value="{{num}}" disabled="true" />
-        <view class="_inputb" @tap="shopnumup">+</view>
-      </view>
-    </view>
-    <view class="_num_btn_a" wx:if="{{poat_List.isCart==0}}">
-      <view class="_btnaf" @tap="jiashop_list">加入购物车</view>
-      <view class="_btnafs" @tap="tap_play">立即购买</view>
-    </view>
-    <view class="on_clicki" wx:else @tap="tap_play">确定</view>
-  </view>
-  <view class="cbtndown" wx:if="{{onhidup==false}}"></view>
-  <view class="cla_view" wx:if="{{onhidup==false}}">
-    <view class="hlpelist">
-      <view class="onm">
-        <view class="hlpelist_list">
-          <button open-type="share">
-            <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png"/>
+        <view>
+          <image src='/images/notices/tab_shouye.png'></image>
+          <text>首页</text>
+        </view>
+        <view>
+          <button open-type='contact'>
+            <image src='/images/notices/tab_kefu.png'></image>
           </button>
+          <text>客服</text>
         </view>
-        <view class="on">分享给好友和微信群</view>
+        <view>
+          <image src='/images/notices/tab_gouwuche.png'></image>
+          <text>购物车</text>
+        </view>
       </view>
-      <view class="onm">
-        <view class="hlpelist_list">
-          <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics'/>
+      <view>
+        <view @tap="jiaru_up">
+          <text>加入购物车</text>
         </view>
-        <view class="on">生成海报 保存分享</view>
+        <view>
+          <text @tap="tap_playup">立即购买</text>
+        </view>
       </view>
     </view>
-    <view class="back_tops" @tap="clckhide">取消</view>
-  </view>
-  <!--创建分享卡片-->
-  <!-- 分享 S -->
-  <view class="share-cover" wx:if="{{showSharePic}}" catchtouchmove='true' style="display:{{hinde}}">
-    <scroll-view scroll-y="true" style="height:1300rpx;">
-      <view class="topimg_sd">
-        <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden"/>
-      </view>
-      <view class="share-pic-box">
-        <view class="share-pic">
-          <image src="{{sharePicUrl}}" class="sharePic"/>
+    <view class="bomtrnfxid" wx:if="{{cosde}}">
+      <image src='/images/notices/tab_tanjiangc.png'></image>
+      <text>添加成功，在购物车等你哦~</text>
+    </view>
+    <view class="fixedsd">
+      <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop"></image>
+    </view>
+    <view class="fenxs">返回顶部</view>
+    <!--底部属性弹窗-->
+    <view class="btn_tab_uo" wx:if="{{sod_up==1}}"></view>
+    <view class="back_stopup" wx:if="{{sod_up==1}}" @tap="hi_stoplist"></view>
+    <view class="ontabbtnsfdg" wx:if="{{sod_up==1}}">
+      <view class="up_top">
+        <view class="om">
+          <image mode="aspectFill" lazy-load="true" src="{{imgurls+poat_List.thumbnail_pic}}"></image>
         </view>
-        <button class="share-tips" @tap='savePicsd'>保存图片到相册</button>
+        <view class="oms">
+          <view>￥{{poat_List.market_price}}</view>
+          <view wx:if="{{sexid==0}}">选择 颜色 尺码</view>
+          <view wx:if="{{sexid==1}}">选择 {{sexcale}}</view>
+          <view wx:if="{{sexid==2}}" style="width:350rpx;">已选："{{scolor}}" "{{ssexd}}"</view>
+        </view>
       </view>
-    </scroll-view>
-  </view>
-  <canvas canvas-id="shareFrends" class="canvas"></canvas>
+      <view class="zws_list"></view>
+      <scroll-view scroll-y="true" style="height:470rpx;">
+        <view class="up_cont_tap">
+          <text>颜色</text>
+          <view class="up_donwn">
+            <view wx:for="{{data_list}}" wx:key="{{data_list}}" wx:if="{{data_list[index].name}}" data-name="{{data_list[index].name}}" data-id="{{index}}" style="{{index == id?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="click">{{data_list[index].name}}</view>
+          </view>
+        </view>
+        <view class="up_cont_tap" style="margin-top:40rpx;">
+          <text>尺码</text>
+          <view class="up_donwn">
+            <view wx:for="{{sizeNames}}" wx:key="{{sizeNames}}" wx:if="{{item.sizeName&&datacode==true}}" data-name="{{item.sizeName}}" data-id="{{index}}" style="{{index == ida?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="clicks">{{item.sizeName}}</view>
+            <view wx:if="{{datacode==false}}" data-name="{{sizeName}}" style="{{idas==0?'color:white;background:rgba(244,105,95,1);':'background: rgba(245, 245, 245, 1);border:none'}}" @tap="clicksdf">{{sizeName}}</view>
+          </view>
+        </view>
+        <view class="ontabs_numa">
+          <view class="_numa_text">
+            <text>购买数量</text>
+          </view>
+          <view class="_numa_numt">
+            <view class="_inputas" wx:if="{{num==1}}">-</view>
+            <view class="_inputa" wx:else @tap="shopnumdown">-</view>
+            <input type="text" value="{{num}}" disabled="true" />
+            <view class="_inputb" @tap="shopnumup">+</view>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="_num_btn_a" wx:if="{{poat_List.isCart==0}}">
+        <view class="_btnaf" @tap="jiashop_list">加入购物车</view>
+        <view class="_btnafs" @tap="tap_play">立即购买</view>
+      </view>
+      <view class="on_clicki" wx:else @tap="tap_play">确定</view>
+    </view>
+    <view class="cbtndown" wx:if="{{onhidup==false}}"></view>
+    <view class="cla_view" wx:if="{{onhidup==false}}">
+      <view class="hlpelist">
+        <view class="onm">
+          <view class="hlpelist_list">
+            <button open-type="share">
+              <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png"></image>
+            </button>
+          </view>
+          <view class="on">分享给好友和微信群</view>
+        </view>
+        <view class="onm">
+          <view class="hlpelist_list">
+            <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics'></image>
+          </view>
+          <view class="on">生成海报 保存分享</view>
+        </view>
+      </view>
+      <view class="back_tops" @tap="clckhide">取消</view>
+    </view>
+    <!--创建分享卡片-->
+    <!-- 分享 S -->
+    <view class="share-cover" wx:if="{{showSharePic}}" catchtouchmove='true' style="display:{{hinde}}">
+      <scroll-view scroll-y="true" style="height:1300rpx;">
+        <view class="topimg_sd">
+          <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden"></image>
+        </view>
+        <view class="share-pic-box">
+          <view class="share-pic">
+            <image src="{{sharePicUrl}}" class="sharePic"></image>
+          </view>
+          <button class="share-tips" @tap='savePicsd'>保存图片到相册</button>
+        </view>
+      </scroll-view>
+    </view>
+    <canvas canvas-id="shareFrends" class="canvas"></canvas>
   </view>
 </template>
 
@@ -326,9 +329,14 @@ export default class Detail extends wepy.page {
     onhiden: true,
     home_liat: [],
     data_list: [], //重写商品属性尺码
-    name_list: [],
+    sizeNames: [
+      { sizeName: '大码' },
+      { sizeName: '中码' },
+      { sizeName: '小码' },
+      { sizeName: 'mini' }
+    ],
     data_pric: [],
-    shareited:'',
+    shareited: ''
   };
 
   computed = {};
@@ -358,7 +366,18 @@ export default class Detail extends wepy.page {
       this.scolor = name;
       this.idas = 1;
       this.datacode = false;
-      this.sizeName = this.name_list[ids].sizeName;
+      let a = this.data_list[ids].detail;
+      let namessd = '';
+      if (a == '暂无货') {
+        this.sizeName = '暂无货';
+        this.ssexd = '';
+      } else if (a.constructor == Array) {
+        for (let i in a) {
+          namessd = a[i].sizeName;
+        }
+        this.sizeName = namessd;
+        this.ssexd = '';
+      }
       this.id = ids;
       if (this.ssexd == '') {
         this.sexcale = '尺码';
@@ -367,43 +386,36 @@ export default class Detail extends wepy.page {
         this.sexid = 2;
       }
     },
-    // clickdedf: function(e) {
-    //   let name = e.currentTarget.dataset.name;
-    //   let exclusiveId = e.currentTarget.dataset.exclusiveid;
-    //   this.exclusiveId = exclusiveId;
-    //   this.scolor = name;
-    //   this.idas = 1;
-    //   this.idasd = 0;
-    //   if (this.ssexd == '') {
-    //     this.sexcale = '尺码';
-    //     this.sexid = 1;
-    //   } else {
-    //     this.sexid = 2;
-    //   }
-    // },
+    tap_playup() {
+      if (this.scolor && this.ssexd && this.ssexd != '暂无货') {
+        wx.navigateTo({
+          url: '/pages/index/order'
+        });
+      } else {
+         wx.showToast({
+          title: '请选择商品属性',
+          icon: 'none',
+          duration: 2000
+        });
+        this.sod_up = 1;
+      }
+    },
     clicks: function(e) {
       let ids = e.currentTarget.dataset.id;
       let name = e.currentTarget.dataset.name;
       this.datacodes = false;
-      this.idasd = 1;
       this.ssexd = name;
       this.ida = ids;
-      let colorName = [];
-      for (let i in this.name_list) {
-        if (this.name_list) {
-          let obj = {};
-          let data = this.name_list[i].colorName;
-          obj.data = data;
-          colorName.push(obj);
-        }
-      }
-      this.colorName = colorName;
       if (this.scolor == '') {
         this.sexcale = '颜色';
         this.sexid = 1;
       } else {
         this.sexid = 2;
       }
+    },
+    //隐藏购物车
+    hi_stoplist() {
+      this.sod_up = 0;
     },
     clicksdf: function(e) {
       let name = e.currentTarget.dataset.name;
@@ -431,11 +443,19 @@ export default class Detail extends wepy.page {
     jiaru_ups() {
       this.sod_up = 1;
     },
-    // tap_playto(e) {
-    //     wx.navigateTo({
-    //       url: '/pages/index/detail',
-    //     });
-    // },
+    tap_playto(e) {
+      if (this.ssexd != '暂无货') {
+        wx.navigateTo({
+          url: '/pages/index/detail'
+        });
+      } else {
+        wx.showToast({
+          title: '请选择商品属性',
+          icon: 'none',
+          duration: 2000
+        });
+      }
+    },
     jiaru_up() {
       if (this.sexcale && this.scolor) {
         this.sod_up = 0;
@@ -456,7 +476,7 @@ export default class Detail extends wepy.page {
       if (this.poat_List.isCart == 1) {
         that.cosde = false;
       }
-      if (that.ssexd && that.scolor) {
+      if (that.ssexd && that.scolor && that.ssexd != '暂无货') {
         that.cosde = true;
         that.sod_up = 0;
         wepy.$Api.addshoplist(a).then(
@@ -501,9 +521,17 @@ export default class Detail extends wepy.page {
     },
     //立即购买
     tap_play() {
-      wx.navigateTo({
-        url: '/pages/index/order'
-      });
+      if (this.ssexd != '暂无货') {
+        wx.navigateTo({
+          url: '/pages/index/order'
+        });
+      } else {
+        wx.showToast({
+          title: '请选择商品属性',
+          icon: 'none',
+          duration: 2000
+        });
+      }
     },
     evaldetail() {
       wx.navigateTo({
@@ -861,8 +889,7 @@ export default class Detail extends wepy.page {
     this.imgurl = this.imgurls.imgurl;
     this.deatil();
     this.recommendations();
-    this.shareited=this.shop_detaiMethods
-
+    this.shareited = this.shop_detaiMethods;
   }
   //轮播图
   deatil() {
@@ -872,9 +899,8 @@ export default class Detail extends wepy.page {
     };
     wepy.$Api.shopDetail(a).then(
       res => {
-        console.log(res.data)
-        let name_list = [];
         if (res.data.data) {
+          let sizeNames = [];
           if (res.data.data.goods_pic) {
             this.imgurlsd = res.data.data.goods_pic.split(',');
           }
@@ -883,18 +909,8 @@ export default class Detail extends wepy.page {
           this.data_pric = res.data.data.commentsMap.commentsList;
           let love = res.data.data.description;
           WxParse.wxParse('article', 'html', love, this, 5);
-          for (let i in res.data.data.JBXX) {
-            let name = res.data.data.JBXX[i].detail;
-            if (name.constructor == Array) {
-              for (let j in name) {
-                let names = name[j];
-                name_list.push(names);
-              }
-            }
-          }
-          this.name_list = name_list;
         }
-        this.$apply()
+        this.$apply();
       },
       err => {}
     );
@@ -909,7 +925,6 @@ export default class Detail extends wepy.page {
     wepy.$Api.recommendation(a).then(
       res => {
         if (res.data.data) {
-          console.log(res);
           this.home_liat = res.data.data;
         }
       },
@@ -1644,6 +1659,7 @@ button::after {
   background: rgba(255, 255, 255, 1);
   position: fixed;
   bottom: 0;
+  z-index: 777;
 }
 .up_top {
   width: 700rpx;
@@ -1724,7 +1740,6 @@ button::after {
 }
 .up_cont_tap {
   width: 700rpx;
-  height: 115rpx;
   margin: 20rpx auto;
 }
 .up_cont_tap text {
@@ -1736,12 +1751,13 @@ button::after {
 }
 .up_donwn {
   width: 100%;
-  height: 90rpx;
+  height: auto;
   display: flex;
   // justify-content: space-between;
   justify-content: left;
   flex-wrap: wrap;
-  margin-top: 28rpx;
+  margin-top: 8rpx;
+  margin-left: -30rpx;
 }
 .up_donwn view {
   width: 144rpx;
@@ -1752,13 +1768,11 @@ button::after {
   line-height: 58rpx;
   font-size: 24rpx;
   margin-left: 30rpx;
+  margin-top: 20rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
   color: rgba(54, 54, 54, 1);
   letter-spacing: 1rpx;
-}
-.up_donwn view:nth-child(1) {
-  margin-left: 0;
 }
 .ontabs_numa {
   width: 700rpx;
@@ -1836,7 +1850,7 @@ button::after {
   width: 700rpx;
   height: 70rpx;
   display: flex;
-  margin: 125rpx auto;
+  margin: 70rpx auto;
 }
 ._num_btn_a view:nth-child(1) {
   width: 330rpx;
@@ -1869,7 +1883,7 @@ button::after {
 .on_clicki {
   width: 600rpx;
   height: 70rpx;
-  margin: 125rpx auto;
+  margin: 70rpx auto;
   text-align: center;
   line-height: 70rpx;
   letter-spacing: 2rpx;
@@ -2063,5 +2077,12 @@ button::after {
 .stopimg {
   width: 56rpx;
   height: 56rpx;
+}
+.back_stopup {
+  width: 100%;
+  height: 250rpx;
+  position: fixed;
+  top: 0;
+  z-index: 66;
 }
 </style>

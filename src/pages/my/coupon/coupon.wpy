@@ -28,7 +28,11 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  userinfo(state) {
+    return state.counter.userinfo;
+  }
+})
 export default class Coupon extends wepy.page {
   config = {
     navigationBarTitleText: '优惠券'
@@ -69,8 +73,23 @@ export default class Coupon extends wepy.page {
       this.id = ids;
     }
   };
-
-  onLoad() {}
+  couponts() {
+    let a = {
+      unionId: this.userinfo.unionid
+    };
+    if (a) {
+      wepy.$Api.addcoupon(a).then(
+        res => {
+          console.log(res)
+        },
+        err => {}
+      );
+    }
+  }
+  onLoad() {
+    this.couponts();
+  }
+  
 }
 </script>
 

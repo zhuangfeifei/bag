@@ -1,100 +1,101 @@
 <template>
-<view>
+  <view>
     <view class="tap_back" wx:if="{{post_list.length>0}}"></view>
-  <view class="top_v" wx:if="{{clckcode==false&&post_list.length>0}}" @tap="management">管理</view>
-  <view class="top_v" wx:if="{{clckcode==true&&post_list.length>0}}" @tap="manageall">完成</view>
-  <view class="shop_list" wx:if="{{post_list.length>0}}">
-    <view class="top_ve" wx:for="{{post_list}}" wx:key="{{post_list}}">
-      <view class="_detil">
-        <view class="_dr_list" wx:if="{{selection==true}}" @tap="selectdck" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">
-          <image wx:if="{{index==idx||item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
-          <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
-        </view>
-        <view class="_dr_list" wx:else @tap="selectdcks" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">
-          <image wx:if="{{item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
-          <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
-        </view>
-        <view class="_detail_v">
-          <image src="{{item.spic}}" />
-          <view wx:if="{{item.code==0}}">已失效</view>
-          <view wx:if="{{item.code==1}}">降价中</view>
-          <view wx:if='{{item.code==2}}'>库存低</view>
-        </view>
-        <view class="_detail_vs">
-          <view class="_detail_sd">{{item.text}}</view>
-          <view class="_detail_s">颜色({{item.color}}）；尺码({{item.size}})</view>
-          <view class="_detail_d">
-            <view class="_d_price">
-              <text>￥</text>
-              <text>{{item.sprice}}</text>
-            </view>
-            <view class="_d_num">
-              <view @tap="prnumj" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">-</view>
-              <view>{{item.count}}</view>
-              <view @tap="prnumz" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">+</view>
+    <view class="top_v" wx:if="{{clckcode==false&&post_list.length>0}}" @tap="management">管理</view>
+    <view class="top_v" wx:if="{{clckcode==true&&post_list.length>0}}" @tap="manageall">完成</view>
+    <view class="shop_list" wx:if="{{post_list.length>0}}">
+      <view class="top_ve" wx:for="{{post_list}}" wx:key="{{post_list}}">
+        <view class="_detil">
+          <view class="_dr_list" wx:if="{{selection==true}}" @tap="selectdck" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">
+            <image wx:if="{{index==idx||item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
+            <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
+          </view>
+          <view class="_dr_list" wx:else @tap="selectdcks" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">
+            <image wx:if="{{item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
+            <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
+          </view>
+          <view class="_detail_v">
+            <image src="{{item.spic}}" />
+            <view wx:if="{{item.code==0}}">已失效</view>
+            <view wx:if="{{item.code==1}}">降价中</view>
+            <view wx:if='{{item.code==2}}'>库存低</view>
+          </view>
+          <view class="_detail_vs">
+            <view class="_detail_sd">{{item.text}}</view>
+            <view class="_detail_s">颜色({{item.color}}）；尺码({{item.size}})</view>
+            <view class="_detail_d">
+              <view class="_d_price">
+                <text>￥</text>
+                <text>{{item.sprice}}</text>
+              </view>
+              <view class="_d_num">
+                <view @tap="prnumj" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">-</view>
+                <view>{{item.count}}</view>
+                <view @tap="prnumz" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">+</view>
+              </view>
             </view>
           </view>
         </view>
       </view>
     </view>
-  </view>
-  <view class="liatflex" wx:if="{{post_list.length>0}}">
-    <view class="fllist">
-      <view class="ona"></view>
-      <text>猜你喜欢</text>
-      <view class="onb"></view>
+    <view class="liatflex" wx:if="{{post_list.length>0}}">
+      <view class="fllist">
+        <view class="ona"></view>
+        <text>猜你喜欢</text>
+        <view class="onb"></view>
+      </view>
     </view>
-  </view>
-  <view class="btnoom" wx:if="{{post_list.length>0}}">
-    <view class="btn_list">
-      <view class="ontab_list">
-        <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-          <image src="{{item.pic}}"/>
-          <view class="ontbnt">
-            <text>￥{{item.oprice}}</text>
-            <text>￥{{item.price}}</text>
+    <view class="btnoom" wx:if="{{post_list.length>0}}">
+      <view class="btn_list">
+        <view class="ontab_list">
+          <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
+            <image src="{{item.pic}}">
+            </image>
+            <view class="ontbnt">
+              <text>￥{{item.oprice}}</text>
+              <text>￥{{item.price}}</text>
+            </view>
+            <view class="btnbuton" @tap="tap_play">立即购买</view>
           </view>
-          <view class="btnbuton" @tap="tap_play">立即购买</view>
         </view>
       </view>
+      <view style="height:60rpx"></view>
     </view>
-    <view style="height:60rpx"></view>
-  </view>
-  <view class="onnone" wx:if="{{post_list.length>0}}">没有更多了哦~</view>
-  <view style="height:100rpx;" wx:if="{{post_list.length>0}}"></view>
-  <view class="po_fxide" wx:if="{{clckcode==false&&post_list.length>0}}">
-    <view>
-      <view>合计:
-        <text>￥{{total_price}}</text>
-      </view>
-    </view>
-    <view>
-      <view>结算</view>
-    </view>
-  </view>
-  <view class="btno" wx:if="{{clckcode==true&&post_list.length>0}}">
-    <view @tap="selectall">
-      <image wx:if="{{selectds==true}}" src="/images/notices/cxuanzhong.png" />
-      <image wx:else src="/images/notices/nnxuanzhong.png" />
-      <text>全选</text>
-    </view>
-    <view>
+    <view class="onnone" wx:if="{{post_list.length>0}}">没有更多了哦~</view>
+    <view style="height:100rpx;" wx:if="{{post_list.length>0}}"></view>
+    <view class="po_fxide" wx:if="{{clckcode==false&&post_list.length>0}}">
       <view>
-        <text>移入收藏夹</text>
+        <view>合计:
+          <text>￥{{total_price}}</text>
+        </view>
       </view>
-      <view @tap="detelte">
-        <text>删除</text>
+      <view>
+        <view>结算</view>
       </view>
     </view>
+    <view class="btno" wx:if="{{clckcode==true&&post_list.length>0}}">
+      <view @tap="selectall">
+        <image wx:if="{{selectds==true}}" src="/images/notices/cxuanzhong.png" />
+        <image wx:else src="/images/notices/nnxuanzhong.png" />
+        <text>全选</text>
+      </view>
+      <view>
+        <view>
+          <text>移入收藏夹</text>
+        </view>
+        <view @tap="detelte">
+          <text>删除</text>
+        </view>
+      </view>
+    </view>
+    <view class="empty_tip" wx:if="{{post_list.length==0}}">
+      <view>
+        <image src="/images/notices/cartnone.png" />
+      </view>
+      <view>购物车还是空空的哦~</view>
+      <view @tap="onbackin">去首页逛逛</view>
+    </view>ff
   </view>
-  <view class="empty_tip" wx:if="{{post_list.length==0}}">
-    <view>
-      <image src="/images/notices/cartnone.png" />
-    </view>
-    <view>购物车还是空空的哦~</view>
-    <view @tap="onbackin">去首页逛逛</view>
-  </view>ff
-</view>
 </template>
 
 <script>
@@ -318,37 +319,45 @@ export default class Cart extends wepy.page {
     this.cartlist();
     this.userlike();
   }
+  //购物车
   cartlist() {
     let a = {
-      unionid: this.userinfo.unionid,
+      unionId: this.userinfo.unionid,
       limit: 10,
       current: this.current
     };
-    console.log(a);
-    wepy.$Api.cartList(a).then(
-      res => {
-        if (res.data.data) {
-          console.log(res);
-        }
-      },
-      err => {}
-    );
+    if (a) {
+      console.log(a);
+      wepy.$Api.cartList(a).then(
+        res => {
+          if (res.data.data) {
+            console.log(res);
+            this.post_list=res.data.data
+          }
+        },
+        err => {}
+      );
+    }
   }
+  //猜你喜欢
   userlike() {
     let a = {
-      unionid: this.userinfo.unionid,
+      unionId: this.userinfo.unionid,
       limit: 10,
       current: this.current
     };
-    console.log(a);
-    wepy.$Api.userlike(a).then(
-      res => {
-        if (res.data.data) {
-          console.log(res);
-        }
-      },
-      err => {}
-    );
+    
+    if (a) {
+      console.log(a);
+      wepy.$Api.userlike(a).then(
+        res => {
+          if (res.data.data) {
+            console.log(res);
+          }
+        },
+        err => {}
+      );
+    }
   }
   onReachBottom() {
     //  wepy.$Api.cartList(a).then(

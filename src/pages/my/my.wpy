@@ -70,7 +70,6 @@ export default class My extends wepy.page {
     config = {
         navigationBarTitleText: '会员中心'
     }
-    
     components = {
     
     }
@@ -85,17 +84,13 @@ export default class My extends wepy.page {
         ],
         order:['待付款','待发货','待收货','评价/售后']
     }
-    
     computed = {
-    
     }
-    
     methods = {
         linkTo(e){
             this.$navigate({url: e.currentTarget.dataset.url})
         }
     }
-    
     onLoad() {
         // console.log(this.userinfo)
     }
