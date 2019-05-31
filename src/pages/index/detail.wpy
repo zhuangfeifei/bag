@@ -94,7 +94,7 @@
             <swiper-item class="onswiper">
               <view class="slide-image {{swiperIndex == index ? 'active' : 'quiet'}}">
                 <view class="name_list">
-                  <image src="{{data_pric[index].headicon}}"/>
+                  <image src="{{data_pric[index].headicon}}" />
                   <view>{{data_pric[index].realname}}</view>
                 </view>
                 <view class="ontetx">{{data_pric[index].content}}</view>
@@ -131,10 +131,11 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image src="{{imgurls+home_liat[index].thumbnail_pic}}"/>
+            <image src="{{imgurls+home_liat[index].thumbnail_pic}}" />
             <view class="ontbnt">
               <text>￥{{home_liat[index].original_price}}</text>
-              <text>￥{{home_liat[index].fall_price}}</text>
+              <text wx:if="{{home_liat[index].is_accept==1}}">￥{{home_liat[index].fall_price}}</text>
+              <text wx:else>￥{{home_liat[index].market_price}}</text>
             </view>
             <view class="btnbuton" @tap="tap_playto" data-id="{{home_liat[index].id}}">立即购买</view>
           </view>
@@ -152,7 +153,7 @@
         </view>
         <view>
           <button open-type='contact'>
-            <image src='/images/notices/tab_kefu.png'/>
+            <image src='/images/notices/tab_kefu.png' />
           </button>
           <text>客服</text>
         </view>
@@ -171,11 +172,11 @@
       </view>
     </view>
     <view class="bomtrnfxid" wx:if="{{cosde}}">
-      <image src='/images/notices/tab_tanjiangc.png'/>
+      <image src='/images/notices/tab_tanjiangc.png' />
       <text>添加成功，在购物车等你哦~</text>
     </view>
     <view class="fixedsd">
-      <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop"/>
+      <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop" />
     </view>
     <view class="fenxs">返回顶部</view>
     <!--底部属性弹窗-->
@@ -184,7 +185,7 @@
     <view class="ontabbtnsfdg" wx:if="{{sod_up==1}}">
       <view class="up_top">
         <view class="om">
-          <image mode="aspectFill" lazy-load="true" src="{{imgurls+poat_List.thumbnail_pic}}"/>
+          <image mode="aspectFill" lazy-load="true" src="{{imgurls+poat_List.thumbnail_pic}}" />
         </view>
         <view class="oms">
           <view>￥{{poat_List.market_price}}</view>
@@ -232,14 +233,14 @@
         <view class="onm">
           <view class="hlpelist_list">
             <button open-type="share">
-              <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png"/>
+              <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png" />
             </button>
           </view>
           <view class="on">分享给好友和微信群</view>
         </view>
         <view class="onm">
           <view class="hlpelist_list">
-            <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics'/>
+            <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics' />
           </view>
           <view class="on">生成海报 保存分享</view>
         </view>
@@ -251,11 +252,11 @@
     <view class="share-cover" wx:if="{{showSharePic}}" catchtouchmove='true' style="display:{{hinde}}">
       <scroll-view scroll-y="true" style="height:1300rpx;">
         <view class="topimg_sd">
-          <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden"/>
+          <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden" />
         </view>
         <view class="share-pic-box">
           <view class="share-pic">
-            <image src="{{sharePicUrl}}" class="sharePic"/>
+            <image src="{{sharePicUrl}}" class="sharePic" />
           </view>
           <button class="share-tips" @tap='savePicsd'>保存图片到相册</button>
         </view>
@@ -360,7 +361,7 @@ export default class Detail extends wepy.page {
     click: function(e) {
       let ids = e.currentTarget.dataset.id;
       let name = e.currentTarget.dataset.name;
-      let id_p = ""
+      let id_p = '';
       this.scolor = name;
       this.idas = 1;
       this.datacode = false;
@@ -372,7 +373,7 @@ export default class Detail extends wepy.page {
       } else if (a.constructor == Array) {
         for (let i in a) {
           namessd = a[i].sizeName;
-          id_p=a[i].id
+          id_p = a[i].id;
         }
         this.sizeName = namessd;
         this.ssexd = '';
@@ -384,7 +385,7 @@ export default class Detail extends wepy.page {
       } else {
         this.sexid = 2;
       }
-      this.exclusiveId =id_p
+      this.exclusiveId = id_p;
     },
     tap_playup() {
       if (this.scolor && this.ssexd && this.ssexd != '暂无货') {
@@ -392,7 +393,7 @@ export default class Detail extends wepy.page {
           url: '/pages/index/order'
         });
       } else {
-         wx.showToast({
+        wx.showToast({
           title: '请选择商品属性',
           icon: 'none',
           duration: 2000
@@ -444,15 +445,15 @@ export default class Detail extends wepy.page {
       this.sod_up = 1;
     },
     //shouye
-    next_index(){
+    next_index() {
       wx.switchTab({
-        url:"/pages/index/index"
-      })
+        url: '/pages/index/index'
+      });
     },
-    next_cart(){
+    next_cart() {
       wx.switchTab({
-        url:"/pages/cart/cart"
-      })
+        url: '/pages/cart/cart'
+      });
     },
     tap_playto(e) {
       if (this.ssexd != '暂无货') {
@@ -910,7 +911,12 @@ export default class Detail extends wepy.page {
     };
     wepy.$Api.shopDetail(a).then(
       res => {
+        console.log(res.data);
         if (res.data.data) {
+          wepy.$store.dispatch({
+            type: 'goodsDetailMethods',
+            payload: res.data.data
+          });
           let sizeNames = [];
           if (res.data.data.goods_pic) {
             this.imgurlsd = res.data.data.goods_pic.split(',');

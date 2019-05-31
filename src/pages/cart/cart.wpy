@@ -53,7 +53,8 @@
             </image>
             <view class="ontbnt">
               <text>￥{{home_liat[index].market_price}}</text>
-              <text>￥{{home_liat[index].fall_price}}</text>
+              <text wx:if="{{home_liat[index].is_accept==1}}">￥{{item.fall_price}}</text>
+              <text wx:else>￥{{home_liat[index].market_price}}</text>
             </view>
             <view class="btnbuton" @tap="tap_play">立即购买</view>
           </view>

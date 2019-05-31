@@ -10,16 +10,16 @@
     <picker mode="date" value="{{date}}" start="{{year}}-01" fields="month" end="{{years}}-12" bindchange="bindTimeChange">
       <view class="bill_timelist" @tap="list_down">
         <text>{{year}}年{{month}}月</text>
-        <image src="/images/notices/sc_xialaup.png" wx:if="{{anmiaon==false}}"></image>
-        <image src="/images/notices/sc_xiala.png" wx:else></image>
+        <image src="/images/notices/sc_xialaup.png" wx:if="{{anmiaon==false}}" />
+        <image src="/images/notices/sc_xiala.png" wx:else />
       </view>
     </picker>
     <!--账单列表-->
     <view class="bill_up_list" wx:for="{{bill_list}}" wx:key="{{bill_list}}">
       <view>
-        <image src="/images/notices/tbweixinqianbao.png" wx:if="{{item.stat==0}}"></image>
-        <image src="/images/notices/qb_yongjin.png" wx:if="{{item.stat==1}}"></image>
-        <image src="/images/notices/qb_xiaogeqianbao.png" wx:if="{{item.stat==2}}"></image>
+        <image src="/images/notices/tbweixinqianbao.png" wx:if="{{item.stat==0}}" />
+        <image src="/images/notices/qb_yongjin.png" wx:if="{{item.stat==1}}"/>
+        <image src="/images/notices/qb_xiaogeqianbao.png" wx:if="{{item.stat==2}}" />
       </view>
       <view>
         <view>

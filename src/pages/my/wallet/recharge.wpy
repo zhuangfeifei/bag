@@ -7,13 +7,13 @@
       </view>
       <view class="numchong">充值金额</view>
       <view class="nun_ong">
-        <image src="/images/notices/renminbijk.png"></image>
+        <image src="/images/notices/renminbijk.png" />
         <view class="inoutcls">
           <input type="text" value="{{unbers}}" bindinput="uameInputs"></input>
         </view>
       </view>
       <view class="donrtnim">最低充值金额为¥50</view>
-      <image src="/images/notices/querenchongzhis.png" class="clsimg" @tap="titapnext"></image>
+      <image src="/images/notices/querenchongzhis.png" class="clsimg" @tap="titapnext" />
     </view>
   </view>
 </template>

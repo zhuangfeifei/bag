@@ -7,7 +7,7 @@
     <view class="useriphones">
       <text>验证码</text>
       <input type="text" name="usernum" bindinput="userInput" placeholder="请输入验证码" placeholder-class="placeholderStyle" class="phonein" @tap="onipnone"></input>
-      <image src="/images/notices/huoquyanzhengma.png" @tap="hqyzm" wx:if="{{code==0||countDownNum==0}}"></image>
+      <image src="/images/notices/huoquyanzhengma.png" @tap="hqyzm" wx:if="{{code==0||countDownNum==0}}" />
       <view class="ontabtiime" wx:else>正在获取({{countDownNum}})</view>
     </view>
     <view class="useriphone">
@@ -20,8 +20,8 @@
     </view>
     <view class="titleli">提示：密码为6位数数字密码</view>
     <view class="obtn">
-      <image wx:if="{{stsat==0}}" src="/images/notices/querenjinyong.png" class="btnimg"></image>
-      <image wx:else src="/images/notices/querenqiyongt.png" class="btnimg" @tap="ontapy"></image>
+      <image wx:if="{{stsat==0}}" src="/images/notices/querenjinyong.png" class="btnimg" />
+      <image wx:else src="/images/notices/querenqiyongt.png" class="btnimg" @tap="ontapy" />
     </view>
   </view>
 </template>

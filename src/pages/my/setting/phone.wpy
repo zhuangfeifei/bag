@@ -12,8 +12,8 @@
       <view class="ontabtiime" wx:else>正在获取({{countDownNum}})</view>
     </view>
     <view class="obtn">
-      <image wx:if="{{stsat==0}}" src="/images/notices/querenjinyong.png" class="btnimg"></image>
-      <image wx:else src="/images/notices/querenqiyongt.png" class="btnimg" @tap="ontapy"></image>
+      <image wx:if="{{stsat==0}}" src="/images/notices/querenjinyong.png" class="btnimg" />
+      <image wx:else src="/images/notices/querenqiyongt.png" class="btnimg" @tap="ontapy" />
     </view>
   </view>
 </template>

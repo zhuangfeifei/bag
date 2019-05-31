@@ -20,7 +20,8 @@ const defaultState = {
   imgurl:Api.imgUrl+'/bag/kaptcha/file/gallery/' ,//首页图片地址
   pric:Api.imgUrl+"/bag/kaptcha/",//评论图片地址
   shareited:1,
-  addresCode:1
+  addresCode:1,
+  goodsDetail:'',  // 商品详情
 }
 
 export default handleActions({
@@ -66,5 +67,9 @@ export default handleActions({
   },
   useraddres(state, action){
     return { ...state,addresCode:action.payload}
+  },
+    
+  goodsDetailMethods(state, action){
+    return { ...state, goodsDetail:action.payload}
   },
 }, defaultState)

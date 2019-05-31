@@ -33,6 +33,9 @@ module.exports = {
   collotionStatusCloth: (data) => { // 获取各状态下收藏服装列表
     return api.request('/bag/api/boutique/collotionStatusCloth', 'post', data)
   },
+  emptyShelves: (data) => { // 清空下架收藏
+    return api.request('/bag/api/boutique/emptyShelves', 'post', data)
+  },
 
 
   goodsLis:(data)=>{//首页商品展示
@@ -103,5 +106,12 @@ module.exports = {
   },
   ecxtForgeta:(data)=>{//	修改密码
     return api.request('/bag/api/setUpdatePwd', 'post', data)
+  },
+
+
+
+  
+  couponsAvailable:(data)=>{//下订单时查询某一商品会员拥有的可用优惠券信息
+    return api.request('/bag/api/order/couponsAvailable', 'post', data)
   },
 }

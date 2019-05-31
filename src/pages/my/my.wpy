@@ -48,12 +48,12 @@
         </view>
       </navigator>
     </view>
-    <view class="My-back"></view>
+    <!-- <view class="My-back"></view>
     <view class="My_chedk">
       <image src='/images/my/chexkd_list.png' />
       <view>2006</view>
       <view>当前积分</view>
-    </view>
+    </view> -->
   </view>
 </template>
 

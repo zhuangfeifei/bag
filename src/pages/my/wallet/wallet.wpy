@@ -1,23 +1,23 @@
 <template>
   <view>
     <view class="bchd">
-      <image src="/images/notices/bg-5.png"></image>
+      <image src="/images/notices/bg-5.png" />
       <view class="dort">
-        <image src="/images/notices/zhangdan.png" @tap="nextbill"></image>
+        <image src="/images/notices/zhangdan.png" @tap="nextbill" />
         <text @tap="nextbill">账单</text>
       </view>
       <view class="playnumb">450.50</view>
       <view class="playnumbs">钱包余额</view>
     </view>
     <view class="ontliat" @tap="regularto">
-      <image src='/images/notices/chongzhi.png' class="onliimg"></image>
+      <image src='/images/notices/chongzhi.png' class="onliimg" />
       <text class="cltextsdf">充值</text>
-      <image src='/images/notices/jinru.png' class="onliimged"></image>
+      <image src='/images/notices/jinru.png' class="onliimged" />
     </view>
     <view class="ontliats">
-      <image src='/images/notices/tixian.png' class="onliimg"></image>
+      <image src='/images/notices/tixian.png' class="onliimg" />
       <text class="cltextsdf" @tap="withdraw">提现</text>
-      <image src='/images/notices/jinru.png' class="onliimged"></image>
+      <image src='/images/notices/jinru.png' class="onliimged" />
     </view>
   </view>
 </template>

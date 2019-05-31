@@ -2,7 +2,7 @@
   <view>
     <!--地址-->
     <view class="top_addres">
-      <view class="addres" wx:if="{{addres==0}}">
+      <view class="addres" wx:if="{{addressList.length==0}}">
         <view class="addr">
           <image src="/images/notices/dingwei.png" class="_imgas" />
           <text>添加收货地址</text>
@@ -11,15 +11,15 @@
           <image src="/images/notices/jinru.png" class="_imgass" />
         </view>
       </view>
-      <view class="address" wx:if="{{addres==1}}">
+      <view class="address" wx:if="{{item.isdefault==1}}" wx:for="{{addressList}}" wx:key="{{index}}">
         <view class="addred">
           <view style="width:60rpx;height:60rpx;">
             <image src="/images/notices/dingwei.png" class="_imgas_a" />
           </view>
           <view class="adder_nan">
-            <text>王春刚</text>
-            <text>18298864760</text>
-            <view class="om_addres">收货地址收货地址收货地址收货地址收货地址收货地址收货地址</view>
+            <text>{{item.ship_name}}</text>
+            <text>{{item.phone_num}}</text>
+            <view class="om_addres">{{item.province+item.city+item.area+item.address}}</view>
           </view>
         </view>
         <view class="addrs">
@@ -34,7 +34,7 @@
           <image src="http://img1.imgtn.bdimg.com/it/u=817252206,2157667651&fm=15&gp=0.jpg" />
         </view>
         <view class="_detail_vs">
-          <view class="_detail_sd">商品标题商品标题商品标题商品标题商品标题商品标题商品标...</view>
+          <view class="_detail_sd">{{goodsDetail.goods_name}}</view>
           <view class="_detail_s">颜色(黑色）；尺码(大码)</view>
           <view class="_detail_d">
             <view class="_d_price">
@@ -67,7 +67,7 @@
     <view class="pricde">
       <view class="on_price">
         <view>商家活动</view>
-        <view>无活动</view>
+        <view>{{goodsDetail.is_accept == 0 ? '无活动' : goodsDetail.is_accept == 1 ? '降价促销' : '秒杀'}}</view>
       </view>
       <view class="on_priced" @tap="seylist">
         <view>选择优惠券</view>
@@ -138,7 +138,14 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+    userinfo(state){
+        return state.counter.userinfo
+    },
+    goodsDetail(state) {
+      return state.counter.goodsDetail;
+    },
+})
 export default class Order extends wepy.page {
   config = {
     navigationBarTitleText: '确认订单'
@@ -147,18 +154,18 @@ export default class Order extends wepy.page {
   components = {};
 
   data = {
-    addres: 1,
     num: 1,
     usernums: '', //输入框内容
     shipping: 10, //包邮
     freight: 10, //运费
     snum: '', //可用优惠券
     gjprice: '', //共计价格
-    discount: 9.8, //商品折扣
+    discount: 10, //商品折扣
     mprice: '', // 商品金额
     sected: false,
-    total_price: '',
-    sprice: 139, //售价
+    total_price: '', // 总价
+    total_prices: '', // 没有使用优惠券的总价
+    sprice: '', //售价
     cuprice: '', //优惠券价格
     conum_list: [
       {
@@ -185,7 +192,8 @@ export default class Order extends wepy.page {
         ontime: '2019.05.01',
         untime: '2020.05.01'
       }
-    ]
+    ],
+    addressList:[]
   };
 
   computed = {};
@@ -247,14 +255,40 @@ export default class Order extends wepy.page {
     let num = (this.discount / 10) * this.mprice;
     let result = num.toFixed(2);
     this.gjprice = result;
+    // 没有使用优惠券的总价
+    let objs = this.gjprice + (this.freight - this.shipping);
+    let wnumss = parseFloat(objs).toFixed(2);
+    this.total_prices = wnumss;
+    console.log(this.total_prices)
+
     let obj = this.gjprice - this.cuprice + (this.freight - this.shipping);
     let wnums = obj.toFixed(2);
     this.total_price = wnums;
   }
   onLoad() {
+    this.sprice = this.goodsDetail.is_accept == 1 ? this.goodsDetail.fall_price : this.goodsDetail.market_price
+    this.discount = this.userinfo.discount
     this.totalprice();
     let snum = this.conum_list.length;
     this.snum = snum;
+    wepy.$Api.listadress({ unionId: this.userinfo.unionid, limit: 50, current: 1 }).then(res => { 
+        // console.log(res.data)
+        if (res.data.code == 200) {
+            this.addressList = res.data.data
+            this.$apply()
+        }
+    }, err => {
+        
+    })
+    wepy.$Api.couponsAvailable({ unionId: this.userinfo.unionid, goodsId: this.goodsDetail.id, payAmount: this.total_prices }).then(res => { 
+        console.log(res.data)
+        if (res.data.code == 200) {
+            // this.addressList = res.data.data
+            // this.$apply()
+        }
+    }, err => {
+        
+    })
   }
 }
 </script>
