@@ -33,6 +33,9 @@ module.exports = {
   collotionStatusCloth: (data) => { // 获取各状态下收藏服装列表
     return api.request('/bag/api/boutique/collotionStatusCloth', 'post', data)
   },
+  emptyShelves: (data) => { // 清空下架收藏
+    return api.request('/bag/api/boutique/emptyShelves', 'post', data)
+  },
 
 
   goodsLis:(data)=>{//首页商品展示
