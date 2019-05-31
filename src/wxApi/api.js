@@ -73,5 +73,12 @@ module.exports = {
   },
   addcoupon:(data)=>{//领取优惠券(待领取)
     return api.request('/bag/api/coupon/getCouponList', 'post', data)
-  }
+  },
+
+
+
+
+  couponsAvailable:(data)=>{//下订单时查询某一商品会员拥有的可用优惠券信息
+    return api.request('/bag/api/order/couponsAvailable', 'post', data)
+  },
 }

@@ -19,7 +19,8 @@ const defaultState = {
   shareit: Api.imgUrl+'/bag/static/modular/images',//分享卡片图
   imgurl:Api.imgUrl+'/bag/kaptcha/file/gallery/' ,//首页图片地址
   pric:Api.imgUrl+"/bag/kaptcha/",//评论图片地址
-  shareited:1
+  shareited:1,
+  goodsDetail:'',  // 商品详情
 }
 
 export default handleActions({
@@ -62,5 +63,8 @@ export default handleActions({
   },
   pricMethods(state, action){
     return { ...state,pric:action.payload}
-  }
+  },
+  goodsDetailMethods(state, action){
+    return { ...state, goodsDetail:action.payload}
+  },
 }, defaultState)

@@ -898,7 +898,9 @@ export default class Detail extends wepy.page {
     };
     wepy.$Api.shopDetail(a).then(
       res => {
+        console.log(res.data)
         if (res.data.data) {
+          wepy.$store.dispatch({type:'goodsDetailMethods', payload: res.data.data})
           let sizeNames = [];
           if (res.data.data.goods_pic) {
             this.imgurlsd = res.data.data.goods_pic.split(',');

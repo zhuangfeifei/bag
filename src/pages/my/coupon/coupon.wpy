@@ -4,20 +4,20 @@
       <view wx:for="{{list}}" wx:key="{{list}}" data-id="{{index}}" style="{{index == id?'color:#F4695F;border-bottom:1px solid #F4695F':'color:rgba(54, 54, 54, 1);border:none'}}" @tap="click">{{item.text}}</view>
     </view>
     <view class="oncouplist" wx:for="{{coupon}}" wx:key="{{coupon}}" wx:if="{{coupon}}">
-      <image src="/images/notices/quandi.png" class="quandi"></image>
+      <image src="/images/notices/quandi.png" class="quandi"/>
       <view class="oncunlom">
-        <image src="/images/notices/renminbi.png" class="quandis"></image>
+        <image src="/images/notices/renminbi.png" class="quandis"/>
         <view class="clatextb">{{item.pck}}</view>
         <view>【{{item.text}}】</view>
       </view>
       <view class="oncunloms">有效期：{{item.timea}}-{{item.timab}}</view>
-      <image src="/images/notices/lingqu.png" class="lincone" wx:if="{{id==0}}"></image>
-      <image src="/images/notices/qushiyong.png" class="lincone" wx:if="{{id==1}}"></image>
-      <image src="/images/notices/yishiyong.png" class="lincones" wx:if="{{id==2}}"></image>
-      <image src="/images/notices/yiguoqi.png" class="lincones" wx:if="{{id==3}}"></image>
+      <image src="/images/notices/lingqu.png" class="lincone" wx:if="{{id==0}}"/>
+      <image src="/images/notices/qushiyong.png" class="lincone" wx:if="{{id==1}}"/>
+      <image src="/images/notices/yishiyong.png" class="lincones" wx:if="{{id==2}}"/>
+      <image src="/images/notices/yiguoqi.png" class="lincones" wx:if="{{id==3}}"/>
     </view>
     <view class="conone" wx:if="{{coupon.lenght==0}}">
-      <image src="/images/notices/zanwuyouhuiquan.png"></image>
+      <image src="/images/notices/zanwuyouhuiquan.png"/>
       <view class="con_text">亲，你还没有优惠券哦～</view>
     </view>
   </view>
