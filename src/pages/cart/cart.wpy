@@ -49,8 +49,7 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image src="{{item.pic}}">
-            </image>
+            <image src="{{item.pic}}"/>
             <view class="ontbnt">
               <text>￥{{item.oprice}}</text>
               <text>￥{{item.price}}</text>

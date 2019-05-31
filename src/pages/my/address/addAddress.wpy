@@ -12,7 +12,7 @@
         <view class="consignee">
             <text>所在地区</text>
             <picker mode="region" bindchange="bindRegionChange" value="{{region}}" custom-item="{{customItem}}">
-                <view wx:if="{{region.length > 0}}" class="picker">
+                <view wx:if="{{region.length > 0 && region[0] != null}}" class="picker">
                     {{region[0]}}，{{region[1]}}，{{region[2]}}
                 </view>
                 <view wx:else class="picker pickerDefault">

@@ -6,7 +6,7 @@
                 <h5>{{item.ship_name}}<text>{{item.phone_num}}</text></h5>
                 <view class="addressList_address">{{item.province+' '+item.city+' '+item.area+' '+item.address}}</view>
                 <view class="addressList_Modify">
-                    <view @tap="change" data-id="{{index}}"><image src="{{checked[item.isdefault == 1 ? 1 : 0]}}" />设为默认地址</view>
+                    <view @tap="change" data-id="{{item.id}}"><image src="{{checked[item.isdefault == 1 ? 1 : 0]}}" />设为默认地址</view>
                     <view><text @tap="editor" data-item="{{item}}">编辑</text><text @tap="deladress" data-id="{{item.id}}">删除</text></view>
                 </view>
             </view>
@@ -56,6 +56,7 @@ export default class Address extends wepy.page {
     
     methods = {
         change(e){
+            console.log(e.currentTarget.dataset.id)
             wepy.$Api.defaultById({ unionId: this.userinfo.unionid, id: e.currentTarget.dataset.id, }).then(res => { 
                 // console.log(res.data)
                 if (res.data.code == 200) {
