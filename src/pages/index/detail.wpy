@@ -22,7 +22,7 @@
           <text class="oma_e">销量\t {{poat_List.virtual_sales}}</text>
         </view>
         <view class="onmb">
-          <view class="omnb_text">{{poat_List.goods_name}}
+          <view class="omnb_text">{{poat_List.goods_specif}}
           </view>
           <view class="fenxi" @tap="clckhide">
             <image src="/images/notices/fenxiangsk.png" />
@@ -147,7 +147,7 @@
     <view style="height:100rpx"></view>
     <view class="ontabbtn">
       <view>
-        <view>
+        <view @tap="next_index">
           <image src='/images/notices/tab_shouye.png'></image>
           <text>首页</text>
         </view>
@@ -157,7 +157,7 @@
           </button>
           <text>客服</text>
         </view>
-        <view>
+        <view @tap="next_cart">
           <image src='/images/notices/tab_gouwuche.png'></image>
           <text>购物车</text>
         </view>
@@ -361,8 +361,7 @@ export default class Detail extends wepy.page {
     click: function(e) {
       let ids = e.currentTarget.dataset.id;
       let name = e.currentTarget.dataset.name;
-      let exclusiveId = e.currentTarget.dataset.exclusiveid;
-      this.exclusiveId = exclusiveId;
+      let id_p = ""
       this.scolor = name;
       this.idas = 1;
       this.datacode = false;
@@ -374,6 +373,7 @@ export default class Detail extends wepy.page {
       } else if (a.constructor == Array) {
         for (let i in a) {
           namessd = a[i].sizeName;
+          id_p=a[i].id
         }
         this.sizeName = namessd;
         this.ssexd = '';
@@ -385,6 +385,7 @@ export default class Detail extends wepy.page {
       } else {
         this.sexid = 2;
       }
+      this.exclusiveId =id_p
     },
     tap_playup() {
       if (this.scolor && this.ssexd && this.ssexd != '暂无货') {
@@ -442,6 +443,17 @@ export default class Detail extends wepy.page {
     },
     jiaru_ups() {
       this.sod_up = 1;
+    },
+    //shouye
+    next_index(){
+      wx.switchTab({
+        url:"/pages/index/index"
+      })
+    },
+    next_cart(){
+      wx.switchTab({
+        url:"/pages/cart/cart"
+      })
     },
     tap_playto(e) {
       if (this.ssexd != '暂无货') {

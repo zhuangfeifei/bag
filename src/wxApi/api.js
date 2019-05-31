@@ -21,8 +21,6 @@ module.exports = {
   deladress: (data) => { // 删除地址
     return api.request('/bag/api/address/deladress', 'post', data)
   },
-
-
   goodsLis:(data)=>{//首页商品展示
     return api.request('/bag/api/boutique/goodsList', 'post', data)
   },
@@ -53,10 +51,40 @@ module.exports = {
   cartList:(data)=>{//获取购物车列表
     return api.request('/bag/api/shoppingCart/shoppingCartList', 'post', data)
   },
+  deteleList:(data)=>{//购物车商品删除
+    return api.request('/bag/api/shoppingCart/delShoppingCart', 'post', data)
+  },
+  cartMove:(data)=>{//购物车商品移入收藏夹
+    return api.request('/bag/api/shoppingCart/moveCollotion', 'post', data)
+  },
   userlike:(data)=>{//猜你喜欢
     return api.request('/bag/api/similarLike/likeList', 'post', data)
   },
   addcoupon:(data)=>{//领取优惠券(待领取)
     return api.request('/bag/api/coupon/getCouponList', 'post', data)
-  }
+  },
+  toBeused:(data)=>{//领取优惠券(待使用  已使用)
+    return api.request('/bag/api/coupon/getCouponListByUseState', 'post', data)
+  },
+  toBeusedto:(data)=>{//领取优惠券(已过期)
+    return api.request('/bag/api/coupon/getCouponListByState', 'post', data)
+  },
+  getCoupon:(data)=>{//领取优惠券(领取)
+    return api.request('/bag/api/coupon/getCoupon', 'post', data)
+  },
+  ecxtUsername:(data)=>{//修改会员昵称
+    return api.request('/bag/api/basic/setMemberName', 'post', data)
+  },
+  payPassworld:(data)=>{//设置支付密码
+    return api.request('/bag/api/setPaypwd', 'post', data)
+  },
+  addphoneNum:(data)=>{//	根据手机号获取验证码
+    return api.request('/bag/api/customer/code', 'post', data)
+  },
+  phoneNews:(data)=>{//	绑定手机号
+    return api.request('/bag/api/bind/phoneNew', 'post', data)
+  },
+  setForget:(data)=>{//	忘记密码
+    return api.request('/bag/api/setForgetPwd', 'post', data)
+  },
 }

@@ -13,7 +13,7 @@
                 <image class="touxiang" src="{{userinfo.avatar}}" mode="scaleToFill" lazy-load="false" />
                 <text class="touxiang_name">\n{{userinfo.nickname}}</text>
             </view>
-            <view @tap="linkTo" data-url="./address/address">
+            <view @tap="linkTo" data-url="./setting/setting">
                 <image class="HYZX_xiaoxi" src="/images/my/HYZX_shezhi.png" mode="scaleToFill" lazy-load="false" />
                 <text>\n设置</text>
             </view>

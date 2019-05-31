@@ -13,7 +13,8 @@ const defaultState = {
   shareit: Api.imgUrl+'/bag/static/modular/images',//分享卡片图
   imgurl:Api.imgUrl+'/bag/kaptcha/file/gallery/' ,//首页图片地址
   pric:Api.imgUrl+"/bag/kaptcha/",//评论图片地址
-  shareited:1
+  shareited:1,
+  usercode:200
 }
 
 export default handleActions({
@@ -43,5 +44,8 @@ export default handleActions({
   },
   pricMethods(state, action){
     return { ...state,pric:action.payload}
+  },
+  usercodes(state, action){
+    return { ...state,usercode:action.payload}
   }
 }, defaultState)

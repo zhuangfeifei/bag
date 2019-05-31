@@ -1,18 +1,18 @@
 <template>
   <view>
     <view class="useriphone">
-    <text>设置支付密码</text>
-    <input type="password" placeholder="请输入密码" name="userName" placeholder-class="placeholderStyle" class="phoneinput" bindinput="userNameInput" maxlength="6"></input>
-  </view>
-  <view class="useriphone">
-    <text>确认支付密码</text>
-    <input type="password" placeholder="请确认密码" name="usernum" bindinput="userInput" placeholder-class="placeholderStyle" class="phoneinput" maxlength="6"></input>
-  </view>
-  <view class="titleli">提示：密码为6位数数字密码</view>
-  <view class="obtn">
-    <image wx:if="{{stsat==0}}" src="/images/notices/querenjinyong.png" class="btnimg"></image>
-    <image wx:else src="/images/notices/querenqiyongt.png" class="btnimg" @tap="ontapy"></image>
-  </view>
+      <text>设置支付密码</text>
+      <input type="password" placeholder="请输入密码" name="userName" placeholder-class="placeholderStyle" class="phoneinput" bindinput="userNameInput" maxlength="6"></input>
+    </view>
+    <view class="useriphone">
+      <text>确认支付密码</text>
+      <input type="password" placeholder="请确认密码" name="usernum" bindinput="userInput" placeholder-class="placeholderStyle" class="phoneinput" maxlength="6"></input>
+    </view>
+    <view class="titleli">提示：密码为6位数数字密码</view>
+    <view class="obtn">
+      <image wx:if="{{stsat==0}}" src="/images/notices/querenjinyong.png" class="btnimg"></image>
+      <image wx:else src="/images/notices/querenqiyongt.png" class="btnimg" @tap="ontapy"></image>
+    </view>
   </view>
 </template>
 
@@ -21,7 +21,11 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  userinfo(state) {
+    return state.counter.userinfo;
+  }
+})
 export default class Playkey extends wepy.page {
   config = {
     navigationBarTitleText: '设置支付密码'
@@ -49,7 +53,7 @@ export default class Playkey extends wepy.page {
       }
     },
     ontapy() {
-      if (this.userName != this.usernum) {
+      if (this.userName != this.usernum && this.userName && this.userName) {
         wx.showToast({
           title: this.texts,
           icon: 'none',
@@ -57,6 +61,28 @@ export default class Playkey extends wepy.page {
           mask: true
         });
         return false;
+      } else {
+        let a = {
+          unionId: this.userinfo.unionid,
+          pwd: this.usernum
+        };
+        if (a) {
+          wepy.$Api.payPassworld(a).then(
+            res => {
+              if (res.data.code == 200) {
+                let a = 200;
+                wepy.$store.dispatch({ type: 'usercodes', payload: a });
+                wx.showToast({
+                  title: '密码设置成功，快去购物吧~',
+                  icon: 'none',
+                  duration: 1500,
+                  mask: false
+                });
+              }
+            },
+            err => {}
+          );
+        }
       }
     }
   };

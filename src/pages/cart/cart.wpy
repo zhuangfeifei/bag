@@ -6,32 +6,32 @@
     <view class="shop_list" wx:if="{{post_list.length>0}}">
       <view class="top_ve" wx:for="{{post_list}}" wx:key="{{post_list}}">
         <view class="_detil">
-          <view class="_dr_list" wx:if="{{selection==true}}" @tap="selectdck" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">
+          <view class="_dr_list" wx:if="{{selection==true}}" @tap="selectdck" data-id="{{index}}" data-price="{{post_list[index].market_price}}" data-count="{{post_list[index].num}}">
             <image wx:if="{{index==idx||item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
             <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
           </view>
-          <view class="_dr_list" wx:else @tap="selectdcks" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">
+          <view class="_dr_list" wx:else @tap="selectdcks" data-id="{{index}}" data-price="{{post_list[index].market_price}}" data-count="{{post_list[index].num}}">
             <image wx:if="{{item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
             <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
           </view>
           <view class="_detail_v">
-            <image src="{{item.spic}}" />
-            <view wx:if="{{item.code==0}}">已失效</view>
-            <view wx:if="{{item.code==1}}">降价中</view>
-            <view wx:if='{{item.code==2}}'>库存低</view>
+            <image mode="aspectFill" lazy-load="true" src="{{imgurl+post_list[index].thumbnail_pic}}" />
+            <view wx:if="{{post_list[index].goods_status==0}}">下架</view>
+            <view wx:if="{{post_list[index].goods_status==1}}">上架</view>
+            <view wx:if='{{post_list[index].goods_status==2}}'>即将下架</view>
           </view>
           <view class="_detail_vs">
-            <view class="_detail_sd">{{item.text}}</view>
-            <view class="_detail_s">颜色({{item.color}}）；尺码({{item.size}})</view>
+            <view class="_detail_sd">{{post_list[index].goods_specif}}</view>
+            <view class="_detail_s">颜色({{post_list[index].color_name}}）；尺码({{post_list[index].size_name}})</view>
             <view class="_detail_d">
               <view class="_d_price">
                 <text>￥</text>
-                <text>{{item.sprice}}</text>
+                <text>{{post_list[index].market_price}}</text>
               </view>
               <view class="_d_num">
-                <view @tap="prnumj" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">-</view>
-                <view>{{item.count}}</view>
-                <view @tap="prnumz" data-id="{{index}}" data-price="{{item.sprice}}" data-count="{{item.count}}">+</view>
+                <view @tap="prnumj" data-id="{{index}}" data-price="{{post_list[index].market_price}}" data-count="{{post_list[index].num}}">-</view>
+                <view>{{post_list[index].num}}</view>
+                <view @tap="prnumz" data-id="{{index}}" data-price="{{post_list[index].market_price}}" data-count="{{post_list[index].num}}">+</view>
               </view>
             </view>
           </view>
@@ -49,11 +49,11 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image src="{{item.pic}}">
+            <image src="{{imgurl+home_liat[index].thumbnail_pic}}">
             </image>
             <view class="ontbnt">
-              <text>￥{{item.oprice}}</text>
-              <text>￥{{item.price}}</text>
+              <text>￥{{home_liat[index].market_price}}</text>
+              <text>￥{{home_liat[index].fall_price}}</text>
             </view>
             <view class="btnbuton" @tap="tap_play">立即购买</view>
           </view>
@@ -61,7 +61,7 @@
       </view>
       <view style="height:60rpx"></view>
     </view>
-    <view class="onnone" wx:if="{{post_list.length>0}}">没有更多了哦~</view>
+    <view class="onnone" wx:if="{{post_st==false}}">没有更多了哦~</view>
     <view style="height:100rpx;" wx:if="{{post_list.length>0}}"></view>
     <view class="po_fxide" wx:if="{{clckcode==false&&post_list.length>0}}">
       <view>
@@ -74,13 +74,13 @@
       </view>
     </view>
     <view class="btno" wx:if="{{clckcode==true&&post_list.length>0}}">
-      <view @tap="selectall">
-        <image wx:if="{{selectds==true}}" src="/images/notices/cxuanzhong.png" />
-        <image wx:else src="/images/notices/nnxuanzhong.png" />
+      <view>
+        <image wx:if="{{selectds==true}}" @tap="unselectalls" src="/images/notices/cxuanzhong.png" />
+        <image wx:else @tap="selectall" src="/images/notices/nnxuanzhong.png" />
         <text>全选</text>
       </view>
       <view>
-        <view>
+        <view @tap="moveCollo">
           <text>移入收藏夹</text>
         </view>
         <view @tap="detelte">
@@ -94,7 +94,7 @@
       </view>
       <view>购物车还是空空的哦~</view>
       <view @tap="onbackin">去首页逛逛</view>
-    </view>ff
+    </view>
   </view>
 </template>
 
@@ -106,6 +106,9 @@ import 'wepy-async-function';
 @connect({
   userinfo(state) {
     return state.counter.userinfo;
+  },
+  imgurls(state) {
+    return state.counter.imgurl;
   }
 })
 export default class Cart extends wepy.page {
@@ -122,72 +125,13 @@ export default class Cart extends wepy.page {
     sprice: '',
     po_idnum: '', //删除个数
     idx: -1,
+    imgurl: '',
     selectds: false,
     current: 1,
-    post_list: [
-      {
-        spic:
-          'http://img1.imgtn.bdimg.com/it/u=817252206,2157667651&fm=15&gp=0.jpg',
-        text:
-          '商品标题商品标题商品标题商品标题商品标题商品标题商品标商品标题商品标题商品标题商品标题商品标题商品标题商品标',
-        color: '黑色',
-        size: '大码',
-        sprice: 139,
-        count: 1,
-        code: 1,
-        selectd: false
-      },
-      {
-        spic:
-          'http://img1.imgtn.bdimg.com/it/u=817252206,2157667651&fm=15&gp=0.jpg',
-        text:
-          '商品标题商品标题商品标题商品标题商品标题商品标题商品标商品标题商品标题商品标题商品标题商品标题商品标题商品标',
-        color: '黑色',
-        size: '大码',
-        sprice: 140,
-        count: 1,
-        code: 0,
-        selectd: false
-      },
-      {
-        spic:
-          'http://img1.imgtn.bdimg.com/it/u=817252206,2157667651&fm=15&gp=0.jpg',
-        text:
-          '商品标题商品标题商品标题商品标题商品标题商品标题商品标商品标题商品标题商品标题商品标题商品标题商品标题商品标',
-        color: '黑色',
-        size: '大码',
-        sprice: 139,
-        count: 1,
-        code: 2,
-        selectd: false
-      }
-    ],
-    home_liat: [
-      {
-        pic:
-          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
-        oprice: 800,
-        price: 300
-      },
-      {
-        pic:
-          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
-        oprice: 800,
-        price: 300
-      },
-      {
-        pic:
-          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
-        oprice: 800,
-        price: 300
-      },
-      {
-        pic:
-          'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg',
-        oprice: 800,
-        price: 300
-      }
-    ]
+    post_st: true,
+    post_list: [],
+    post_id: [],
+    home_liat: []
   };
 
   computed = {};
@@ -198,12 +142,12 @@ export default class Cart extends wepy.page {
       let index = e.currentTarget.dataset.id;
       let post_list = this.post_list;
       let selectd = this.post_list[index].selectd;
-      let count = post_list[index].count;
+      let count = post_list[index].num;
       count = count - 1;
       if (count < 1) {
         return false;
       }
-      post_list[index].count = count;
+      post_list[index].num = count;
       this.post_list = post_list;
       this.sprice = e.currentTarget.dataset.price;
       this.total_price = this.sprice * count;
@@ -213,9 +157,9 @@ export default class Cart extends wepy.page {
       let index = e.currentTarget.dataset.id;
       let post_list = this.post_list;
       let selectd = this.post_list[index].selectd;
-      let count = post_list[index].count;
+      let count = post_list[index].num;
       count = count + 1;
-      post_list[index].count = count;
+      post_list[index].num = count;
       this.post_list = post_list;
       this.sprice = e.currentTarget.dataset.price;
       this.total_price = this.sprice * count;
@@ -250,6 +194,18 @@ export default class Cart extends wepy.page {
       array[index].selectd = !array[index].selectd;
       this.post_list = array;
       let po_id = [];
+      if (array[index].selectd == true) {
+        let pid = array[index].id;
+        let a = pid.toString();
+        this.post_id.push(a);
+      } else {
+        let pid = array[index].id;
+        let array_l = this.post_id;
+        let val = pid;
+        this.remove(array_l, val);
+        this.post_id = array_l;
+        this.selectds = false;
+      }
       for (let i = 0; i < array.length; i++) {
         if (array[i].selectd == true) {
           po_id.push(i);
@@ -261,6 +217,23 @@ export default class Cart extends wepy.page {
     selectall() {
       this.selec_tall();
       this.selectds = !this.selectds;
+      let array = this.post_list;
+      let post_id = [];
+      for (let i in array) {
+        let pid = array[i].id;
+        let a = pid.toString();
+        post_id.push(a);
+      }
+
+      this.post_id = post_id;
+      console.log(this.post_id, '全选');
+    },
+    //取消全选
+    unselectalls() {
+      this.unselectall();
+      this.selectds = !this.selectds;
+      this.post_id = [];
+      console.log(this.post_id);
     },
     //完成
     manageall() {
@@ -274,7 +247,11 @@ export default class Cart extends wepy.page {
     },
     //删除
     detelte() {
-      if (this.po_idnum) {
+      let a = {
+        shoppingCartIds: this.post_id
+      };
+      console.log(a);
+      if (this.po_idnum && a) {
         wx.showModal({
           title: '删除商品',
           content: '确定将这' + this.po_idnum + '个宝贝删除？',
@@ -285,6 +262,21 @@ export default class Cart extends wepy.page {
           confirmColor: '#7C838D',
           success: result => {
             if (result.confirm) {
+              wepy.$Api.deteleList(a).then(
+                res => {
+                  if (res.data.code) {
+                    wx.wx.showToast({
+                      title: '删除成功',
+                      icon: 'none',
+                      duration: 1500,
+                      mask: false
+                    });
+                  }
+                  // console.log(res.data.code)
+                  this.cartlist();
+                },
+                err => {}
+              );
             }
           }
         });
@@ -297,27 +289,74 @@ export default class Cart extends wepy.page {
         });
       }
     },
+    //移入收藏夹
+    moveCollo() {
+      let a = {
+        shoppingCartIds: this.post_id,
+        unionId: this.userinfo.unionid
+      };
+      if (a) {
+        wepy.$Api.cartMove(a).then(
+          res => {
+            if (res.data.code) {
+              wx.showToast({
+                title: '移入收藏夹成功',
+                icon: 'none',
+                duration: 1500,
+                mask: false
+              });
+            }
+            this.cartlist();
+          },
+          err => {}
+        );
+      }
+    },
     onbackin() {
       wx.switchTab({
         url: '/pages/index/index'
       });
     }
   };
-  //全选
+
   selec_tall() {
     let array = this.post_list;
     let po_id = [];
     for (let i = 0; i < array.length; i++) {
-      array[i].selectd = !array[i].selectd;
+      for (let j = 0; j < array.length; j++) {
+        array[i].selectd = false;
+        if (array[i].selectd == array[j].selectd) {
+          array[i].selectd = !array[i].selectd;
+        } else {
+          array[i].selectd = true;
+        }
+      }
       if (array[i].selectd == true) {
         po_id.push(i);
       }
       this.po_idnum = po_id.length;
     }
   }
+  //取消全选
+  unselectall() {
+    let array = this.post_list;
+    let po_id = [];
+    for (let i = 0; i < array.length; i++) {
+      for (let j = 0; j < array.length; j++) {
+        array[i].selectd = true;
+        if (array[i].selectd == array[j].selectd) {
+          array[i].selectd = !array[i].selectd;
+        }
+      }
+      if (array[i].selectd == true) {
+        po_id.push(i);
+      }
+    }
+  }
   onLoad() {
     this.cartlist();
     this.userlike();
+    this.imgurl = this.imgurls;
   }
   //购物车
   cartlist() {
@@ -327,13 +366,12 @@ export default class Cart extends wepy.page {
       current: this.current
     };
     if (a) {
-      console.log(a);
       wepy.$Api.cartList(a).then(
         res => {
           if (res.data.data) {
-            console.log(res);
-            this.post_list=res.data.data
+            this.post_list = res.data.data;
           }
+          this.$apply();
         },
         err => {}
       );
@@ -346,30 +384,45 @@ export default class Cart extends wepy.page {
       limit: 10,
       current: this.current
     };
-    
     if (a) {
-      console.log(a);
       wepy.$Api.userlike(a).then(
         res => {
           if (res.data.data) {
-            console.log(res);
+            this.home_liat = res.data.data;
           }
+          this.$apply();
         },
         err => {}
       );
     }
   }
+  remove(array_l, val) {
+    for (let i = 0; i < array_l.length; i++) {
+      if (array_l[i] == val) {
+        array_l.splice(i, 1);
+      }
+    }
+    return -1;
+  }
   onReachBottom() {
-    //  wepy.$Api.cartList(a).then(
-    //   res => {
-    //     if (res.data.data.length!=0) {
-    //       this.home_liat = res.data.data;
-    //     } else {
-    //       this.onhiden = false;
-    //     }
-    //   },
-    //   err => {}
-    // );
+    let a = {
+      unionId: this.userinfo.unionid,
+      limit: 10,
+      current: this.current++
+    };
+    if (a) {
+      wepy.$Api.userlike(a).then(
+        res => {
+          if (res.data.data.length != 0) {
+            this.home_liat = res.data.data;
+          } else {
+            this.post_st = false;
+          }
+          this.$apply();
+        },
+        err => {}
+      );
+    }
   }
 }
 </script>
@@ -667,6 +720,7 @@ export default class Cart extends wepy.page {
   font-weight: 500;
   color: rgba(153, 153, 153, 1);
   text-align: center;
+  background: #f2f2f2;
   line-height: 63rpx;
   letter-spacing: 1rpx;
 }
@@ -677,6 +731,7 @@ export default class Cart extends wepy.page {
   position: fixed;
   bottom: 0;
   display: flex;
+  z-index: 666;
   border-bottom: 1px solid #f2f2f2;
 }
 .po_fxide view:nth-child(1) {
@@ -720,6 +775,7 @@ export default class Cart extends wepy.page {
   position: fixed;
   bottom: 0;
   display: flex;
+  z-index: 666;
   border-bottom: 1px solid #f2f2f2;
 }
 

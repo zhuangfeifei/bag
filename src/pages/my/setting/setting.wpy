@@ -1,6 +1,9 @@
 
 <style lang='less'>
-.topconniar {
+page {
+  background-color: #f2f2f2;
+}
+.topconniars {
   width: 690rpx;
   height: 200rpx;
   background: rgba(255, 255, 255, 1);
@@ -17,7 +20,7 @@
   line-height: 200rpx;
   letter-spacing: 2rpx;
 }
-.topconniar image {
+.topconniars image {
   width: 120rpx;
   height: 120rpx;
   border-radius: 50%;
@@ -44,11 +47,15 @@
   letter-spacing: 2rpx;
 }
 .texta {
+  width: 200rpx;
   font-size: 28rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
-  color: rgba(153, 153, 153, 1);
-  margin-left: 342rpx;
+  color: #666666;
+  margin-left: 270rpx;
+  margin-top: 25rpx;
+  letter-spacing: 1rpx;
+  text-align: right;
 }
 .textb {
   font-size: 28rpx;
@@ -56,13 +63,25 @@
   font-weight: 500;
   color: rgba(153, 153, 153, 1);
   margin-left: 371rpx;
+  letter-spacing: 1rpx;
 }
-.textc {
+.textbs {
   font-size: 28rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
   color: rgba(153, 153, 153, 1);
-  margin-left: 264rpx;
+  margin-left: 335rpx;
+  letter-spacing: 1rpx;
+}
+.textc {
+  width: 300rpx;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  margin-left: 65rpx;
+  text-align: right;
+  letter-spacing: 1rpx;
 }
 .onimg {
   width: 13rpx;
@@ -71,30 +90,37 @@
   position: relative;
   top: 38rpx;
 }
+.clastyle {
+  float: right;
+}
 </style>
 
 <template>
   <view>
-    <view class="topconniar">
+    <view class="topconniars">
       <view class="tomgtitle">头像</view>
-      <image src="/images/notices/weishangchuan.png"></image>
+      <image src="{{userinfo.avatar}}" wx:if="{{userinfo.avatar}}"></image>
+      <image src="/images/notices/weishangchuan.png" wx:else></image>
     </view>
     <view class="vipyuan">
       <view class="tomgtitles">会员名</view>
-      <text class="texta">设置会员名</text>
+      <input type="text" class="texta" wx:if="{{userinfo.name}}" placeholder='{{userinfo.name}}' confirm-type="done" bindconfirm="userameex" name="usernum" bindinput="userInput" placeholder-class='clastyle' />
+      <input type="text" class="texta" wx:else placeholder='设置会员名' confirm-type="done" bindconfirm="userameex" name="usernum" bindinput="userInput" placeholder-class='clastyle' />
       <image src="/images/notices/jinru.png" class="onimg"></image>
     </view>
     <view class="vipyuan" @tap="myphone">
       <view class="tomgtitles">手机</view>
-      <text class="textb">绑定手机号</text>
+      <text class="textbs" wx:if="{{phonenum}}">{{phonenum}}</text>
+      <text class="textb" wx:else>绑定手机号</text>
       <image src="/images/notices/jinru.png" class="onimg"></image>
     </view>
     <view class="vipyuan" @tap="myphonekey">
       <view class="tomgtitles">钱包支付密码</view>
-      <text class="textc">设置密码</text>
+      <text class="textc" wx:if="{{codesd&&codesd==200}}">已设置</text>
+      <text class="textc" wx:else>设置密码</text>
       <image src="/images/notices/jinru.png" class="onimg"></image>
     </view>
-    <view class="vipyuan">
+    <view class="vipyuan" @tap="tapaddres">
       <view class="tomgtitles">我的收获地址</view>
       <text class="textc">添加地址</text>
       <image src="/images/notices/jinru.png" class="onimg"></image>
@@ -107,7 +133,14 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  userinfo(state) {
+    return state.counter.userinfo;
+  },
+  usercodes(state) {
+    return state.counter.usercode;
+  }
+})
 export default class Setting extends wepy.page {
   config = {
     navigationBarTitleText: '设置'
@@ -115,7 +148,11 @@ export default class Setting extends wepy.page {
 
   components = {};
 
-  data = {};
+  data = {
+    phonenum: '',
+    usernum: '',
+    codesd: ''
+  };
 
   computed = {};
 
@@ -127,13 +164,55 @@ export default class Setting extends wepy.page {
       });
     },
     myphonekey() {
-      wepy.navigateTo({
-        url: '/pages/my/setting/playkey'
+      if (this.userinfo.phonenumber) {
+        wx.navigateTo({
+          url: '/pages/my/setting/easitplay'
+        });
+      } else {
+        wx.navigateTo({
+          url: '/pages/my/setting/playkey'
+        });
+      }
+    },
+    tapaddres() {
+      wx.navigateTo({
+        url: '/pages/my/address/address'
       });
+    },
+    userInput(e) {
+      this.usernum = e.detail.value;
+    },
+    userameex() {
+      let a = {
+        unionId: this.userinfo.unionid,
+        memberName: this.usernum
+      };
+      if (a) {
+        wepy.$Api.ecxtUsername(a).then(
+          res => {
+            if (res.data.code == 200) {
+              wx.showToast({
+                title: '设置会员名成功',
+                icon: 'none',
+                duration: 1500,
+                mask: false
+              });
+            }
+          },
+          err => {}
+        );
+      }
     }
   };
 
-  onLoad() {}
+  onLoad() {
+    let phone = this.userinfo.phonenumber;
+    this.phonenum = phone.substr(0, 3) + '****' + phone.substr(7);
+    this.codesd = this.usercodes;
+  }
+  onShow() {
+    this.onLoad();
+  }
 }
 </script>
 

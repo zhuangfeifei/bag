@@ -500,7 +500,7 @@ export default class Index extends wepy.page {
   goodsLisd() {
     let a = {
       order: 0,
-      limit: 10,
+      limit: 16,
       current: this.current
     };
     wepy.$Api.goodsLis(a).then(
@@ -521,13 +521,13 @@ export default class Index extends wepy.page {
   onReachBottom() {
     let a = {
       order: 0,
-      limit: 10,
+      limit: 16,
       current: this.current++
     };
     wepy.$Api.goodsLis(a).then(
       res => {
         if (res.data.data.length != 0) {
-          this.home_liat = res.data.data;
+          this.home_liat=res.data.data
         } else {
           this.onhiden = false;
         }

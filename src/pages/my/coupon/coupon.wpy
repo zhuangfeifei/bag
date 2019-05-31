@@ -7,16 +7,16 @@
       <image src="/images/notices/quandi.png" class="quandi"></image>
       <view class="oncunlom">
         <image src="/images/notices/renminbi.png" class="quandis"></image>
-        <view class="clatextb">{{item.pck}}</view>
-        <view>【{{item.text}}】</view>
+        <view class="clatextb">{{coupon[index].price}}</view>
+        <view>【{{coupon[index].title}}】</view>
       </view>
-      <view class="oncunloms">有效期：{{item.timea}}-{{item.timab}}</view>
-      <image src="/images/notices/lingqu.png" class="lincone" wx:if="{{id==0}}"></image>
+      <view class="oncunloms">有效期：{{coupon[index].limitDate}}</view>
+      <image src="/images/notices/lingqu.png" class="lincone" wx:if="{{id==0}}" data-pid='{{coupon[index].id}}' @tap="ontapto"></image>
       <image src="/images/notices/qushiyong.png" class="lincone" wx:if="{{id==1}}"></image>
       <image src="/images/notices/yishiyong.png" class="lincones" wx:if="{{id==2}}"></image>
       <image src="/images/notices/yiguoqi.png" class="lincones" wx:if="{{id==3}}"></image>
     </view>
-    <view class="conone" wx:if="{{coupon.lenght==0}}">
+    <view class="conone" wx:if="{{coupon==''}}">
       <image src="/images/notices/zanwuyouhuiquan.png"></image>
       <view class="con_text">亲，你还没有优惠券哦～</view>
     </view>
@@ -41,6 +41,7 @@ export default class Coupon extends wepy.page {
   components = {};
   data = {
     id: 0,
+    couponId: '', //优惠券id
     list: [
       {
         text: '待领取'
@@ -55,14 +56,7 @@ export default class Coupon extends wepy.page {
         text: '已过期'
       }
     ],
-    coupon: [
-      {
-        pck: 20,
-        text: '无门槛优惠券',
-        timea: '2019.05.01',
-        timab: '2020.05.01'
-      }
-    ]
+    coupon: []
   };
 
   computed = {};
@@ -71,6 +65,78 @@ export default class Coupon extends wepy.page {
     click: function(e) {
       var ids = e.currentTarget.dataset.id;
       this.id = ids;
+      if (this.id == 0 && ids == 0) {
+        this.couponts();
+      }
+      if (this.id == 1 && ids == 1) {
+        let a = {
+          unionId: this.userinfo.unionid,
+          useState: 0
+        };
+        if (a) {
+          wepy.$Api.toBeused(a).then(
+            res => {
+              this.coupon = res.data.data;
+              this.$apply();
+            },
+            err => {}
+          );
+        }
+      }
+      if (this.id == 2 && ids == 2) {
+        let a = {
+          unionId: this.userinfo.unionid,
+          useState: 1
+        };
+        if (a) {
+          wepy.$Api.toBeused(a).then(
+            res => {
+              this.coupon = res.data.data;
+              this.$apply();
+            },
+            err => {}
+          );
+        }
+      }
+      if (this.id == 3 && ids == 3) {
+        let a = {
+          unionId: this.userinfo.unionid
+        };
+        if (a) {
+          wepy.$Api.toBeused(a).then(
+            res => {
+              this.coupon = res.data.data;
+              this.$apply();
+            },
+            err => {}
+          );
+        }
+      }
+    },
+    //领取
+    ontapto(e) {
+      console.log(e);
+      let couponId = e.currentTarget.dataset.pid;
+      let a = {
+        unionId: this.userinfo.unionid,
+        couponId: couponId
+      };
+      if (a) {
+        wepy.$Api.getCoupon(a).then(
+          res => {
+            this.couponts();
+            if (res.data.code == 200) {
+              wx.showToast({
+                title: '领取成功',
+                icon: 'none',
+                duration: 1500,
+                mask: false
+              });
+            }
+          },
+          err => {}
+        );
+      }
     }
   };
   couponts() {
@@ -80,7 +146,9 @@ export default class Coupon extends wepy.page {
     if (a) {
       wepy.$Api.addcoupon(a).then(
         res => {
-          console.log(res)
+          this.coupon = res.data.data;
+          this.$apply();
+          console.log(res);
         },
         err => {}
       );
@@ -89,7 +157,6 @@ export default class Coupon extends wepy.page {
   onLoad() {
     this.couponts();
   }
-  
 }
 </script>
 

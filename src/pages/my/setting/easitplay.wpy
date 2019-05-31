@@ -84,6 +84,9 @@ export default class Playkey extends wepy.page {
 </script>
 
 <style lang='less'>
+page{
+  background-color: #f2f2f2;
+}
 .useriphone {
   width: 690rpx;
   height: 120rpx;

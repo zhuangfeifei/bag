@@ -23,7 +23,11 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  userinfo(state) {
+    return state.counter.userinfo;
+  }
+})
 export default class Phone extends wepy.page {
   config = {
     navigationBarTitleText: '绑定手机号'
@@ -66,9 +70,28 @@ export default class Phone extends wepy.page {
         return false;
       }
     },
-    //判断验证码
+    
     ontapy() {
-      console.log('1');
+      let a = {
+        unionId: this.userinfo.unionid,
+        phone: this.userName,
+        vcode: this.usernum
+      };
+      if (a) {
+        wepy.$Api.phoneNews(a).then(
+          res => {
+            if (res.data.code == 200) {
+              wx.showToast({
+                title: '绑定手机成功',
+                icon: 'none',
+                duration: 1500,
+                mask: false
+              });
+            }
+          },
+          err => {}
+        );
+      }
     },
     //获取验证码
     hqyzm() {
@@ -84,6 +107,25 @@ export default class Phone extends wepy.page {
           clearInterval(that.timer);
         }
       }, 1000);
+      let a = {
+        phone: this.userName,
+        msgType: 1
+      };
+      if (a) {
+        wepy.$Api.addphoneNum(a).then(
+          res => {
+            if (res.data.code == 200) {
+              wx.showToast({
+                title: '验证码发送成功',
+                icon: 'none',
+                duration: 1500,
+                mask: false
+              });
+            }
+          },
+          err => {}
+        );
+      }
     }
   };
 
@@ -92,6 +134,9 @@ export default class Phone extends wepy.page {
 </script>
 
 <style lang='less'>
+page {
+  background-color: #f2f2f2;
+}
 .topcpntarin {
   font-size: 34rpx;
   font-family: PingFang-SC-Medium;
