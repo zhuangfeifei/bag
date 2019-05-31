@@ -70,13 +70,17 @@ export default class Playkey extends wepy.page {
           wepy.$Api.payPassworld(a).then(
             res => {
               if (res.data.code == 200) {
-                let a = 200;
-                wepy.$store.dispatch({ type: 'usercodes', payload: a });
-                wx.showToast({
-                  title: '密码设置成功，快去购物吧~',
-                  icon: 'none',
-                  duration: 1500,
-                  mask: false
+                wx.showModal({
+                  content: '密码设置成功，快去购物吧~',
+                  confirmText: '确定',
+                  confirmColor: '#3CC51F',
+                  success: result => {
+                    if (result.confirm) {
+                      wx.navigateTo({
+                        url: '/pages/index/index'
+                      });
+                    }
+                  }
                 });
               }
             },

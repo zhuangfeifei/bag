@@ -19,7 +19,8 @@
             <image wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}"/>
             <view class="ontbnt">
               <text>￥{{item.original_price}}</text>
-              <text>￥{{item.market_price}}</text>
+              <text wx:if="{{item.is_accept==1}}">￥{{item.fall_price}}</text>
+              <text wx:else>￥{{item.market_price}}</text>
             </view>
             <view class="btnbuton" @tap="tapondetil" data-goods_id='{{item.id}}'>立即购买</view>
           </view>
@@ -505,6 +506,7 @@ export default class Index extends wepy.page {
     };
     wepy.$Api.goodsLis(a).then(
       res => {
+        console.log(res)
         this.home_liat = res.data.data;
       },
       err => {}

@@ -34,7 +34,7 @@ import 'wepy-async-function';
 @connect({
   userinfo(state) {
     return state.counter.userinfo;
-  },
+  }
 })
 export default class Playkey extends wepy.page {
   config = {
@@ -93,7 +93,7 @@ export default class Playkey extends wepy.page {
           clearInterval(that.timer);
         }
       }, 1000);
-       let a = {
+      let a = {
         phone: this.userName,
         msgType: 2
       };
@@ -134,10 +134,34 @@ export default class Playkey extends wepy.page {
           mask: true
         });
         return false;
-      }else{
-        // let a={
-
-        // }
+      } else {
+        let a = {
+          unionId: this.userinfo.unionid,
+          phone: this.userName,
+          vcode: this.usernum,
+          pwd: this.usernums
+        };
+        if (a) {
+          wepy.$Api.setForget(a).then(
+            res => {
+              if (res.data.code == 200) {
+                wx.showModal({
+                  content: '新密码设置成功',
+                  confirmText: '确定',
+                  confirmColor: '#3CC51F',
+                  success: result => {
+                    if (result.confirm) {
+                      wx.navigateTo({
+                        url: '/pages/my/setting/setting'
+                      });
+                    }
+                  }
+                });
+              }
+            },
+            err => {}
+          );
+        }
       }
     }
   };
@@ -147,7 +171,7 @@ export default class Playkey extends wepy.page {
 </script>
 
 <style lang='less'>
-page{
+page {
   background-color: #f2f2f2;
 }
 .useriphone {

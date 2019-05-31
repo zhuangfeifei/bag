@@ -26,7 +26,11 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  userinfo(state) {
+    return state.counter.userinfo;
+  }
+})
 export default class Playkey extends wepy.page {
   config = {
     navigationBarTitleText: '修改支付密码'
@@ -71,6 +75,32 @@ export default class Playkey extends wepy.page {
         });
         return false;
       }
+      let a = {
+        unionId: this.userinfo.unionid,
+        pwd:this.userNames,
+        newPwd:this.usernum
+      };
+      if(a){
+         wepy.$Api.ecxtForgeta(a).then(
+          res => {
+            if (res.data.code == 200) {
+              wx.showModal({
+                content: '修改密码成功',
+                confirmText: '确定',
+                confirmColor: '#3CC51F',
+                success: result => {
+                  if (result.confirm) {
+                    wx.navigateTo({
+                      url: '/pages/my/setting/setting'
+                    });
+                  }
+                }
+              });
+            }
+          },
+          err => {}
+        );
+      }
     },
     tapnext() {
       wepy.navigateTo({
@@ -84,7 +114,7 @@ export default class Playkey extends wepy.page {
 </script>
 
 <style lang='less'>
-page{
+page {
   background-color: #f2f2f2;
 }
 .useriphone {

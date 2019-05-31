@@ -94,7 +94,7 @@
             <swiper-item class="onswiper">
               <view class="slide-image {{swiperIndex == index ? 'active' : 'quiet'}}">
                 <view class="name_list">
-                  <image src="{{data_pric[index].headicon}}"></image>
+                  <image src="{{data_pric[index].headicon}}"/>
                   <view>{{data_pric[index].realname}}</view>
                 </view>
                 <view class="ontetx">{{data_pric[index].content}}</view>
@@ -131,8 +131,7 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image src="{{imgurls+home_liat[index].thumbnail_pic}}">
-            </image>
+            <image src="{{imgurls+home_liat[index].thumbnail_pic}}"/>
             <view class="ontbnt">
               <text>￥{{home_liat[index].original_price}}</text>
               <text>￥{{home_liat[index].fall_price}}</text>
@@ -153,7 +152,7 @@
         </view>
         <view>
           <button open-type='contact'>
-            <image src='/images/notices/tab_kefu.png'></image>
+            <image src='/images/notices/tab_kefu.png'/>
           </button>
           <text>客服</text>
         </view>
@@ -172,11 +171,11 @@
       </view>
     </view>
     <view class="bomtrnfxid" wx:if="{{cosde}}">
-      <image src='/images/notices/tab_tanjiangc.png'></image>
+      <image src='/images/notices/tab_tanjiangc.png'/>
       <text>添加成功，在购物车等你哦~</text>
     </view>
     <view class="fixedsd">
-      <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop"></image>
+      <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop"/>
     </view>
     <view class="fenxs">返回顶部</view>
     <!--底部属性弹窗-->
@@ -185,7 +184,7 @@
     <view class="ontabbtnsfdg" wx:if="{{sod_up==1}}">
       <view class="up_top">
         <view class="om">
-          <image mode="aspectFill" lazy-load="true" src="{{imgurls+poat_List.thumbnail_pic}}"></image>
+          <image mode="aspectFill" lazy-load="true" src="{{imgurls+poat_List.thumbnail_pic}}"/>
         </view>
         <view class="oms">
           <view>￥{{poat_List.market_price}}</view>
@@ -233,14 +232,14 @@
         <view class="onm">
           <view class="hlpelist_list">
             <button open-type="share">
-              <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png"></image>
+              <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png"/>
             </button>
           </view>
           <view class="on">分享给好友和微信群</view>
         </view>
         <view class="onm">
           <view class="hlpelist_list">
-            <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics'></image>
+            <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics'/>
           </view>
           <view class="on">生成海报 保存分享</view>
         </view>
@@ -252,11 +251,11 @@
     <view class="share-cover" wx:if="{{showSharePic}}" catchtouchmove='true' style="display:{{hinde}}">
       <scroll-view scroll-y="true" style="height:1300rpx;">
         <view class="topimg_sd">
-          <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden"></image>
+          <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden"/>
         </view>
         <view class="share-pic-box">
           <view class="share-pic">
-            <image src="{{sharePicUrl}}" class="sharePic"></image>
+            <image src="{{sharePicUrl}}" class="sharePic"/>
           </view>
           <button class="share-tips" @tap='savePicsd'>保存图片到相册</button>
         </view>

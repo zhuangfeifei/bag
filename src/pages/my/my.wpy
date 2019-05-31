@@ -1,173 +1,347 @@
 <template>
-    <view id="my" wx:if="{{imgUrl}}">
+  <view id="my" wx:if="{{imgUrl}}">
 
-        <view class="nav_bak">
-            <image src="{{imgUrl+'/my/bg_1.png'}}" />
-        </view>
-        <view class="nav">
-            <view>
-                <image class="HYZX_xiaoxi" src="{{imgUrl+'/my/HYZX_xiaoxi.png'}}" mode="scaleToFill" lazy-load="false" />
-                <text>\n通知</text>
-            </view>
-            <view>
-                <image class="touxiang" src="{{userinfo.avatar}}" mode="scaleToFill" lazy-load="false" />
-                <text class="touxiang_name">\n{{userinfo.nickname}}</text>
-            </view>
-            <view @tap="linkTo" data-url="./setting/setting">
-                <image class="HYZX_xiaoxi" src="/images/my/HYZX_shezhi.png" mode="scaleToFill" lazy-load="false" />
-                <text>\n设置</text>
-            </view>
-            <image class="sign" src="/images/my/HYZX_qiandao.png" />
-        </view>
-        <view class="vip_level">
-            <image src="/images/my/bg_2.png" />
-            <view class="vip_rules" @tap="linkTo" data-url="./membershipRules">您是普卡会员，查看折扣权限>></view>
-            <view class="vip_level_bar"><view style="width:{{20}}%"></view></view>
-            <view class="vip_level_list"><text wx:for="{{level}}" wx:key="{{index}}">{{item}}</text></view>
-        </view>
-
-
-        <view class="My_service">
-            <h3>我的服务</h3>
-            <view class="My_service_list">
-                <view wx:for="{{service}}" wx:key="{{index}}" @tap="linkTo" data-url="{{item.url}}">
-                    <image src="{{item.img}}" mode="widthFix" lazy-load="false" />
-                    <text>\n{{item.title}}</text>
-                </view>
-            </view>
-        </view>
-
-        <view class="My_order">
-            <h3>我的订单</h3>
-            <view class="My_order_list"><text wx:for="{{order}}" wx:key="{{index}}">{{item}}</text></view>
-            <navigator url="./order/myOrder">
-                <view class="My_allOrder">
-                    全部订单
-                    <image src="/images/my/QBDD_tubiao.png" />
-                </view>
-            </navigator>
-        </view>
-
+    <view class="nav_bak">
+      <image src="{{imgUrl+'/my/bg_1.png'}}" />
     </view>
+    <view class="nav">
+      <view>
+        <image class="HYZX_xiaoxi" src="{{imgUrl+'/my/HYZX_xiaoxi.png'}}" mode="scaleToFill" lazy-load="false" />
+        <text>\n通知</text>
+      </view>
+      <view>
+        <image class="touxiang" src="{{userinfo.avatar}}" mode="scaleToFill" lazy-load="false" />
+        <text class="touxiang_name">\n{{userinfo.nickname}}</text>
+      </view>
+      <view @tap="linkTo" data-url="./address/address">
+        <image class="HYZX_xiaoxi" src="/images/my/HYZX_shezhi.png" mode="scaleToFill" lazy-load="false" />
+        <text>\n设置</text>
+      </view>
+      <image class="sign" src="/images/my/HYZX_qiandao.png" />
+    </view>
+    <view class="vip_level">
+      <image src="/images/my/bg_2.png" />
+      <view class="vip_rules" @tap="linkTo" data-url="./membershipRules">您是普卡会员，查看折扣权限>></view>
+      <view class="vip_level_bar">
+        <view style="width:{{20}}%"></view>
+      </view>
+      <view class="vip_level_list"><text wx:for="{{level}}" wx:key="{{index}}">{{item}}</text></view>
+    </view>
+
+    <view class="My_service">
+      <h3>我的服务</h3>
+      <view class="My_service_list">
+        <view wx:for="{{service}}" wx:key="{{index}}" @tap="linkTo" data-url="{{item.url}}">
+          <image src="{{item.img}}" mode="widthFix" lazy-load="false" />
+          <text>\n{{item.title}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="My_order">
+      <h3>我的订单</h3>
+      <view class="My_order_list"><text wx:for="{{order}}" wx:key="{{index}}">{{item}}</text></view>
+      <navigator url="./order/myOrder">
+        <view class="My_allOrder">
+          全部订单
+          <image src="/images/my/QBDD_tubiao.png" />
+        </view>
+      </navigator>
+    </view>
+    <view class="My-back"></view>
+    <view class="My_chedk">
+      <image src='/images/my/chexkd_list.png' />
+      <view>2006</view>
+      <view>当前积分</view>
+    </view>
+  </view>
 </template>
 
 <script>
-import wepy from 'wepy'
-import { connect } from 'wepy-redux'
-import 'wepy-async-function'
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
 
 @connect({
-    userinfo(state){
-        return state.counter.userinfo
-    },
-    imgUrl(state){
-        return state.counter.imgUrl
-    },
+  userinfo(state) {
+    return state.counter.userinfo;
+  },
+  imgUrl(state) {
+    return state.counter.imgUrl;
+  }
 })
-    
 export default class My extends wepy.page {
-    
-    config = {
-        navigationBarTitleText: '会员中心'
+  config = {
+    navigationBarTitleText: '会员中心'
+  };
+  components = {};
+
+  data = {
+    level: ['普卡', '银卡', '金卡', '翠玉卡', '钻石卡'],
+    service: [
+      {
+        title: '收藏夹',
+        img: '../../images/my/HYZX_shoucangjia.png',
+        url: './favorites/favorites'
+      },
+      {
+        title: '优惠券',
+        img: '../../images/my/HYZX_youhuiquan.png',
+        url: './coupon/coupon'
+      },
+      { title: '钱包', img: '../../images/my/HYZX_qianbao.png' },
+      { title: '客户服务', img: '../../images/my/HYZX_kehufuwu.png' }
+    ],
+    order: ['待付款', '待发货', '待收货', '评价/售后']
+  };
+  computed = {};
+  methods = {
+    linkTo(e) {
+      this.$navigate({ url: e.currentTarget.dataset.url });
     }
-    components = {
-    
-    }
-    
-    data = {
-        level:['普卡','银卡','金卡','翠玉卡','钻石卡'],
-        service:[
-            {title:'收藏夹', img:'../../images/my/HYZX_shoucangjia.png', url:'./favorites/favorites'},
-            {title:'优惠券', img:'../../images/my/HYZX_youhuiquan.png', url:'./coupon/coupon'},
-            {title:'钱包', img:'../../images/my/HYZX_qianbao.png'},
-            {title:'客户服务', img:'../../images/my/HYZX_kehufuwu.png'},
-        ],
-        order:['待付款','待发货','待收货','评价/售后']
-    }
-    computed = {
-    }
-    methods = {
-        linkTo(e){
-            this.$navigate({url: e.currentTarget.dataset.url})
-        }
-    }
-    onLoad() {
-        // console.log(this.userinfo)
-    }
+  };
+  onLoad() {
+    // console.log(this.userinfo)
+  }
 }
 </script>
 
 <style lang='less'>
-#my{
-    width: 100%; min-height: 100%; box-sizing: border-box; padding-top: 78rpx; position: relative; background-color: #F2F2F2;
+#my {
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding-top: 78rpx;
+  position: relative;
+  background-color: #f2f2f2;
 }
 
-.font{
-    font-family:PingFang-SC-Medium; font-weight:500;
+.font {
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
 }
 
-
-.nav_bak{
-    width: 100%; height: 268rpx; position: absolute; top: 0; left: 0;
-    image{width: 100%; height: 100%;}
+.nav_bak {
+  width: 100%;
+  height: 268rpx;
+  position: absolute;
+  top: 0;
+  left: 0;
+  image {
+    width: 100%;
+    height: 100%;
+  }
 }
-.nav{
-    width: 690rpx; height: 330rpx; background-color: white; position: relative; margin: 0 auto; z-index: 2;
-    box-shadow:0px 1rpx 33rpx 2rpx rgba(0, 0, 0, 0.11); border-radius: 10rpx; text-align: center;
-    font-size: 24rpx; color: #666666; .font;
-    display: flex; justify-content: space-around; padding-top: 77rpx; box-sizing: border-box;
-    .HYZX_xiaoxi{width: 44rpx; height: 44rpx; margin-top: 73rpx;}
-    .touxiang{width: 120rpx; height: 120rpx; border-radius: 50%;}
-    .touxiang_name{font-size: 36rpx; color: #000000; line-height: 60rpx;}
-    .sign{
-        width: 130rpx; height: 58rpx; position: absolute; top: 35rpx; right: 0;
-    }
+.nav {
+  width: 690rpx;
+  height: 330rpx;
+  background-color: white;
+  position: relative;
+  margin: 0 auto;
+  z-index: 2;
+  box-shadow: 0px 1rpx 33rpx 2rpx rgba(0, 0, 0, 0.11);
+  border-radius: 10rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #666666;
+  .font;
+  display: flex;
+  justify-content: space-around;
+  padding-top: 77rpx;
+  box-sizing: border-box;
+  .HYZX_xiaoxi {
+    width: 44rpx;
+    height: 44rpx;
+    margin-top: 73rpx;
+  }
+  .touxiang {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: 50%;
+  }
+  .touxiang_name {
+    font-size: 36rpx;
+    color: #000000;
+    line-height: 60rpx;
+  }
+  .sign {
+    width: 130rpx;
+    height: 58rpx;
+    position: absolute;
+    top: 35rpx;
+    right: 0;
+  }
 }
-.vip_level{
-    width: 690rpx; height: 175rpx; margin: 0 auto; position: relative; top: -35rpx; box-sizing: border-box; padding-top: 50rpx;
-    image{width: 100%; height: 100%; position: absolute; top: 0; left: 0;}
-    .vip_rules{
-        width: 645rpx; margin: 0 auto; position: relative; color: #FFFFFF; font-size: 24rpx;.font;
+.vip_level {
+  width: 690rpx;
+  height: 175rpx;
+  margin: 0 auto;
+  position: relative;
+  top: -35rpx;
+  box-sizing: border-box;
+  padding-top: 50rpx;
+  image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .vip_rules {
+    width: 645rpx;
+    margin: 0 auto;
+    position: relative;
+    color: #ffffff;
+    font-size: 24rpx;
+    .font;
+  }
+  .vip_level_bar {
+    width: 645rpx;
+    height: 14rpx;
+    background-color: #ffffff;
+    border-radius: 7rpx;
+    margin: 0 auto;
+    position: relative;
+    margin-top: 19rpx;
+    view {
+      width: 20%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        rgba(246, 146, 105, 1),
+        rgba(242, 79, 75, 1)
+      );
+      border-radius: 7rpx;
     }
-    .vip_level_bar{
-        width: 645rpx; height: 14rpx; background-color: #FFFFFF; border-radius: 7rpx; margin: 0 auto; position: relative; margin-top: 19rpx;
-        view{
-            width: 20%; height: 100%;
-            background:linear-gradient(90deg,rgba(246,146,105,1),rgba(242,79,75,1)); border-radius:7rpx;
-        }
-    }
-    .vip_level_list{
-        width: 645rpx; margin: 0 auto; position: relative; color: #FFFFFF; font-size: 24rpx; 
-        display: flex; justify-content: space-around; margin-top: 15rpx;
-    }
+  }
+  .vip_level_list {
+    width: 645rpx;
+    margin: 0 auto;
+    position: relative;
+    color: #ffffff;
+    font-size: 24rpx;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15rpx;
+  }
 }
 
-
-.My_service{
-    width: 690rpx; height: 240rpx; background-color: white; margin: 0 auto; margin-top: -15rpx; box-sizing: border-box;
-    box-shadow:0px 1rpx 33rpx 2rpx rgba(0, 0, 0, 0.11); border-radius:10rpx; padding: 28rpx 32rpx; .font;
-    h3{font-size: 32rpx; color: #000000;}
-    .My_service_list{
-        width: 100%; display: flex; justify-content: space-around; font-size: 24rpx; color: #363636; text-align: center; margin-top: 40rpx;
-        image{width: 52rpx;}
+.My_service {
+  width: 690rpx;
+  height: 240rpx;
+  background-color: white;
+  margin: 0 auto;
+  margin-top: -15rpx;
+  box-sizing: border-box;
+  box-shadow: 0px 1rpx 33rpx 2rpx rgba(0, 0, 0, 0.11);
+  border-radius: 10rpx;
+  padding: 28rpx 32rpx;
+  .font;
+  h3 {
+    font-size: 32rpx;
+    color: #000000;
+  }
+  .My_service_list {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    font-size: 24rpx;
+    color: #363636;
+    text-align: center;
+    margin-top: 40rpx;
+    image {
+      width: 52rpx;
     }
+  }
 }
 
-
-.My_order{
-    width: 690rpx; height: 220rpx; background-color: white; margin: 0 auto; margin-top: 20rpx; padding: 28rpx 32rpx;
-    box-shadow:0px 1rpx 33rpx 2rpx rgba(0, 0, 0, 0.11); border-radius:10rpx; box-sizing: border-box; position: relative; .font;
-    h3{font-size: 32rpx; color: #000000;}
-    .My_order_list{
-        width: 100%; display: flex; justify-content: space-between; font-size: 24rpx; margin-top: 38rpx;
-        text{
-            display: inline-block; width: 130rpx; height: 60rpx; background-color: #F3F7FA; color: #363636; 
-            border-radius: 30rpx; text-align: center; line-height: 60rpx;
-        }
+.My_order {
+  width: 690rpx;
+  height: 220rpx;
+  background-color: white;
+  margin: 0 auto;
+  margin-top: 20rpx;
+  padding: 28rpx 32rpx;
+  box-shadow: 0px 1rpx 33rpx 2rpx rgba(0, 0, 0, 0.11);
+  border-radius: 10rpx;
+  box-sizing: border-box;
+  position: relative;
+  .font;
+  h3 {
+    font-size: 32rpx;
+    color: #000000;
+  }
+  .My_order_list {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 24rpx;
+    margin-top: 38rpx;
+    text {
+      display: inline-block;
+      width: 130rpx;
+      height: 60rpx;
+      background-color: #f3f7fa;
+      color: #363636;
+      border-radius: 30rpx;
+      text-align: center;
+      line-height: 60rpx;
     }
-    .My_allOrder{
-        position: absolute; top: 39rpx; right: 32rpx; font-size: 24rpx; color: #999999;
-        image{width: 9rpx; height: 16rpx; margin-left: 5rpx;}
+  }
+  .My_allOrder {
+    position: absolute;
+    top: 39rpx;
+    right: 32rpx;
+    font-size: 24rpx;
+    color: #999999;
+    image {
+      width: 9rpx;
+      height: 16rpx;
+      margin-left: 5rpx;
     }
+  }
+}
+.My-back {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 1);
+  opacity: 0.5;
+  z-index: 66;
+}
+.My_chedk {
+  width: 436rpx;
+  height: 551rpx;
+  position: absolute;
+  top: 247rpx;
+  left: 157rpx;
+  z-index: 77;
+}
+.My_chedk image {
+  width: 436rpx;
+  height: 551rpx;
+}
+.My_chedk view:nth-child(1) {
+  font-size: 60rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(255, 73, 63, 1);
+  letter-spacing: 1rpx;
+  margin-top: 272rpx;
+  position: absolute;
+  z-index: 88;
+}
+.My_chedk view:nth-child(2) {
+  font-size: 24rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  letter-spacing: 1rpx;
+  margin-top: 23rpx;
+  position: absolute;
+  top: 23rpx;
+  z-index: 88;
 }
 </style>

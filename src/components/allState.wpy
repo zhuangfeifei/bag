@@ -1,0 +1,86 @@
+<template>
+    <scroll-view scroll-y id='state' style="height: {{screenHeight+'px'}};">
+        <block>
+        <view class='state_list'>
+            <view class='state_nav' wx:for="{{state}}" wx:key="{{index}}" @tap="collotionStatusCloth" data-state="{{index}}"><text>{{item}}</text></view>
+        </view>
+        </block>
+    </scroll-view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import 'wepy-async-function'
+
+@connect({
+    
+})
+    
+export default class Card extends wepy.component {
+    props = {
+        category: {
+            type: Object,
+            default: 'nothing',
+            twoWay: true
+        }
+    }
+    
+    data = {
+        screenHeight:'', state:['全部','即将下架','下架','库存紧张','已售罄','降价中']
+    }
+    
+    computed = {
+    
+    }
+    
+    methods = {
+        collotionStatusCloth(e){
+            // console.log(e)
+            wepy.$store.dispatch({type:'stateIdMethod', payload: e.currentTarget.dataset.state})
+        }
+    }
+
+    onLoad () {
+        let screenHeight = wx.getSystemInfoSync().windowHeight
+        this.screenHeight = screenHeight - this.px(120)
+        this.$apply()
+    }
+
+    // rpx转px
+    px(rpx) {
+        var systemInfo = wx.getSystemInfoSync()
+        return rpx / 750 * systemInfo.windowWidth
+    }
+}
+</script>
+
+<style lang='less'>
+.font{
+    font-family:PingFang-SC-Medium; font-weight:500;
+}
+.displays{
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal !important;
+    -webkit-box-orient: vertical;
+}
+
+
+#state{
+  width: 100%; background-color: #FFFFFF;
+}
+
+.state_list{
+  width: 100%; display: flex; flex-wrap: wrap; padding-left: 40rpx; box-sizing: border-box; padding-top: 30rpx;
+}
+.state_nav{
+  width: 150rpx; height: 64rpx; font-size: 24rpx; color: #2B2B2B; line-height: 64rpx; box-sizing: border-box; margin-bottom: 20rpx;
+  background-color: #F6F6F6; margin-right: 20rpx; text-align: center;
+}
+.state_nav text:nth-child(2){
+  font-size: 20rpx; color: #808080;
+}
+</style>
