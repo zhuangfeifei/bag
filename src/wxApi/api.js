@@ -50,7 +50,7 @@ module.exports = {
   uncollection:(data)=>{//取消商品收藏 删除收藏
     return api.request('/bag/api/boutique/deleteCollotion', 'post', data)
   },
-  userlike:(data)=>{//商品喜欢
+  userLike:(data)=>{//商品喜欢
     return api.request('/bag/api/boutique/clickLike', 'post', data)
   },
   usernolike:(data)=>{//取消喜欢

@@ -305,6 +305,7 @@ export default class Detail extends wepy.page {
     sharePicUrl: '', //生成海报链接
     isShow: false,
     id: -1,
+    islikes: '',
     sizeName: '', //商品属性大小
     colorName: [], //商品属性颜色
     ida: -1,
@@ -396,13 +397,13 @@ export default class Detail extends wepy.page {
         let a = {
           name: this.ssexd,
           color: this.scolor,
-          img:this.poat_List.thumbnail_pic
+          img: this.poat_List.thumbnail_pic
         };
         if (a) {
           wx.navigateTo({
             url: '/pages/index/order'
           });
-           wepy.$store.dispatch({ type : 'orderDeteil', payload: a})
+          wepy.$store.dispatch({ type: 'orderDeteil', payload: a });
         }
       } else {
         wx.showToast({
@@ -553,13 +554,13 @@ export default class Detail extends wepy.page {
         let a = {
           name: this.ssexd,
           color: this.scolor,
-          img:this.poat_List.thumbnail_pic
+          img: this.poat_List.thumbnail_pic
         };
         if (a) {
           wx.navigateTo({
             url: '/pages/index/order'
           });
-           wepy.$store.dispatch({ type : 'orderDeteil', payload: a})
+          wepy.$store.dispatch({ type: 'orderDeteil', payload: a });
         }
       } else {
         wx.showToast({
@@ -578,9 +579,11 @@ export default class Detail extends wepy.page {
     Collection() {
       let a = {
         goodsId: this.shop_detailsMethods.goods_id,
-        unionId: this.shop_detailsMethods.unionid
+        unionId: this.userinfo.unionid
       };
-      if (this.poat_List.isCollection == 0 && a) {
+      let like = this.poat_List.islike;
+      if (like == 0 && a) {
+        console.log(a)
         wepy.$Api.collection(a).then(
           res => {
             this.poat_List.isCollection = 1;
@@ -591,20 +594,21 @@ export default class Detail extends wepy.page {
         //取消收藏
         wepy.$Api.uncollection(a).then(
           res => {
-            this.poat_List.isCollection = 0;
           },
           err => {}
         );
       }
+       this.poat_List.isCollection=!like
     },
     //喜欢
     uesrlike() {
       let a = {
         goodsId: this.shop_detailsMethods.goods_id,
-        unionId: this.shop_detailsMethods.unionid
+        unionId: this.userinfo.unionid
       };
-      if (this.poat_List.isCollection == 0) {
-        wepy.$Api.userlike(a).then(
+      let like = this.poat_List.islike;
+      if (like == 0 && a) {
+        wepy.$Api.userLike(a).then(
           res => {
             this.poat_List.islike = 1;
           },
@@ -614,11 +618,11 @@ export default class Detail extends wepy.page {
         //取消
         wepy.$Api.usernolike(a).then(
           res => {
-            this.poat_List.islike = 0;
           },
           err => {}
         );
       }
+      this.poat_List.islike = !like;
     }
   };
   onShareAppMessage(res) {
@@ -918,6 +922,7 @@ export default class Detail extends wepy.page {
   onLoad() {
     this.imgurl = this.imgurls.imgurl;
     this.deatil();
+    this.islikes = this.poat_List.islike;
     this.recommendations();
     this.shareited = this.shop_detaiMethods;
   }
