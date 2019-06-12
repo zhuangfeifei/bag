@@ -1,0 +1,227 @@
+<style lang="less">
+.onzhan {
+  background: #f2f2f2;
+  height: 4rpx;
+}
+.topconlist {
+  width: 100%;
+  height: 130rpx;
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+}
+.list_view {
+  width: 93%;
+  height: 100%;
+  border-bottom: 1rpx solid #f2f2f2;
+  margin: auto;
+  display: flex;
+}
+.coun_list {
+  width: 13%;
+  height: 100%;
+}
+.coun_listd {
+  width: 20%;
+  height: 100%;
+}
+.coun_list view {
+  width: 70rpx;
+  height: 36rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 5rpx;
+  margin-top: 47rpx;
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+  line-height: 36rpx;
+  letter-spacing: 1rpx;
+}
+.coun_listd view {
+  width: 120rpx;
+  height: 36rpx;
+  background: rgba(244, 105, 95, 1);
+  border-radius: 5rpx;
+  margin-top: 47rpx;
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+  line-height: 36rpx;
+  letter-spacing: 1rpx;
+}
+.list_views {
+  width: 47%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.list_viewsd {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.list_texta {
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(51, 51, 51, 1);
+  margin-top: 23rpx;
+}
+.list_textb {
+  font-size: 26rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  margin-top: 13rpx;
+}
+.list_textc {
+  font-size: 26rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(244, 105, 95, 1);
+  margin-top: 13rpx;
+}
+.reconlist {
+  width: 40%;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(244, 105, 95, 1);
+  line-height: 130rpx;
+  text-align: right;
+}
+.reconlists {
+  width: 48%;
+  font-size: 28rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(102, 102, 102, 1);
+  line-height: 130rpx;
+  text-align: right;
+}
+.onBottom {
+  width: 100%;
+  height: 55rpx;
+  background-color: #f2f2f2;
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  text-align: center;
+  line-height: 55rpx;
+}
+</style>
+<template>
+  <view>
+    <view class="onzhan"></view>
+    <view class="topconlist" wx:for="{{integralD}}" wx:key="{{integralD}}" data-id="{{index}}">
+      <view class="list_view">
+        <view class="coun_list" wx:if="{{integralD[index].type<3}}">
+          <view wx:if="{{integralD[index].type==0}}" style="background:#1493E3;">购物</view>
+          <view wx:if="{{integralD[index].type==1}}">分享</view>
+          <view wx:if="{{integralD[index].type==2}}">签到</view>
+          <view wx:if="{{integralD[index].type==3}}">充值</view>
+        </view>
+        <view class="coun_listd" wx:else>
+          <view wx:if="{{integralD[index].type==4}}">绑定手机号</view>
+          <view wx:if="{{integralD[index].type==5}}">登录送积分</view>
+          <view wx:if="{{integralD[index].type==6}}">退款减积分</view>
+        </view>
+        <view class="list_views" wx:if="{{integralD[index].type<3}}">
+          <text class="list_texta">{{integralD[index].operatime}}</text>
+          <text class="list_textb" wx:if="{{integralD[index].type==2}}">连续签到{{integralD[index].count}}天</text>
+          <text class="list_textb" wx:if="{{integralD[index].type==0}}">购物金额￥{{integralD[index].remark}}</text>
+          <text class="list_textb" wx:if="{{integralD[index].type==1}}">分享页面</text>
+          <text class="list_textb" wx:if="{{integralD[index].type==3}}">余额充值</text>
+        </view>
+        <view class="reconlist" wx:if="{{integralD[index].type==2}}">签到成功 +{{integralD[index].changed}}积分</view>
+        <view class="reconlist" wx:if="{{integralD[index].type==0}}">下单成功 +{{integralD[index].changed}}积分</view>
+        <view class="reconlist" wx:if="{{integralD[index].type==1}}">分享成功 +{{integralD[index].changed}}积分</view>
+        <view class="reconlist" wx:if="{{integralD[index].type==3}}">充值成功 +{{integralD[index].changed}}积分</view>
+
+        <view class="list_viewsd" wx:if="{{integralD[index].type>3}}">
+          <text class="list_texta">{{integralD[index].operatime}}</text>
+          <text class="list_textb" wx:if="{{integralD[index].type==4}}">绑定手机号</text>
+          <text class="list_textb" wx:if="{{integralD[index].type==5}}">登录</text>
+          <text class="list_textb" wx:if="{{integralD[index].type==6}}">退款</text>
+        </view>
+        <view class="reconlist" wx:if="{{integralD[index].type==4}}">绑定手机号 +{{integralD[index].changed}}积分</view>
+        <view class="reconlist" wx:if="{{integralD[index].type==5}}">登录送积分 +{{integralD[index].changed}}积分</view>
+        <view class="reconlist" wx:if="{{integralD[index].type==6}}">退款减积分 +{{integralD[index].changed}}积分</view>
+      </view>
+    </view>
+    <view class="onBottom" wx:if="{{onBottoms==false}}">没有更多了哦~</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
+
+@connect({
+  userinfo(state) {
+    return state.counter.userinfo;
+  }
+})
+export default class Selectd extends wepy.page {
+  config = {
+    navigationBarTitleText: '积分明细'
+  };
+
+  components = {};
+
+  data = {
+    onBottoms: true,
+    current: 1,
+    integralD: []
+  };
+
+  computed = {};
+
+  methods = {};
+  onLoad() {
+    this.hisIntegralDetail();
+  }
+  hisIntegralDetail() {
+    let a = {
+      unionId: this.userinfo.unionid,
+      limit: 1,
+      current: this.current
+    };
+    if (a) {
+      wepy.$Api.hisalDetail(a).then(
+        res => {
+          this.integralD = res.data.data;
+          this.$apply();
+        },
+        err => {}
+      );
+    }
+  }
+  onReachBottom() {
+    let a = {
+      unionId: this.userinfo.unionid,
+      limit: 1,
+      current: this.current++
+    };
+    if (a) {
+      wepy.$Api.hisalDetail(a).then(
+        res => {
+          if (res.data.data.length != 0) {
+            this.integralD = this.integralD.concat(res.data.data);
+            this.$apply();
+          } else {
+            this.onBottoms = false;
+          }
+        },
+        err => {}
+      );
+    }
+  }
+}
+</script>

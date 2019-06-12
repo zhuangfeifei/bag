@@ -22,6 +22,8 @@ const defaultState = {
   shareited:1,
   addresCode:1,
   goodsDetail:'',  // 商品详情
+  mrgkm:1,//签到
+  orDeteil:''
 }
 
 export default handleActions({
@@ -68,8 +70,13 @@ export default handleActions({
   useraddres(state, action){
     return { ...state,addresCode:action.payload}
   },
-    
+  mrgkmMethods(state, action){
+    return { ...state,mrgkm:action.payload}
+  },
   goodsDetailMethods(state, action){
     return { ...state, goodsDetail:action.payload}
+  },
+  orderDeteil(state, action){
+    return { ...state, orDeteil:action.payload}
   },
 }, defaultState)

@@ -20,6 +20,7 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index/index',
+      'pages/my/selectd',
       'pages/cart/cart',
       'pages/my/my',
       'pages/my/membershipRules',
@@ -109,8 +110,7 @@ export default class extends wepy.app {
                     encryptedData: res.encryptedData,
                     iv: res.iv
                   }
-                  Api.userinfo(jsonData).then(res => { 
-                    console.log(res.data)
+                  Api.userinfo(jsonData).then(res => {
                     if (res.data.code == 200) {
                       wepy.setStorageSync('userinfo', res.data.data)
                       wepy.$store.dispatch({ type : 'userinfos', payload: res.data.data})

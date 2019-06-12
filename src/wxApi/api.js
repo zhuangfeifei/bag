@@ -107,10 +107,24 @@ module.exports = {
   ecxtForgeta:(data)=>{//	修改密码
     return api.request('/bag/api/setUpdatePwd', 'post', data)
   },
+  addFliat:(data)=>{//	签到
+    return api.request('/bag/api/sign/addIntegration', 'post', data)
+  },
+  signRecords:(data)=>{//	签到记录
+    return api.request('/bag/api/sign/integrationHistory', 'post', data)
+  },
+  hisalDetail:(data)=>{//积分明细
+    return api.request('/bag/api/basic/hisIntegralDetail', 'post', data)
+  },
+  basiCrules:(data)=>{//公告规则
+    return api.request('/bag/api/basic/rules', 'post', data)
+  },
+  goodsMessaged:(data)=>{//商品提醒
+    return api.request('/bag/api/message/goodsMessage', 'post', data)
+  },
 
 
 
-  
   couponsAvailable:(data)=>{//下订单时查询某一商品会员拥有的可用优惠券信息
     return api.request('/bag/api/order/couponsAvailable', 'post', data)
   },

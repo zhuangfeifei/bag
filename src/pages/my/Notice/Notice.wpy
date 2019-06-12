@@ -1,5 +1,8 @@
 
 <style lang='less'>
+page{
+  background: #f2f2f2;
+}
 .topcotarin {
   width: 690rpx;
   height: 150rpx;

@@ -4,7 +4,7 @@
       <view wx:for="{{list}}" wx:key="{{list}}" data-id="{{index}}" style="{{index == id?'color:#F4695F;border-bottom:1px solid #F4695F':'color:rgba(54, 54, 54, 1);border:none'}}" @tap="click">{{item.text}}</view>
     </view>
     <view class="oncouplist" wx:for="{{coupon}}" wx:key="{{coupon}}" wx:if="{{coupon}}">
-      <image src="/images/notices/quandi.png" class="quandi"/>
+      <image src="/images/notices/quandi.png" class="quandi" />
       <view class="oncunlom">
         <image src="/images/notices/renminbi.png" class="quandis" />
         <view class="clatextb">{{coupon[index].price}}</view>
@@ -115,7 +115,6 @@ export default class Coupon extends wepy.page {
     },
     //领取
     ontapto(e) {
-      console.log(e);
       let couponId = e.currentTarget.dataset.pid;
       let a = {
         unionId: this.userinfo.unionid,
@@ -148,7 +147,6 @@ export default class Coupon extends wepy.page {
         res => {
           this.coupon = res.data.data;
           this.$apply();
-          console.log(res);
         },
         err => {}
       );

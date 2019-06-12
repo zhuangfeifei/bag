@@ -3,10 +3,11 @@
   <view>
     <import src="../../wxParse/wxParse.wxml" />
     <view class="swprice">
+      <image src='/images/my/loading.png' class="om_loading" wx:if="{{isImg}}" animation="{{animationRound}}" />
       <swiper class="topswiper" indicator-dots="{{indicatorDots}}" circular="true" indicator-active-color="white" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
         <block wx:for="{{imgurlsd}}" wx:key="{{imgurlsd}}">
           <swiper-item>
-            <image mode="aspectFill" lazy-load="true" src="{{imgurls+item}}" />
+            <image mode="aspectFill" bindload="isImg" lazy-load="true" src="{{imgurls+item}}" />
           </swiper-item>
         </block>
       </swiper>
@@ -16,7 +17,7 @@
       <view class="onconter">
         <view class="onma">
           <text class="oma_a">￥</text>
-          <text class="oma_b">{{poat_List.market_price}}</text>
+          <text class="oma_b">{{poat_List.is_accept==1?poat_List.fall_price:poat_List.market_price}}</text>
           <text class="oma_c">￥</text>
           <text class="oma_d">{{poat_List.original_price}}</text>
           <text class="oma_e">销量\t {{poat_List.virtual_sales}}</text>
@@ -134,8 +135,7 @@
             <image src="{{imgurls+home_liat[index].thumbnail_pic}}" />
             <view class="ontbnt">
               <text>￥{{home_liat[index].original_price}}</text>
-              <text wx:if="{{home_liat[index].is_accept==1}}">￥{{home_liat[index].fall_price}}</text>
-              <text wx:else>￥{{home_liat[index].market_price}}</text>
+              <text>￥{{home_liat[index].is_accept==1?home_liat[index].fall_price:home_liat[index].market_price}}</text>
             </view>
             <view class="btnbuton" @tap="tap_playto" data-id="{{home_liat[index].id}}">立即购买</view>
           </view>
@@ -298,6 +298,7 @@ export default class Detail extends wepy.page {
 
   data = {
     onhidup: true,
+    isImg: true,
     imgurlsd: [], //轮播图
     poat_List: [], //详情
     showSharePic: false, //分享海报显示隐藏
@@ -358,6 +359,9 @@ export default class Detail extends wepy.page {
         });
       }
     },
+    isImg() {
+      this.isImg = false;
+    },
     click: function(e) {
       let ids = e.currentTarget.dataset.id;
       let name = e.currentTarget.dataset.name;
@@ -389,9 +393,17 @@ export default class Detail extends wepy.page {
     },
     tap_playup() {
       if (this.scolor && this.ssexd && this.ssexd != '暂无货') {
-        wx.navigateTo({
-          url: '/pages/index/order'
-        });
+        let a = {
+          name: this.ssexd,
+          color: this.scolor,
+          img:this.poat_List.thumbnail_pic
+        };
+        if (a) {
+          wx.navigateTo({
+            url: '/pages/index/order'
+          });
+           wepy.$store.dispatch({ type : 'orderDeteil', payload: a})
+        }
       } else {
         wx.showToast({
           title: '请选择商品属性',
@@ -456,21 +468,25 @@ export default class Detail extends wepy.page {
       });
     },
     tap_playto(e) {
-      if (this.ssexd != '暂无货') {
+      let a = {
+        goods_id: e.currentTarget.dataset.id,
+        unionid: this.shop_detailsMethods.unionid
+      };
+      wepy.$store.dispatch({ type: 'shop_detailsMethods', payload: a });
+      if (a) {
         wx.navigateTo({
           url: '/pages/index/detail'
-        });
-      } else {
-        wx.showToast({
-          title: '请选择商品属性',
-          icon: 'none',
-          duration: 2000
         });
       }
     },
     jiaru_up() {
       if (this.sexcale && this.scolor) {
-        this.sod_up = 0;
+        wx.showToast({
+          title: '此商品已加入购物车',
+          icon: 'none',
+          duration: 1500,
+          mask: false
+        });
       } else {
         this.sod_up = 1;
       }
@@ -534,9 +550,17 @@ export default class Detail extends wepy.page {
     //立即购买
     tap_play() {
       if (this.ssexd != '暂无货') {
-        wx.navigateTo({
-          url: '/pages/index/order'
-        });
+        let a = {
+          name: this.ssexd,
+          color: this.scolor,
+          img:this.poat_List.thumbnail_pic
+        };
+        if (a) {
+          wx.navigateTo({
+            url: '/pages/index/order'
+          });
+           wepy.$store.dispatch({ type : 'orderDeteil', payload: a})
+        }
       } else {
         wx.showToast({
           title: '请选择商品属性',
@@ -556,7 +580,7 @@ export default class Detail extends wepy.page {
         goodsId: this.shop_detailsMethods.goods_id,
         unionId: this.shop_detailsMethods.unionid
       };
-      if (this.poat_List.isCollection == 0) {
+      if (this.poat_List.isCollection == 0 && a) {
         wepy.$Api.collection(a).then(
           res => {
             this.poat_List.isCollection = 1;
@@ -601,14 +625,13 @@ export default class Detail extends wepy.page {
     if (res.from === 'button') {
     }
     return {
-      title: '白鸽优购',
-      path: '/pages/index/index',
-      imageUrl:
-        'https://gaitaobao4.alicdn.com/tfscom/i2/1891818282/O1CN01XtpIgX2B3CjHZn6ZD_!!1891818282.jpg_300x300q90.jpg'
+      title: this.poat_List.goods_specif,
+      path: '/pages/detail/detail',
+      imageUrl: this.imgurls + this.imgurlsd[0]
     };
   }
   showPic() {
-    let sharePicUrl = this.data.sharePicUrl;
+    let sharePicUrl = this.sharePicUrl;
 
     if (sharePicUrl != '') {
       //如果已经生成过一次直接显示
@@ -622,10 +645,7 @@ export default class Detail extends wepy.page {
         icon: 'loading',
         duration: 100000
       });
-
-      this.setData({
-        share: false
-      });
+      this.share = false;
 
       let logo = '';
       let headIcon = '';
@@ -748,12 +768,11 @@ export default class Detail extends wepy.page {
       0.5 * Math.PI,
       true
     );
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = '#f2f2f2';
     ctx.fill();
     ctx.stroke();
     //绘制头像、昵称
     ctx.save(); //保存当前的绘图上下文。
-    ctx.beginPath(); //开始创建一个路径
     ctx.arc(
       (w / 750) * 52 * 2,
       (w / 750) * 486 * 2,
@@ -774,7 +793,6 @@ export default class Detail extends wepy.page {
       0.5 * Math.PI,
       true
     );
-
     ctx.restore(); //恢复之前保存的绘图上下文
 
     //绘制二维码
@@ -911,8 +929,8 @@ export default class Detail extends wepy.page {
     };
     wepy.$Api.shopDetail(a).then(
       res => {
-        console.log(res.data);
         if (res.data.data) {
+          console.log(res);
           wepy.$store.dispatch({
             type: 'goodsDetailMethods',
             payload: res.data.data
@@ -948,6 +966,25 @@ export default class Detail extends wepy.page {
       err => {}
     );
   }
+  onReady() {
+    this.animationRound();
+  }
+  animationRound() {
+    //加载更多动画
+    const animation = wx.createAnimation({
+      duration: 500,
+      timingFunction: 'linear'
+    });
+
+    var n = 0;
+    setInterval(() => {
+      n = n + 1;
+      animation.rotate(180 * n).step();
+      this.setData({
+        animationRound: animation.export()
+      });
+    }, 500);
+  }
   onReachBottom() {
     let a = {
       goodsId: this.shop_detailsMethods.goods_id,
@@ -956,8 +993,8 @@ export default class Detail extends wepy.page {
     };
     wepy.$Api.recommendation(a).then(
       res => {
-        if (res.data.data.length != 0) {
-          this.home_liat = res.data.data;
+        if (res.data.data > 0) {
+          this.home_liat = this.home_liat.concat(res.data.data);
         } else {
           this.homelist = false;
         }
@@ -1939,6 +1976,14 @@ button::after {
   text-align: center;
   letter-spacing: 2rpx;
   margin-top: 103rpx;
+}
+.om_loading {
+  width: 50rpx;
+  height: 50rpx;
+  position: absolute;
+  left: calc((100% - 40rpx) / 2);
+  margin: 10rpx;
+  z-index: 666;
 }
 .bacdinpahob {
   width: 338rpx;

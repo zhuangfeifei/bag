@@ -1,7 +1,11 @@
+
 <style lang='less'>
+page {
+  background: #f2f2f2;
+}
 .topcement {
   width: 690rpx;
-  height: 440rpx;
+  height: auto;
   background: rgba(255, 255, 255, 1);
   border-radius: 0px 0px 10px 10px;
   margin: 20rpx auto;
@@ -23,16 +27,6 @@
   padding-left: 254rpx;
   line-height: 100rpx;
 }
-.titlesdl {
-  width: 626rpx;
-  background: rgba(255, 255, 255, 1);
-  margin:14rpx auto;
-  font-size: 30rpx;
-  font-family: PingFang-SC-Medium;
-  font-weight: 500;
-  color: rgba(54, 54, 54, 1);
-  line-height: 40rpx;
-}
 .bat {
   width: 626rpx;
   margin: auto;
@@ -43,22 +37,37 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  top:-3rpx;
+  top: -3rpx;
+}
+.bat .wxParse-p:nth-child(2) .WxEmojiView:nth-child(1) {
+  font-size: 30rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(54, 54, 54, 1);
+  margin-top: -15rpx;
+}
+.bat .wxParse-p:nth-child(3) {
+  margin-top: 20rpx;
 }
 </style>
 
 <template>
   <view>
-    <repeat for="{{list}}">
+    <import src="../../../wxParse/wxParse.wxml" />
     <view class="topcement">
-      <view class="back">{{item.title}}</view>
+      <view class="back">会员等级优势</view>
       <image src='/images/notices/bg_4.png'></image>
-      <view class="titlesdl">{{item.text}}</view>
       <view class="bat">
-        <text wx:for="{{post}}" wx:key="{{post}}">{{item.text}}</text>
+        <template is="wxParse" data="{{wxParseData:article.nodes}}" />
       </view>
     </view>
-  </repeat>
+    <view class="topcement" wx:if="{{list}}">
+      <view class="back">佣金获得规则</view>
+      <image src='/images/notices/bg_4.png'></image>
+      <view class="bat">
+        <template is="wxParse" data="{{wxParseData:articles.nodes}}" />
+      </view>
+    </view>
   </view>
 </template>
 
@@ -66,6 +75,7 @@
 import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
+import WxParse from '../../../wxParse/wxParse.js';
 @connect({})
 export default class Announcement extends wepy.page {
   config = {
@@ -75,31 +85,34 @@ export default class Announcement extends wepy.page {
   components = {};
 
   data = {
-    list: [
-      {
-        title: '会员等级优势',
-        text:
-          '商城不同等级会员在商品结算时享有不同折扣，此折扣不可用于活动商品。会员等级享有折扣如下：'
-      },
-      {
-        title: '佣金获得规则',
-        text:
-          '商城不同等级会员在商品结算时享有不同折扣，此折扣不可用于活动商品。会员等级享有折扣如下：'
-      }
-    ],
-    post: [
-      { text: '普卡会员：无折扣；' },
-      { text: '银卡会员：9.8折；' },
-      { text: '翠玉卡会员：9折；' },
-      { text: '钻石卡会员：8.5折' }
-    ]
+    post_list: [],
+    list: ''
   };
 
   computed = {};
 
   methods = {};
 
-  onLoad() {}
+  onLoad() {
+    this.baciCrules();
+  }
+  baciCrules(){
+    wepy.$Api.basiCrules().then(
+      res => {
+        console.log(res);
+        let post_list = res.data.data.regulations;
+        let a = res.data.data.equity;
+        WxParse.wxParse('article', 'html', post_list, this, 5);
+        if (/^[\u3220-\uFA29]+$/.test(a)) {
+          return true;
+          WxParse.wxParse('articles', 'html', a, this, 5);
+          this.list = a;
+        } else {
+          return false;
+        }
+      },
+      err => {}
+    );
+  }
 }
 </script>
-

@@ -70,7 +70,7 @@ page {
   font-family: PingFang-SC-Medium;
   font-weight: 500;
   color: rgba(153, 153, 153, 1);
-  margin-left: 335rpx;
+  margin-left: 340rpx;
   letter-spacing: 1rpx;
 }
 .textc {
@@ -100,7 +100,7 @@ page {
     <view class="topconniars">
       <view class="tomgtitle">头像</view>
       <image src="{{userinfo.avatar}}" wx:if="{{userinfo.avatar}}" />
-      <image src="/images/notices/weishangchuan.png" wx:else />
+      <image wx:else src="/images/notices/weishangchuan.png" />
     </view>
     <view class="vipyuan">
       <view class="tomgtitles">会员名</view>
@@ -140,7 +140,7 @@ import 'wepy-async-function';
   },
   useraddres(state) {
     return state.counter.addresCode;
-  },
+  }
 })
 export default class Setting extends wepy.page {
   config = {
@@ -151,7 +151,7 @@ export default class Setting extends wepy.page {
 
   data = {
     phonenum: '',
-    usernum: '',
+    usernum: ''
   };
 
   computed = {};
@@ -208,10 +208,42 @@ export default class Setting extends wepy.page {
   onLoad() {
     let phone = this.userinfo.phonenumber;
     this.phonenum = phone.substr(0, 3) + '****' + phone.substr(7);
+    wepy.login({
+      success: res_login => {
+        // 获取用户信息
+        wepy.getSetting({
+          success: res => {
+            // console.log(res)
+            if (res.authSetting['scope.userInfo']) {
+              wepy.getUserInfo({
+                success: res => {
+                  // console.log(res)
+                  var jsonData = {
+                    code: res_login.code,
+                    encryptedData: res.encryptedData,
+                    iv: res.iv
+                  };
+                  wepy.$Api.userinfo(jsonData).then(
+                    res => {
+                      if (res.data.code == 200) {
+                        wepy.$store.dispatch({
+                          type: 'userinfos',
+                          payload: res.data.data
+                        });
+                      }
+                    },
+                    err => {}
+                  );
+                }
+              });
+            }
+          }
+        });
+      }
+    });
   }
   onShow() {
     this.onLoad();
   }
 }
 </script>
-

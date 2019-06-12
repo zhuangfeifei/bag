@@ -1,5 +1,8 @@
 
 <style lang='less'>
+page {
+  background-color: #f2f2f2;
+}
 .topconert {
   width: 690rpx;
   border-radius: 10rpx;
@@ -11,7 +14,7 @@
   background-color: #f2f2f2;
 }
 .ontime view {
-  width: 180rpx;
+  width: 230rpx;
   height: 40rpx;
   background: rgba(0, 0, 0, 1);
   opacity: 0.2;
@@ -102,7 +105,7 @@
   font-weight: 500;
   color: rgba(255, 255, 255, 1);
   line-height: 40rpx;
-  background:rgba(206,206,206,1);
+  background: rgba(206, 206, 206, 1);
   border-radius: 20rpx 0rpx 0rpx 20rpx;
   float: right;
   margin-top: 22rpx;
@@ -116,7 +119,7 @@
   font-weight: 500;
   color: rgba(255, 255, 255, 1);
   line-height: 40rpx;
-  background:rgba(246,179,17,1);
+  background: rgba(246, 179, 17, 1);
   border-radius: 20rpx 0rpx 0rpx 20rpx;
   float: right;
   margin-top: 22rpx;
@@ -125,28 +128,27 @@
 
 <template>
   <view>
-    <view class="topconert">
-    <repeat for="{{list}}">
-      <view class="ontime" wx:if="{{item.time}}">
-        <view >{{item.time}}</view>
+    <view class="topconert" wx:for="{{po_List}}" wx:key="{{po_List}}" data-id="{{index}}">
+      <view class="ontime" wx:if="{{item.messageTime}}">
+        <view>{{item.messageTime}}</view>
       </view>
-      <view class="onlist">
+      <view class="onlist" wx:for="{{item.messageList}}" wx:item="item" wx:key="{{item.messageList}}">
         <view class="nextimg">
-          <image src="{{item.pic}}"></image>
+          <image src="{{imgurl+item.thumbnail_pic}}"></image>
         </view>
         <view class="zright">
-          <view class="right_title">商品名称商品名称商品名称商品名称商品名称商品名称商品名称</view>
-          <view class="right_text">标题标题标题标题标题标题标标题标题标题标题标题标题标</view>
+          <view class="right_title">{{item.goods_name}}</view>
+          <view class="right_text">{{item.goods_specif}}</view>
           <view class="right_btn">
-            <text>￥{{item.num}}</text>
-            <text wx:if="{{item.statce==0}}" class="ononea">降价中</text>
-            <text wx:if="{{item.statce==1}}" class="ononeb">已失效</text>
-            <text wx:if="{{item.statce==2}}" class="ononec">库存低</text>
+            <text wx:if="{{item.type==1||item.type==0}}">￥{{item.market_price}}</text>
+             <text wx:if="{{item.type==2}}">￥{{item.fall_price}}</text>
+            <text wx:if="{{item.type==2}}" class="ononea">降价中</text>
+            <text wx:if="{{item.type==1}}" class="ononeb">已失效</text>
+            <text wx:if="{{item.type==0}}" class="ononec">库存低</text>
           </view>
         </view>
       </view>
-    </repeat>
-  </view>
+    </view>
   </view>
 </template>
 
@@ -155,7 +157,14 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  userinfo(state) {
+    return state.counter.userinfo;
+  },
+  imgurls(state) {
+    return state.counter;
+  }
+})
 export default class Commodity extends wepy.page {
   config = {
     navigationBarTitleText: '商品提醒'
@@ -164,35 +173,41 @@ export default class Commodity extends wepy.page {
   components = {};
 
   data = {
-    list: [
-      {
-        time: '9月6日 17:29',
-        pic:
-          'https://ss0.baidu.com/73t1bjeh1BF3odCf/it/u=4245925481,1830059722&fm=85&s=E5D2568D4C5337CC082050890100A0C3',
-        num: 1234,
-        statce: 0
-      },
-      {
-        pic:
-          'https://ss0.baidu.com/73t1bjeh1BF3odCf/it/u=4245925481,1830059722&fm=85&s=E5D2568D4C5337CC082050890100A0C3',
-        num: 1234,
-        statce: 1
-      },
-      {
-        time: '9月6日 17:29',
-        pic:
-          'https://ss0.baidu.com/73t1bjeh1BF3odCf/it/u=4245925481,1830059722&fm=85&s=E5D2568D4C5337CC082050890100A0C3',
-        num: 1234,
-        statce: 2
-      }
-    ]
+    list: [],
+    po_List: [],
+    imgurl:''
   };
 
   computed = {};
 
   methods = {};
 
-  onLoad() {}
+  onLoad() {
+    this.imgurl = this.imgurls.imgurl;
+    let a = {
+      unionId: this.userinfo.unionid
+    };
+    if (a) {
+      wepy.$Api.goodsMessaged(a).then(
+        res => {
+          console.log(res);
+          this.po_List = res.data.data.list;
+          this.$apply();
+        },
+        err => {}
+      );
+      setInterval(function() {
+        wepy.$Api.goodsMessaged(a).then(
+        res => {
+          console.log(res);
+          this.po_List = res.data.data.list;
+          this.$apply();
+        },
+        err => {}
+      );
+      }, 600000);
+    }
+  }
 }
 </script>
 
