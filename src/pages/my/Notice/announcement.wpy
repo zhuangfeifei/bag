@@ -52,7 +52,7 @@
     <repeat for="{{list}}">
     <view class="topcement">
       <view class="back">{{item.title}}</view>
-      <image src='/images/notices/bg_4.png'></image>
+      <image src='/images/notices/bg_4.png' />
       <view class="titlesdl">{{item.text}}</view>
       <view class="bat">
         <text wx:for="{{post}}" wx:key="{{post}}">{{item.text}}</text>

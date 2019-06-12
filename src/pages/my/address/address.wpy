@@ -1,10 +1,10 @@
 <template>
-	<view id="address" class="{{true ? 'isAddress' : ''}}">
+	<view id="address" class="{{addressList.length > 0 ? 'isAddress' : ''}}">
 
-		<view wx:if="{{true}}" class="addressList">
+		<view wx:if="{{addressList.length > 0}}" class="addressList">
 			<view wx:for="{{addressList}}" wx:key="{{index}}" class="addressList_content">
-				<h5>{{item.ship_name}}<text>{{item.phone_num}}</text></h5>
-				<view class="addressList_address">{{item.province+' '+item.city+' '+item.area+' '+item.address}}</view>
+				<h5 @tap="changeList" data-item="{{item}}">{{item.ship_name}}<text>{{item.phone_num}}</text></h5>
+				<view class="addressList_address" @tap="changeList" data-item="{{item}}">{{item.province+' '+item.city+' '+item.area+' '+item.address}}</view>
 				<view class="addressList_Modify">
 					<view @tap="change" data-id="{{item.id}}">
 						<image src="{{checked[item.isdefault == 1 ? 1 : 0]}}" />设为默认地址</view>
@@ -31,7 +31,10 @@ import 'wepy-async-function';
 @connect({
   userinfo(state) {
     return state.counter.userinfo;
-  }
+  },
+  isChangeAddress(state){
+      return state.counter.isChangeAddress
+  },
 })
 export default class Address extends wepy.page {
   config = {
@@ -50,7 +53,7 @@ export default class Address extends wepy.page {
 
   methods = {
     change(e) {
-      console.log(e.currentTarget.dataset.id);
+      // console.log(e.currentTarget.dataset.id);
       wepy.$Api
         .defaultById({
           unionId: this.userinfo.unionid,
@@ -101,6 +104,12 @@ export default class Address extends wepy.page {
           },
           err => {}
         );
+    },
+    changeList(e){
+      if(this.isChangeAddress){
+        wepy.$store.dispatch({type:'addressIdMethods', payload: e.currentTarget.dataset.item})
+        wepy.navigateBack({ delta: 1 })
+      }
     }
   };
 
@@ -119,6 +128,10 @@ export default class Address extends wepy.page {
         },
         err => {}
       );
+  }
+
+  onUnload(){
+      wepy.$store.dispatch({type:'isChangeAddressMethods', payload: false})
   }
 }
 </script>

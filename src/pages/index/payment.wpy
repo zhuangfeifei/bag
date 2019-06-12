@@ -3,10 +3,10 @@
     <view class="payment">
       <image mode="aspectFill" lazy-load="true" src='/images/notices/playment.png' />
     </view>
-    <view class="pay_ment">订单支付成功￥158.44</view>
-    <view class="pay_menta">恭喜您此次支付获得158积分</view>
+    <view class="pay_ment">订单支付成功￥{{order.actual_price}}</view>
+    <view class="pay_menta">恭喜您此次支付获得{{order.actual_price}}积分</view>
     <view class="btn_liat">
-      <view>查看订单</view>
+      <view @tap="orderDetail">查看订单</view>
       <view @tap="backindexs">返回首页</view>
     </view>
   </view>
@@ -17,7 +17,11 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  order(state){
+      return state.counter.order; 
+  }
+})
 export default class Payment extends wepy.page {
   config = {
     navigationBarTitleText: '支付成功'
@@ -33,6 +37,11 @@ export default class Payment extends wepy.page {
     backindexs() {
       wx.switchTab({
         url: '/pages/index/index'
+      });
+    },
+    orderDetail(){
+      wx.navigateTo({
+        url: '/pages/my/order/orderDetail'
       });
     }
   };

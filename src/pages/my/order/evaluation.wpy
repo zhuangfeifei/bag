@@ -2,13 +2,15 @@
 	<view id="evaluation">
 
 		<view class="evaluation_nav">
-			<card-item></card-item>
+			<repeat for="{{1}}" key="index" index="index" item="item">
+          <card-item :orderList.sync="orderListItem"></card-item>
+      </repeat>
 		</view>
 
 		<view class="evaluation_content">
 			<view class="evaluation_cont">
 				<h3>请写下你对本商品的评价</h3>
-				<textarea placeholder="请输入内容..." maxlength="80" placeholder-style="color:#999999;font-size: 28rpx;" />
+				<textarea bindinput="bindValue" placeholder="请输入内容..." maxlength="80" placeholder-style="color:#999999;font-size: 28rpx;" />
 				<view>最多可输入80字</view>
             </view>
             <view class="file">
@@ -21,7 +23,7 @@
             </view>
         </view>
 
-        <view class="release">确认发布</view>
+        <view class="release" @tap="release">确认发布</view>
 
     </view>
 </template>
@@ -33,7 +35,12 @@ import 'wepy-async-function';
 import card from '../../../components/card';
 
 @connect({
-	 
+	 userinfo(state) {
+        return state.counter.userinfo;
+    },
+    orderListItem(state){
+        return state.counter.orderListItem.orderDetail
+    },
 })
 export default class Evaluation extends wepy.page {
   config = {
@@ -45,43 +52,63 @@ export default class Evaluation extends wepy.page {
   };
 
   data = {
-    images: []
+    images: [],remark:'', files:[]
   };
 
   computed = {};
 
   methods = {
     chooseImage(e) {
-      wx.chooseImage({
-        sizeType: ['original', 'compressed'], //可选择原图或压缩后的图片
-        sourceType: ['album', 'camera'], //可选择性开放访问相册、相机
-        success: res => {
-          console.log(res);
-          const images = this.images.concat(res.tempFiles);
-          // 限制最多只能留下3张照片
-          this.images = images.length <= 3 ? images : images.slice(0, 3);
-          this.$apply();
-        }
-      });
+        wx.chooseImage({
+            sizeType: ['original', 'compressed'],  //可选择原图或压缩后的图片
+            sourceType: ['album', 'camera'], //可选择性开放访问相册、相机
+            success: res => {
+                // console.log(res)
+                wx.uploadFile({
+                    url: 'http://192.168.0.109:8083/bag/api/basic/uploadPicture', // 仅为示例，非真实的接口地址
+                    filePath: res.tempFilePaths[0],
+                    name: 'file',
+                    success:res=> {
+                        let data = JSON.parse(res.data)
+                        // console.log(data)
+                        if(data.code == 200){
+                            this.files.push(data.message)
+                        }
+                    }
+                })
+                const images = this.images.concat(res.tempFiles)
+                // 限制最多只能留下3张照片
+                this.images = images.length <= 3 ? images : images.slice(0, 3) 
+                this.$apply()
+            }
+        })
     },
-    uploadFile() {
-      wx.uploadFile({
-        url: 'https://example.weixin.qq.com/upload', // 仅为示例，非真实的接口地址
-        filePath: tempFilePaths[0],
-        name: 'file',
-        formData: {
-          user: 'test'
-        },
-        success(res) {
-          const data = res.data;
-          // do something
-        }
-      });
+    imagedelete(e){
+        let index = e.currentTarget.dataset.index
+        this.images.splice(index, 1)
+        this.files.splice(index, 1)
+        this.$apply()
     },
-    imagedelete(e) {
-      let index = e.currentTarget.dataset.index;
-      this.images.splice(index, 1);
-      this.$apply();
+    bindValue(e){
+        this.remark = e.detail.value
+    },
+    release(){
+      wepy.$Api.addComments({ unionId: this.userinfo.unionid, orderNo: this.orderListItem.order_no, goodsId: this.orderListItem.goods_id,
+        content: this.remark, pic: this.files.join() }).then( res => {
+          // console.log(res.data)
+          if (res.data.code == 200) {
+              wepy.showToast({
+                  title: '发布成功',
+                  icon: 'success',
+                  duration: 2000
+              })
+              setTimeout(()=>{
+                  wepy.navigateBack({ delta: 1 })
+              },2000)
+          }
+      },err => {
+          
+      });
     }
   };
 

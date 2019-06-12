@@ -2,24 +2,23 @@
     <view id="orderDetail">
 
         <view class="orderDetail_nav">
-            <image wx:if="{{orderIndex == 1}}" src="/images/my/bg_6xin.png" mode="scaleToFill" lazy-load="false" />
-            <image wx:if="{{orderIndex == 2}}" src="/images/my/bg_7xin.png" mode="scaleToFill" lazy-load="false" />
-            <image wx:if="{{orderIndex == 3}}" src="/images/my/bg_8xin.png" mode="scaleToFill" lazy-load="false" />
-            <image wx:if="{{orderIndex == 4}}" src="/images/my/bg_9xin.png" mode="scaleToFill" lazy-load="false" />
-            <view wx:if="{{orderIndex == 1}}" class="Waiting">
+            <image wx:if="{{orderDetails.orderDetail.status == 0}}" src="/images/my/bg_6xin.png" mode="scaleToFill" lazy-load="false" />
+            <image wx:if="{{orderDetails.orderDetail.status == 1}}" src="/images/my/bg_7xin.png" mode="scaleToFill" lazy-load="false" />
+            <image wx:if="{{orderDetails.orderDetail.status == 2}}" src="/images/my/bg_8xin.png" mode="scaleToFill" lazy-load="false" />
+            <image wx:if="{{orderDetails.orderDetail.status == 3}}" src="/images/my/bg_9xin.png" mode="scaleToFill" lazy-load="false" />
+            <view wx:if="{{orderDetails.orderDetail.status == 0}}" class="Waiting">
                 等待买家付款
-                <text> \n剩22小时16分自动关闭</text>
             </view>
-            <view wx:if="{{orderIndex == 2}}" class="BuyerPaid">买家已付款</view>
-            <view wx:if="{{orderIndex == 3}}" class="BuyerPaid">卖家已发货</view>
-            <view wx:if="{{orderIndex == 4}}" class="BuyerPaid">买家已确认收货</view>
+            <view wx:if="{{orderDetails.orderDetail.status == 1}}" class="BuyerPaid">买家已付款</view>
+            <view wx:if="{{orderDetails.orderDetail.status == 2}}" class="BuyerPaid">卖家已发货</view>
+            <view wx:if="{{orderDetails.orderDetail.status == 3}}" class="BuyerPaid">买家已确认收货</view>
         </view>
 
-        <view wx:if="{{orderIndex == 3 || orderIndex == 4}}" class="orderDetail_logistics" @tap="linkTo" data-url="./logistics">
+        <view wx:if="{{orderDetails.orderDetail.status == 2 || orderDetails.orderDetail.status == 3}}" class="orderDetail_logistics" @tap="linkTo" data-url="./logistics">
             <image src="/images/my/TB_wuliu.png" mode="scaleToFill" lazy-load="false" />
             <view class="orderDetail_logistics_cont">
-                <view class="orderDetail_logistics_">【苏州市】快件已到达 无锡运转中心</view>
-                <text>2019.06.10  19:31:35</text>
+                <view class="orderDetail_logistics_">{{orderDetails.kdDetail.Traces[orderDetails.kdDetail.Traces.length - 1].AcceptStation}}</view>
+                <text>{{orderDetails.kdDetail.Traces[orderDetails.kdDetail.Traces.length - 1].AcceptTime}}</text>
             </view>
             <image class="more" src="/images/my/jinru.png" mode="scaleToFill" lazy-load="false" />
         </view>
@@ -27,39 +26,41 @@
         <view class="orderDetail_address">
             <image src="/images/my/DDXQ_TB_dingwei.png" mode="scaleToFill" lazy-load="false" />
             <view class="orderDetail_address_cont">
-                郝婷婷<text>13723456789</text>
-                <view class="orderDetail_address_">收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址收货地址</view>
+                {{orderDetails.address.ship_name}}<text>{{orderDetails.address.phone_num}}</text>
+                <view class="orderDetail_address_">{{orderDetails.address.address}}</view>
             </view>
         </view>
 
         <view class="orderList" wx:for="{{1}}" wx:key="{{index}}">
-            <card-item></card-item>
-            <view wx:if="{{orderIndex == 2}}" class="orderList_refund" @tap="linkTo" data-url="./refund">退款</view>
-            <view wx:if="{{orderIndex == 3}}" class="orderList_refund" @tap="linkTo" data-url="./return">退换</view>
-            <view class="orderDetail_preferential"><text>商品金额</text><text>¥400.00</text></view>
-            <view class="orderDetail_preferential"><text>选择优惠券</text><text>-￥20.00</text></view>
-            <view class="orderDetail_preferential"><text>商家活动</text><text>-￥100.00</text></view>
-            <view class="orderDetail_preferential"><text>运费</text><text>￥10.00</text></view>
-            <view class="orderDetail_preferential"><text>会员包邮</text><text>-￥10.00</text></view>
-            <view class="orderDetail_preferential note"><text>订单备注</text><text>赠送袜子</text></view>
-            <view class="orderList_combined"><text>需付款</text><text>￥280.00</text></view>
+            <repeat for="{{1}}" key="index" index="index" item="item">
+                <card-item :orderList.sync="orderDetails.orderDetail"></card-item>
+            </repeat>
+            <view wx:if="{{orderDetails.orderDetail.status == 1}}" class="orderList_refund" @tap="linkTo" data-url="{{orderDetails.returnDetail ? './refundDetails' : './refund'}}">退款</view>
+            <view wx:if="{{orderDetails.orderDetail.status == 2}}" class="orderList_refund" @tap="linkTo" data-url="{{orderDetails.returnDetail ? './returnDetails' : './return'}}">退换</view>
+            <view class="orderDetail_preferential"><text>商品金额</text><text>¥{{orderDetails.orderDetail.unit_price * orderDetails.orderDetail.quantity}}</text></view>
+            <view class="orderDetail_preferential"><text>会员折扣</text><text>{{orderDetails.orderDetail.discount}}折</text></view>
+            <view class="orderDetail_preferential"><text>选择优惠券</text><text>-￥{{orderDetails.orderDetail.coupon_amount}}</text></view>
+            <view class="orderDetail_preferential"><text>运费</text><text>￥{{orderDetails.orderDetail.postage_price}}</text></view>
+            <view class="orderDetail_preferential"><text>会员包邮</text><text>-￥{{orderDetails.orderDetail.postage_price}}</text></view>
+            <view class="orderDetail_preferential note"><text>订单备注</text><text>{{orderDetails.orderDetail.remark}}</text></view>
+            <view class="orderList_combined"><text>需付款</text><text>￥{{orderDetails.orderDetail.actual_price}}</text></view>
         </view>
 
         <view class="orderInformation">
             <h3>订单信息</h3>
-            <view class="orderInformation_preferential"><text>积分：</text><view>付款后可获得280点积分</view></view>
-            <view class="orderInformation_preferential"><text>订单编号：</text><view><text>1234 5678 1234 5678 12</text><text class="copy" @tap="copyText" data-text="1234 5678 1234 5678 12">复制</text></view></view>
-            <view class="orderInformation_preferential"><text>创建时间：</text><view>2019.06.08  12:30:21</view></view>
+            <view class="orderInformation_preferential"><text>积分：</text><view>付款后可获得{{orderDetails.orderDetail.integral_get}}点积分</view></view>
+            <view class="orderInformation_preferential"><text>订单编号：</text><view><text>{{orderDetails.orderDetail.order_no}}</text><text class="copy" @tap="copyText" data-text="{{orderDetails.orderDetail.order_no}}">复制</text></view></view>
+            <view class="orderInformation_preferential"><text>创建时间：</text><view>{{orderDetails.orderDetail.order_date}}</view></view>
         </view>
 
         <view class="paymentList">
-            <view wx:if="{{orderIndex == 1}}" class="payment">付款</view>
-            <view wx:if="{{orderIndex == 1}}" class="Cancel" @tap="changeCancelOrder">取消订单</view>
-            <view wx:if="{{orderIndex == 2}}" class="payment" @tap="remind">提醒发货</view>
-            <view wx:if="{{orderIndex == 3}}" class="payment">确认收货</view>
-            <view wx:if="{{orderIndex == 4}}" class="payment" @tap="linkTo" data-url="./evaluation">评价</view>
-            <view wx:if="{{orderIndex == 3}}" class="Cancel">查看物流</view>
-            <view class="Cancel">联系客服</view>
+            <view wx:if="{{orderDetails.orderDetail.status == 0}}" class="payment" @tap="pay">付款</view>
+            <view wx:if="{{orderDetails.orderDetail.status == 0}}" class="Cancel" @tap="changeCancelOrder">取消订单</view>
+            <view wx:if="{{orderDetails.orderDetail.status == 1}}" class="payment" @tap="remind">提醒发货</view>
+            <view wx:if="{{orderDetails.orderDetail.status == 2}}" class="payment" @tap="confirmGoods">确认收货</view>
+            <view wx:if="{{orderDetails.orderDetail.status == 3}}" class="payment" @tap="linkTo" data-url="./evaluation">评价</view>
+            <view wx:if="{{orderDetails.orderDetail.status == 2}}" class="Cancel" @tap="linkTo" data-url="./logistics">查看物流</view>
+            <view class="Cancel"><button class="contact" open-type='contact'>联系客服</button></view>
         </view>
 
 
@@ -86,9 +87,12 @@ import 'wepy-async-function'
 import card from '../../../components/card'
 
 @connect({
-    orderIndex(state){
-        return state.counter.orderIndex
-    }
+    userinfo(state) {
+        return state.counter.userinfo;
+    },
+    order(state){
+        return state.counter.order
+    },
 })
     
 export default class OrderDetail extends wepy.page {
@@ -104,7 +108,8 @@ export default class OrderDetail extends wepy.page {
     data = {
         screenHeight:603, isCancelOrder: false,
         cancelList:['信息填写错误，重新下单','不想要了','其他原因'], cancelIndex: 0,
-        animationTop:'',isAnimation: true
+        animationTop:'',isAnimation: true,
+        orderDetails:''
     }
     
     computed = {
@@ -135,18 +140,54 @@ export default class OrderDetail extends wepy.page {
         },
         Cance(){
             this.changeCancelOrder()
-            wx.showToast({
-                title: '订单取消成功',
-            })
+            wepy.$Api.cancelOrder({ unionId: this.userinfo.unionid, orderNo: this.order.order_no, 
+                cancelReason: this.cancelList[this.cancelIndex] }).then( res => {
+                // console.log(res.data)
+                if (res.data.code == 200) {
+                    wx.showToast({
+                        title: '订单取消成功',
+                    })
+                    setTimeout(()=>{
+                        wepy.navigateBack({ delta: 1 })
+                    },2000)
+                }
+            },err => {
+                
+            });
         },
         remind(){
-            wx.showToast({
-                title: '已提醒卖家发货',icon:'none'
-            })
+            wepy.$Api.remindOrder({ unionId: this.userinfo.unionid, orderNo: this.order.order_no }).then( res => {
+                // console.log(res.data)
+                if (res.data.code == 200) {
+                    wx.showToast({
+                        title: '已提醒卖家发货',icon:'none'
+                    })
+                }
+            },err => {
+                
+            });
         },
         linkTo(e){
             this.$navigate({url: e.currentTarget.dataset.url})
         },
+        pay(){
+            wepy.$store.dispatch({type:'orderMethods', payload: this.orderDetails.orderDetail})
+            wx.navigateTo({
+              url: '/pages/index/onplay'
+            });
+        },
+        confirmGoods(){
+            wepy.$Api.confirmOrder({ unionId: this.userinfo.unionid, orderNo: this.order.order_no }).then( res => {
+                // console.log(res.data)
+                if (res.data.code == 200) {
+                    wx.showToast({
+                        title: '确认成功',
+                    })
+                }
+            },err => {
+                
+            });
+        }
     }
 
     changeCancelOrder(){
@@ -184,6 +225,28 @@ export default class OrderDetail extends wepy.page {
         let screenHeight = wx.getSystemInfoSync().windowHeight
         // console.log(screenHeight)
         this.screenHeight = screenHeight
+        this.$apply()
+    }
+    onShow() {
+        wepy.$Api.orderDetail({ unionId: this.userinfo.unionid, orderNo: this.order.order_no, 
+            orderStatus: this.order.status, afterStatus: this.order.after_status }).then( res => {
+            // console.log(res.data)
+            if (res.data.code == 200) {
+                this.orderDetails = res.data.data;
+                wepy.$store.dispatch({type:'orderListItemMethod', payload: res.data.data})
+                if(res.data.data.kdDetail){
+                    for(let val of res.data.data.kdDetail.Traces){
+                        val.days = val.AcceptTime.substring(5,10)
+                        val.hours = val.AcceptTime.substring(11,16)
+                    }
+                    res.data.data.kdDetail.Traces.push({ AcceptStation: '[收货地址] '+res.data.data.address.address})
+                    wepy.$store.dispatch({type:'kdDetailMethods', payload: res.data.data.kdDetail.Traces.reverse()})
+                }
+                this.$apply();
+            }
+        },err => {
+            
+        });
         this.$apply()
     }
 }
@@ -279,12 +342,15 @@ export default class OrderDetail extends wepy.page {
 .paymentList{
     width: 100%; height: 98rpx; background-color: white; position: fixed; bottom: 0; left: 0; display: flex; flex-flow: row-reverse; align-items: center;
     padding-right: 40rpx; box-sizing: border-box; border-top: 1rpx solid #CECECE;
-    view{
+    view,.contact{
         width: 160rpx; height: 56rpx; background-color: #F4695F; color: white; text-align: center; line-height: 56rpx;
         font-size: 24rpx; .font; border-radius: 28rpx; margin-left: 20rpx;
     }
     .Cancel{
         border: 1px solid #808080; color: #808080; background-color: white;
+    }
+    .contact{
+        margin-left: 0rpx; background-color: white; color: #808080;
     }
 }
 

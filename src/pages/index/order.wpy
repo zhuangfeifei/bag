@@ -1,7 +1,7 @@
 <template>
   <view>
     <!--地址-->
-    <view class="top_addres">
+    <view class="top_addres" @tap="linkTo" data-url="../my/address/address">
       <view class="addres" wx:if="{{addressList.length==0}}">
         <view class="addr">
           <image src="/images/notices/dingwei.png" class="_imgas" />
@@ -11,15 +11,15 @@
           <image src="/images/notices/jinru.png" class="_imgass" />
         </view>
       </view>
-      <view class="address" wx:if="{{item.isdefault==1}}" wx:for="{{addressList}}" wx:key="{{index}}">
+      <view class="address">
         <view class="addred">
           <view style="width:60rpx;height:60rpx;">
             <image src="/images/notices/dingwei.png" class="_imgas_a" />
           </view>
           <view class="adder_nan">
-            <text>{{item.ship_name}}</text>
-            <text>{{item.phone_num}}</text>
-            <view class="om_addres">{{item.province+item.city+item.area+item.address}}</view>
+            <text>{{addressId.ship_name}}</text>
+            <text>{{addressId.phone_num}}</text>
+            <view class="om_addres">{{addressId.province+addressId.city+addressId.area+addressId.address}}</view>
           </view>
         </view>
         <view class="addrs">
@@ -35,7 +35,7 @@
         </view>
         <view class="_detail_vs">
           <view class="_detail_sd">{{goodsDetail.goods_name}}</view>
-          <view class="_detail_s">颜色(黑色）；尺码(大码)</view>
+          <view class="_detail_s">颜色({{specifications.scolor}}）；尺码({{specifications.ssexd}})</view>
           <view class="_detail_d">
             <view class="_d_price">
               <text>￥</text>
@@ -101,7 +101,7 @@
           <text>合计:￥{{total_price}}</text>
         </view>
         <view>
-          <view>付款</view>
+          <view @tap="ontopay">付款</view>
         </view>
       </view>
     </view>
@@ -114,14 +114,14 @@
         </view>
       </view>
       <scroll-view scroll-y='true' style='height:550rpx'>
-        <view class="om" wx:for="{{conum_list}}" wx:key="{{conum_list}}" data-id="{{index}}" data-name="{{item.price}}" @tap="cuonpicr">
+        <view class="om" wx:for="{{conum_list}}" wx:key="{{conum_list}}" data-id="{{item.id}}" data-name="{{item.price}}" @tap="cuonpicr">
           <image src="/images/notices/youhuibacki.png" />
           <view class="onpricf">
             <image src="/images/notices/renminbi.png"/>
             <text>{{item.price}}</text>
-            <view>【{{item.text}}】</view>
+            <view>【{{item.title}}】</view>
           </view>
-          <view class="wipics">有效期：{{item.ontime}}-{{item.untime}}</view>
+          <view class="wipics">有效期：{{item.limit_date_start}}-{{item.limit_date_end}}</view>
         </view>
         <view class="oms" @tap="pricnone">
           <image src="/images/notices/youhuibacki.png" />
@@ -145,6 +145,12 @@ import 'wepy-async-function';
     goodsDetail(state) {
       return state.counter.goodsDetail;
     },
+    specifications(state) {
+      return state.counter.specifications;
+    },
+    addressId(state) {
+      return state.counter.addressId;
+    },
 })
 export default class Order extends wepy.page {
   config = {
@@ -166,34 +172,10 @@ export default class Order extends wepy.page {
     total_price: '', // 总价
     total_prices: '', // 没有使用优惠券的总价
     sprice: '', //售价
-    cuprice: '', //优惠券价格
-    conum_list: [
-      {
-        price: 20,
-        text: '无门槛优惠券',
-        ontime: '2019.05.01',
-        untime: '2020.05.01'
-      },
-      {
-        price: 100,
-        text: '满500元使用',
-        ontime: '2019.05.01',
-        untime: '2020.05.01'
-      },
-      {
-        price: 100,
-        text: '满500元使用',
-        ontime: '2019.05.01',
-        untime: '2020.05.01'
-      },
-      {
-        price: 100,
-        text: '满500元使用',
-        ontime: '2019.05.01',
-        untime: '2020.05.01'
-      }
-    ],
-    addressList:[]
+    cuprice: 0, //优惠券价格
+    conum_list: [],
+    addressList:[],
+    couponId: '', // 优惠券id
   };
 
   computed = {};
@@ -227,6 +209,7 @@ export default class Order extends wepy.page {
     cuonpicr(e) {
       let cuprice = e.currentTarget.dataset.name;
       this.cuprice = cuprice;
+      this.couponId = e.currentTarget.dataset.id;
       this.sected = false;
       if (this.cuprice == '') {
         this.cuprice = 0;
@@ -237,6 +220,7 @@ export default class Order extends wepy.page {
     pricnone() {
       this.cuprice = 0;
       this.sected = false;
+      this.totalprice()
     },
     userInputs(e) {
       this.usernums = e.detail.value;
@@ -244,9 +228,27 @@ export default class Order extends wepy.page {
     },
     //去支付
     ontopay() {
-      wx.navigateTo({
-        url: '/pages/index/onplay'
-      });
+      let order = { 
+        addressId: this.addressId.id, goodsId: this.goodsDetail.id, exclusiveId: this.specifications.exclusiveId, quantity: this.num, dealPrice: parseFloat(this.gjprice),
+        actualPrice: parseFloat(this.total_price), unitPrice: this.sprice, couponId: this.couponId,couponAmount: this.cuprice, isUseCoupon: this.cuprice == 0 ? 0 : 1,remark: this.usernums
+      }
+      console.log(order)
+      wepy.$Api.createOrder( this.userinfo.unionid, order).then(res => { 
+          console.log(res.data)
+          if (res.data.code == 200) {
+            wepy.$store.dispatch({type:'orderMethods', payload: res.data.data})
+            wx.navigateTo({
+              url: '/pages/index/onplay'
+            });
+          }
+      }, err => {
+          
+      })
+      
+    },
+    linkTo(e) {
+      wepy.$store.dispatch({type:'isChangeAddressMethods', payload: true})
+      this.$navigate({ url: e.currentTarget.dataset.url });
     }
   };
   //计算价格
@@ -265,31 +267,39 @@ export default class Order extends wepy.page {
     let wnums = obj.toFixed(2);
     this.total_price = wnums;
   }
-  onLoad() {
+  onLoad(option) {
     this.sprice = this.goodsDetail.is_accept == 1 ? this.goodsDetail.fall_price : this.goodsDetail.market_price
     this.discount = this.userinfo.discount
     this.totalprice();
-    let snum = this.conum_list.length;
-    this.snum = snum;
+
     wepy.$Api.listadress({ unionId: this.userinfo.unionid, limit: 50, current: 1 }).then(res => { 
-        // console.log(res.data)
+        console.log(res.data)
         if (res.data.code == 200) {
             this.addressList = res.data.data
+            for(let val of res.data.data){
+              if(val.isdefault == 1){
+                wepy.$store.dispatch({type:'addressIdMethods', payload: val})
+              }
+            }
             this.$apply()
         }
     }, err => {
         
     })
+
     wepy.$Api.couponsAvailable({ unionId: this.userinfo.unionid, goodsId: this.goodsDetail.id, payAmount: this.total_prices }).then(res => { 
         console.log(res.data)
         if (res.data.code == 200) {
-            // this.addressList = res.data.data
-            // this.$apply()
+            this.conum_list = res.data.data.couponList
+            let snum = this.conum_list.length;
+            this.snum = snum;
+            this.$apply()
         }
     }, err => {
         
     })
   }
+
 }
 </script>
 

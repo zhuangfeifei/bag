@@ -8,6 +8,7 @@
       <view>
         <image class="HYZX_xiaoxi" src="{{imgUrl+'/my/HYZX_xiaoxi.png'}}" mode="scaleToFill" lazy-load="false" />
         <text>\n通知</text>
+        <view class="messageCount">{{userinfo.messageCount}}</view>
       </view>
       <view>
         <image class="touxiang" src="{{userinfo.avatar}}" mode="scaleToFill" lazy-load="false" />
@@ -23,7 +24,7 @@
       <image src="/images/my/bg_2.png" />
       <view class="vip_rules" @tap="linkTo" data-url="./membershipRules">您是普卡会员，查看折扣权限>></view>
       <view class="vip_level_bar">
-        <view style="width:{{20}}%"></view>
+        <view style="width:{{20*userinfo.userType}}%"></view>
       </view>
       <view class="vip_level_list"><text wx:for="{{level}}" wx:key="{{index}}">{{item}}</text></view>
     </view>
@@ -34,13 +35,14 @@
         <view wx:for="{{service}}" wx:key="{{index}}" @tap="linkTo" data-url="{{item.url}}">
           <image src="{{item.img}}" mode="widthFix" lazy-load="false" />
           <text>\n{{item.title}}</text>
+          <button wx:if="{{index == 3}}" open-type='contact'></button>
         </view>
       </view>
     </view>
 
     <view class="My_order">
       <h3>我的订单</h3>
-      <view class="My_order_list"><text wx:for="{{order}}" wx:key="{{index}}">{{item}}</text></view>
+      <view class="My_order_list"><text @tap="linkTo" data-url="./order/myOrder" data-index="{{index}}" wx:for="{{order}}" wx:key="{{index}}">{{item}}</text></view>
       <navigator url="./order/myOrder">
         <view class="My_allOrder">
           全部订单
@@ -92,11 +94,15 @@ export default class My extends wepy.page {
       { title: '钱包', img: '../../images/my/HYZX_qianbao.png' },
       { title: '客户服务', img: '../../images/my/HYZX_kehufuwu.png' }
     ],
-    order: ['待付款', '待发货', '待收货', '评价/售后']
+    order: ['待付款', '待发货', '待收货', '评价']
   };
   computed = {};
   methods = {
     linkTo(e) {
+      if(e.currentTarget.dataset.url == './order/myOrder'){
+        let index = e.currentTarget.dataset.index + 1
+        wepy.$store.dispatch({type:'ASYNC_INCREMENT', payload: index})
+      }
       this.$navigate({ url: e.currentTarget.dataset.url });
     }
   };
@@ -149,6 +155,7 @@ export default class My extends wepy.page {
   justify-content: space-around;
   padding-top: 77rpx;
   box-sizing: border-box;
+  view{ position: relative;}
   .HYZX_xiaoxi {
     width: 44rpx;
     height: 44rpx;
@@ -170,6 +177,10 @@ export default class My extends wepy.page {
     position: absolute;
     top: 35rpx;
     right: 0;
+  }
+  .messageCount{
+    width: 30rpx; height: 30rpx; border-radius: 50%; background-color: #EB1F14; color: white; font-size: 20rpx; .font;
+    position: absolute; top: 58rpx; right: -15rpx;
   }
 }
 .vip_level {
@@ -249,9 +260,11 @@ export default class My extends wepy.page {
     color: #363636;
     text-align: center;
     margin-top: 40rpx;
-    image {
+    image{
       width: 52rpx;
     }
+    view{position: relative;}
+    button{width: 95rpx; height: 85rpx; position: absolute; top: 0; left: 0; opacity: 0;}
   }
 }
 

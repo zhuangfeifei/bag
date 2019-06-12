@@ -1,10 +1,10 @@
 <template>
-    <view class="orderList_content" @tap="linkTo" data-url="./orderDetail">
+    <view class="orderList_content">
         <image src="/images/my/WDDD_TU_shangpintu.png" mode="scaleToFill" lazy-load="false" />
         <view class="orderList_contents">
-            <view class="orderList_title">商品标题商品标题商品标题商品标题商品标题商品标题商品标商品标题商品标题商品标题商品标题商品标题商品标题商品标</view>
-            <view class="orderList_specifications">颜色(黑色）；尺码(大码)：尺码(大码)商品标题商品标题商品标题商品标题商品标题商品标题商品标</view>
-            <view class="orderList_price">￥200.00<text>x2</text></view>
+            <view class="orderList_title">{{orderList.goods_name}}</view>
+            <view class="orderList_specifications">颜色({{orderList.colorName}}）；尺码({{orderList.sizeName}})</view>
+            <view class="orderList_price">￥{{orderList.unit_price}}<text>x{{orderList.quantity}}</text></view>
         </view>
     </view>
 </template>
@@ -19,7 +19,7 @@ import 'wepy-async-function'
 })
     
 export default class Card extends wepy.component {
-    
+
     data = {
     
     }
@@ -29,9 +29,7 @@ export default class Card extends wepy.component {
     }
     
     methods = {
-        linkTo(e){
-            wx.navigateTo({url: e.currentTarget.dataset.url});
-        }
+        
     }
 }
 </script>

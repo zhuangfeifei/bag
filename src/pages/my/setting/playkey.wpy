@@ -2,11 +2,11 @@
   <view>
     <view class="useriphone">
       <text>设置支付密码</text>
-      <input type="password" placeholder="请输入密码" name="userName" placeholder-class="placeholderStyle" class="phoneinput" bindinput="userNameInput" maxlength="6"></input>
+      <input type="password" placeholder="请输入密码" name="userName" placeholder-class="placeholderStyle" class="phoneinput" bindinput="userNameInput" maxlength="6"/>
     </view>
     <view class="useriphone">
       <text>确认支付密码</text>
-      <input type="password" placeholder="请确认密码" name="usernum" bindinput="userInput" placeholder-class="placeholderStyle" class="phoneinput" maxlength="6"></input>
+      <input type="password" placeholder="请确认密码" name="usernum" bindinput="userInput" placeholder-class="placeholderStyle" class="phoneinput" maxlength="6" />
     </view>
     <view class="titleli">提示：密码为6位数数字密码</view>
     <view class="obtn">
@@ -70,18 +70,27 @@ export default class Playkey extends wepy.page {
           wepy.$Api.payPassworld(a).then(
             res => {
               if (res.data.code == 200) {
-                wx.showModal({
-                  content: '密码设置成功，快去购物吧~',
-                  confirmText: '确定',
-                  confirmColor: '#3CC51F',
-                  success: result => {
-                    if (result.confirm) {
-                      wx.navigateTo({
-                        url: '/pages/index/index'
-                      });
-                    }
-                  }
-                });
+                wepy.showToast({
+                    title: '设置成功',
+                    icon: 'success',
+                    duration: 2000
+                })
+                this.bindGetUserInfo()
+                setTimeout(()=>{
+                    wepy.navigateBack({ delta: 1 })
+                },2000)
+                // wx.showModal({
+                //   content: '密码设置成功，快去购物吧~',
+                //   confirmText: '确定',
+                //   confirmColor: '#3CC51F',
+                //   success: result => {
+                //     if (result.confirm) {
+                //       wx.navigateTo({
+                //         url: '/pages/index/index'
+                //       });
+                //     }
+                //   }
+                // });
               }
             },
             err => {}
@@ -90,6 +99,46 @@ export default class Playkey extends wepy.page {
       }
     }
   };
+
+  bindGetUserInfo() {
+      // 登录
+      wepy.login({
+        success: res_login => {
+          // 获取用户信息
+          wepy.getSetting({
+            success: res => {
+              // console.log(res)
+              if (res.authSetting['scope.userInfo']) {
+                wepy.getUserInfo({
+                  success: res => {
+                    // console.log(res)
+                    var jsonData = {
+                      code: res_login.code,
+                      encryptedData: res.encryptedData,
+                      iv: res.iv
+                    }
+                    Api.userinfo(jsonData).then(res => { 
+                      console.log(res.data)
+                      if (res.data.code == 200) {
+                        wepy.setStorageSync('userinfo', res.data.data)
+                        wepy.$store.dispatch({ type : 'userinfos', payload: res.data.data})
+                        wepy.navigateBack();
+                      }
+                    }, err => {
+                      
+                    })
+                  }
+                })
+              } else {
+                wepy.navigateTo({
+                  url: '/pages/authorization/authorization'
+                })
+              }
+            }
+          })
+        }
+      })
+  }
 
   onLoad() {}
 }

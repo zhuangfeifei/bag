@@ -49,8 +49,7 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image src="{{imgurl+home_liat[index].thumbnail_pic}}">
-            </image>
+            <image src="{{imgurl+home_liat[index].thumbnail_pic}}"/>
             <view class="ontbnt">
               <text>￥{{home_liat[index].market_price}}</text>
               <text wx:if="{{home_liat[index].is_accept==1}}">￥{{item.fall_price}}</text>
