@@ -29,6 +29,8 @@ const defaultState = {
 
   orderListItem:'',  // 订单详情
   kdDetail:'',  // 物流信息
+  mrgkm:1,//签到
+  orDeteil:''
 }
 
 export default handleActions({
@@ -75,7 +77,9 @@ export default handleActions({
   useraddres(state, action){
     return { ...state,addresCode:action.payload}
   },
-    
+  mrgkmMethods(state, action){
+    return { ...state,mrgkm:action.payload}
+  },
   goodsDetailMethods(state, action){
     return { ...state, goodsDetail:action.payload}
   },
@@ -99,5 +103,8 @@ export default handleActions({
   },
   kdDetailMethods(state, action){
     return { ...state, kdDetail:action.payload}
+  },
+  orderDeteil(state, action){
+    return { ...state, orDeteil:action.payload}
   },
 }, defaultState)

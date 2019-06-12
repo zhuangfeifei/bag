@@ -61,23 +61,33 @@
   line-height: 130rpx;
   text-align: right;
 }
+.onBottom {
+  width: 100%;
+  height: 55rpx;
+  background-color: #f2f2f2;
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  text-align: center;
+  line-height: 55rpx;
+}
 </style>
 <template>
   <view>
     <view class="onzhan"></view>
-    <repeat for="{{list}}">
-      <view class="topconlist">
-        <view class="list_view">
-          <view class="list_views">
-            <text class="list_texta">{{item.time}}</text>
-            <text class="list_textb" wx:if='{{item.statse==0}}'>连续签到{{item.day}}天</text>
-            <text class="list_textc" wx:else>未签到</text>
-          </view>
-          <view class="reconlist" wx:if='{{item.statse==0}}'>签到成功 +{{item.num}}积分</view>
-          <view class="reconlists" wx:else>签到失败 +{{item.num}}积分</view>
+    <view class="topconlist" wx:for="{{currentList}}" wx:key="{{currentList}}" data-id="{{index}}">
+      <view class="list_view">
+        <view class="list_views">
+          <text class="list_texta">{{currentList[index].operatime}}</text>
+          <text class="list_textb" wx:if='{{mrgkmMethods==1}}'>连续签到{{currentList[index].count}}天</text>
+          <text class="list_textc" wx:else>未签到</text>
         </view>
+        <view class="reconlist" wx:if='{{mrgkmMethods==1}}'>{{currentList[index].remark}} +{{currentList[index].changed}}积分</view>
+        <view class="reconlists" wx:else>签到失败 +{{changed}}积分</view>
       </view>
-    </repeat>
+    </view>
+    <view class="onBottom" wx:if="{{onBottoms==false}}">没有更多了哦~</view>
   </view>
 </template>
 
@@ -86,7 +96,14 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  userinfo(state) {
+    return state.counter.userinfo;
+  },
+  mrgkmMethods(state) {
+    return state.counter.mrgkm;
+  }
+})
 export default class Record extends wepy.page {
   config = {
     navigationBarTitleText: '签到记录'
@@ -95,26 +112,58 @@ export default class Record extends wepy.page {
   components = {};
 
   data = {
-    list: [
-      {
-        time: '2019.09.06',
-        day: 3,
-        num: 2,
-        statse: 0
-      },
-      {
-        time: '2019.09.06',
-        day: 3,
-        num: 0,
-        statse: 1
-      }
-    ]
+    current: 1,
+    changed: 0,
+    currentList: [],
+    mrgkmMethods: '',
+    onBottoms:true
   };
 
   computed = {};
 
   methods = {};
-
-  onLoad() {}
+  signRecord() {
+    let current = this.current;
+    let currents = current.toString();
+    let a = {
+      unionId: this.userinfo.unionid,
+      limit: 20,
+      current: currents
+    };
+    if (a) {
+      wepy.$Api.signRecords(a).then(
+        res => {
+          if (res.data.data) {
+            console.log(res);
+            this.currentList = res.data.data;
+            this.$apply();
+          }
+        },
+        err => {}
+      );
+    }
+  }
+  onLoad() {
+    this.signRecord();
+  }
+  onReachBottom() {
+    let current = this.current;
+    let currents = current.toString();
+    let a = {
+      unionId: this.userinfo.unionid,
+      limit: 10,
+      current: currents++
+    };
+    wepy.$Api.recommendation(a).then(
+      res => {
+        if (res.data.data.length != 0) {
+          this.currentList = this.currentList.concat(res.data.data);
+        } else {
+          this.onBottoms = false;
+        }
+      },
+      err => {}
+    );
+  }
 }
 </script>

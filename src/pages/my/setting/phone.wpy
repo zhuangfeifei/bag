@@ -102,22 +102,24 @@ export default class Phone extends wepy.page {
     //获取验证码
     hqyzm() {
       let that = this;
-      that.code = 1;
-      let countDownNum = that.countDownNum;
-      that.timer = setInterval(function() {
-        countDownNum--;
-        that.setData({
-          countDownNum: countDownNum
-        });
-        if (countDownNum == 0) {
-          clearInterval(that.timer);
-        }
-      }, 1000);
+      if (this.userName) {
+         that.code = 1;
+        let countDownNum = that.countDownNum;
+        that.timer = setInterval(function() {
+          countDownNum--;
+          that.setData({
+            countDownNum: countDownNum
+          });
+          if (countDownNum == 0) {
+            clearInterval(that.timer);
+          }
+        }, 1000);
+      }
       let a = {
-        phone: this.userName,
-        msgType: 1
-      };
-      if (a) {
+          phone: this.userName,
+          msgType: 1
+        };
+      if (a && this.userName) {
         wepy.$Api.addphoneNum(a).then(
           res => {
             if (res.data.code == 200) {
@@ -131,6 +133,12 @@ export default class Phone extends wepy.page {
           },
           err => {}
         );
+      } else {
+        wx.showModal({
+          content: '请输入手机号',
+          confirmText: '确定',
+          confirmColor: '#3CC51F'
+        });
       }
     }
   };

@@ -22,7 +22,7 @@
             <view class="om_addres">{{addressId.province+addressId.city+addressId.area+addressId.address}}</view>
           </view>
         </view>
-        <view class="addrs">
+        <view class="addrs" @tap="addresTos">
           <image src="/images/notices/jinru.png" class="_imgass_a" />
         </view>
       </view>
@@ -31,7 +31,7 @@
     <view class="shop_detil">
       <view class="_detil">
         <view class="_detail_v">
-          <image src="http://img1.imgtn.bdimg.com/it/u=817252206,2157667651&fm=15&gp=0.jpg" />
+          <image wx:if="{{imgurls+orDeteil.img}}" src="{{imgurls+orDeteil.img}}" />
         </view>
         <view class="_detail_vs">
           <view class="_detail_sd">{{goodsDetail.goods_name}}</view>
@@ -117,7 +117,7 @@
         <view class="om" wx:for="{{conum_list}}" wx:key="{{conum_list}}" data-id="{{item.id}}" data-name="{{item.price}}" @tap="cuonpicr">
           <image src="/images/notices/youhuibacki.png" />
           <view class="onpricf">
-            <image src="/images/notices/renminbi.png"/>
+            <image src="/images/notices/renminbi.png" />
             <text>{{item.price}}</text>
             <view>【{{item.title}}】</view>
           </view>
@@ -151,6 +151,12 @@ import 'wepy-async-function';
     addressId(state) {
       return state.counter.addressId;
     },
+    orDeteil(state) {
+      return state.counter.orDeteil;
+    },
+    imgurls(state) {
+      return state.counter.imgurl;
+    }
 })
 export default class Order extends wepy.page {
   config = {
@@ -208,12 +214,21 @@ export default class Order extends wepy.page {
     //获取优惠劵价格
     cuonpicr(e) {
       let cuprice = e.currentTarget.dataset.name;
-      this.cuprice = cuprice;
-      this.couponId = e.currentTarget.dataset.id;
-      this.sected = false;
-      if (this.cuprice == '') {
-        this.cuprice = 0;
+      if (cuprice > this.gjprice) {
+        wx.showToast({
+          title: '请选择其他优惠券',
+          icon: 'none',
+          duration: 1500,
+          mask: false
+        });
+      } else {
+        this.cuprice = cuprice;
+        this.sected = false;
+        if (this.cuprice == '') {
+          this.cuprice = 0;
+        }
       }
+
       this.totalprice();
     },
     // 不使用优惠券
@@ -251,6 +266,7 @@ export default class Order extends wepy.page {
       this.$navigate({ url: e.currentTarget.dataset.url });
     }
   };
+
   //计算价格
   totalprice() {
     this.mprice = this.num * this.sprice;
@@ -261,7 +277,7 @@ export default class Order extends wepy.page {
     let objs = this.gjprice + (this.freight - this.shipping);
     let wnumss = parseFloat(objs).toFixed(2);
     this.total_prices = wnumss;
-    console.log(this.total_prices)
+    console.log(this.total_prices);
 
     let obj = this.gjprice - this.cuprice + (this.freight - this.shipping);
     let wnums = obj.toFixed(2);
@@ -304,7 +320,7 @@ export default class Order extends wepy.page {
 </script>
 
 <style lang='less'>
-page{
+page {
   background: #f2f2f2;
 }
 .top_addres {
@@ -354,7 +370,7 @@ page{
 ._imgas_a {
   width: 60rpx;
   height: 60rpx;
-  margin-top: 24rpx;
+  margin-top: 40rpx;
 }
 
 ._imgass {
@@ -377,6 +393,7 @@ page{
 }
 .adder_nan {
   width: 100%;
+  margin-top: 10rpx;
 }
 
 .adder_nan text:nth-child(1) {
@@ -650,7 +667,7 @@ page{
   height: 340rpx;
   background: rgba(255, 255, 255, 1);
   border-radius: 10rpx;
-  margin:-15rpx auto;
+  margin: -15rpx auto;
 }
 .btnom {
   width: 750rpx;

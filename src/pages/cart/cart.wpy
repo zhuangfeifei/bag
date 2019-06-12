@@ -1,5 +1,6 @@
 <template>
   <view>
+    <image src='/images/my/loading.png' class="om_loading" wx:if="{{isImg}}" animation="{{animationRound}}" />
     <view class="tap_back" wx:if="{{post_list.length>0}}"></view>
     <view class="top_v" wx:if="{{clckcode==false&&post_list.length>0}}" @tap="management">管理</view>
     <view class="top_v" wx:if="{{clckcode==true&&post_list.length>0}}" @tap="manageall">完成</view>
@@ -15,7 +16,7 @@
             <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
           </view>
           <view class="_detail_v">
-            <image mode="aspectFill" lazy-load="true" src="{{imgurl+post_list[index].thumbnail_pic}}" />
+            <image mode="aspectFill" bindload="isImg" lazy-load="true" src="{{imgurl+post_list[index].thumbnail_pic}}" />
             <view wx:if="{{post_list[index].goods_status==0}}">下架</view>
             <view wx:if="{{post_list[index].goods_status==1}}">上架</view>
             <view wx:if='{{post_list[index].goods_status==2}}'>即将下架</view>
@@ -26,7 +27,7 @@
             <view class="_detail_d">
               <view class="_d_price">
                 <text>￥</text>
-                <text>{{post_list[index].market_price}}</text>
+                <text>{{post_list[index].is_accept==1?post_list[index].fall_price:post_list[index].market_price}}</text>
               </view>
               <view class="_d_num">
                 <view @tap="prnumj" data-id="{{index}}" data-price="{{post_list[index].market_price}}" data-count="{{post_list[index].num}}">-</view>
@@ -55,7 +56,7 @@
               <text wx:if="{{home_liat[index].is_accept==1}}">￥{{item.fall_price}}</text>
               <text wx:else>￥{{home_liat[index].market_price}}</text>
             </view>
-            <view class="btnbuton" @tap="tap_play">立即购买</view>
+            <view class="btnbuton" @tap="tap_play" data-id="{{home_liat[index].id}}">立即购买</view>
           </view>
         </view>
       </view>
@@ -70,7 +71,7 @@
         </view>
       </view>
       <view>
-        <view>结算</view>
+        <view @tap="goShopspric">结算</view>
       </view>
     </view>
     <view class="btno" wx:if="{{clckcode==true&&post_list.length>0}}">
@@ -109,6 +110,9 @@ import 'wepy-async-function';
   },
   imgurls(state) {
     return state.counter.imgurl;
+  },
+  shop_detailsMethods(state) {
+    return state.counter.shop_detail;
   }
 })
 export default class Cart extends wepy.page {
@@ -125,9 +129,12 @@ export default class Cart extends wepy.page {
     sprice: '',
     po_idnum: '', //删除个数
     idx: -1,
+    isImg: true,
     imgurl: '',
     selectds: false,
     current: 1,
+    color_name: '',
+    size_name: '',
     post_st: true,
     post_list: [],
     post_id: [],
@@ -141,7 +148,6 @@ export default class Cart extends wepy.page {
     prnumj(e) {
       let index = e.currentTarget.dataset.id;
       let post_list = this.post_list;
-      let selectd = this.post_list[index].selectd;
       let count = post_list[index].num;
       count = count - 1;
       if (count < 1) {
@@ -150,26 +156,70 @@ export default class Cart extends wepy.page {
       post_list[index].num = count;
       this.post_list = post_list;
       this.sprice = e.currentTarget.dataset.price;
-      this.total_price = this.sprice * count;
+      if (this.idx == -1) {
+        this.total_price = 0;
+      } else if (this.idx != index) {
+        return false;
+      } else {
+        this.total_price = this.sprice * count;
+      }
     },
     //商品数量增加
     prnumz(e) {
       let index = e.currentTarget.dataset.id;
-      let post_list = this.post_list;
-      let selectd = this.post_list[index].selectd;
-      let count = post_list[index].num;
+      let array = this.post_list;
+      let count = array[index].num;
       count = count + 1;
-      post_list[index].num = count;
-      this.post_list = post_list;
+      array[index].num = count;
+      this.post_list = array;
       this.sprice = e.currentTarget.dataset.price;
-      this.total_price = this.sprice * count;
+      if (this.idx == -1) {
+        this.total_price = 0;
+      } else if (this.idx != index) {
+        return false;
+      } else {
+        this.total_price = this.sprice * count;
+      }
     },
-    tap_play() {
-      wx.navigateTo({
-        url: '/pages/index/detail'
-      });
+    tap_play(e) {
+      let a = {
+        goods_id: e.currentTarget.dataset.id,
+        unionid: this.userinfo.unionid
+      };
+      if (a) {
+        wx.navigateTo({
+          url: '/pages/index/detail'
+        });
+        wepy.$store.dispatch({ type: 'shop_detailsMethods', payload: a });
+      }
     },
-
+    //去结算
+    goShopspric() {
+      if (this.total_price > 0 && this.total_price != 0) {
+        let array = this.post_list;
+        let a = {
+          name: this.size_name,
+          color: this.color_name,
+          img: this.thumbnail_pic
+        };
+        if (a) {
+          wx.navigateTo({
+            url: '/pages/index/order'
+          });
+          wepy.$store.dispatch({ type: 'orderDeteil', payload: a });
+        }
+      } else {
+        wx.showModal({
+          content: '请选择要购买的商品',
+          showCancel: false,
+          confirmText: '确定',
+          confirmColor: '#7C838D'
+        });
+      }
+    },
+    isImg() {
+      this.isImg = false;
+    },
     //管理
     management() {
       this.clckcode = !this.clckcode;
@@ -179,11 +229,40 @@ export default class Cart extends wepy.page {
     //选择
     selectdck(e) {
       let index = e.currentTarget.dataset.id;
-      this.sprice = e.currentTarget.dataset.price;
-      this.count = e.currentTarget.dataset.count;
-      this.idx = index;
-      if (this.idx == index) {
-        this.total_price = this.sprice * this.count;
+      let array = this.post_list;
+      this.color_name = array[index].color_name;
+      this.size_name = array[index].size_name;
+      this.thumbnail_pic = array[index].thumbnail_pic;
+      if (array[index].goods_status == 0) {
+        wx.showModal({
+          content: '此商品已下架，请选择其他商品',
+          showCancel: false,
+          confirmText: '确定',
+          confirmColor: '#7C838D'
+        });
+      } else {
+        let a = {
+          goods_specif: array[index].goods_specif,
+          market_price: array[index].market_price,
+          is_accept: array[index].is_accept,
+          fall_price: array[index].fall_price,
+          id: array[index].goods_id
+        };
+        if (a) {
+          wepy.$store.dispatch({
+            type: 'goodsDetailMethods',
+            payload: a
+          });
+        }
+        this.sprice =
+          array[index].is_accept == 1
+            ? array[index].fall_price
+            : array[index].market_price;
+        this.count = e.currentTarget.dataset.count;
+        this.idx = index;
+        if (this.idx == index) {
+          this.total_price = this.sprice * this.count;
+        }
       }
     },
     //多选
@@ -224,9 +303,7 @@ export default class Cart extends wepy.page {
         let a = pid.toString();
         post_id.push(a);
       }
-
       this.post_id = post_id;
-      console.log(this.post_id, '全选');
     },
     //取消全选
     unselectalls() {
@@ -241,8 +318,14 @@ export default class Cart extends wepy.page {
       this.clckcode = !this.clckcode;
       this.selectds = false;
       for (let i = 0; i < array.length; i++) {
-        array[i].selectd = false;
+        if (array[i].selectd == true) {
+          array[i].selectd = false;
+        } else {
+          array[i].selectd = false;
+        }
       }
+      this.idx = -1;
+      this.total_price = 0;
       this.selection = true;
     },
     //删除
@@ -250,7 +333,6 @@ export default class Cart extends wepy.page {
       let a = {
         shoppingCartIds: this.post_id
       };
-      console.log(a);
       if (this.po_idnum && a) {
         wx.showModal({
           title: '删除商品',
@@ -265,7 +347,7 @@ export default class Cart extends wepy.page {
               wepy.$Api.deteleList(a).then(
                 res => {
                   if (res.data.code) {
-                    wx.wx.showToast({
+                    wx.showToast({
                       title: '删除成功',
                       icon: 'none',
                       duration: 1500,
@@ -274,6 +356,11 @@ export default class Cart extends wepy.page {
                   }
                   // console.log(res.data.code)
                   this.cartlist();
+                  if (wx.pageScrollTo) {
+                    wx.pageScrollTo({
+                      scrollTop: 0
+                    });
+                  }
                 },
                 err => {}
               );
@@ -353,6 +440,25 @@ export default class Cart extends wepy.page {
       }
     }
   }
+  onReady() {
+    this.animationRound();
+  }
+  animationRound() {
+    //加载更多动画
+    const animation = wx.createAnimation({
+      duration: 500,
+      timingFunction: 'linear'
+    });
+
+    var n = 0;
+    setInterval(() => {
+      n = n + 1;
+      animation.rotate(180 * n).step();
+      this.setData({
+        animationRound: animation.export()
+      });
+    }, 500);
+  }
   onLoad() {
     this.cartlist();
     this.userlike();
@@ -404,6 +510,10 @@ export default class Cart extends wepy.page {
     }
     return -1;
   }
+  onShow() {
+    this.idx = -1;
+    this.total_price = 0;
+  }
   onReachBottom() {
     let a = {
       unionId: this.userinfo.unionid,
@@ -413,8 +523,8 @@ export default class Cart extends wepy.page {
     if (a) {
       wepy.$Api.userlike(a).then(
         res => {
-          if (res.data.data.length != 0) {
-            this.home_liat = res.data.data;
+          if (res.data.data > 0) {
+            this.home_liat = this.home_liat.concat(res.data.data);
           } else {
             this.post_st = false;
           }
@@ -517,6 +627,14 @@ export default class Cart extends wepy.page {
   letter-spacing: 1rpx;
   line-height: 31rpx;
   margin: 20rpx 72rpx;
+}
+.om_loading {
+  width: 50rpx;
+  height: 50rpx;
+  position: absolute;
+  left: calc((100% - 40rpx) / 2);
+  margin: 10rpx;
+  z-index: 666;
 }
 ._detail_s {
   width: 336rpx;
