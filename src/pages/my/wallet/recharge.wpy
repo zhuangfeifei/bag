@@ -9,7 +9,7 @@
       <view class="nun_ong">
         <image src="/images/notices/renminbijk.png" />
         <view class="inoutcls">
-          <input type="text" value="{{unbers}}" bindinput="uameInputs"></input>
+          <input type="text" value="{{unbers}}" bindinput="uameInputs"/>
         </view>
       </view>
       <view class="donrtnim">最低充值金额为¥50</view>

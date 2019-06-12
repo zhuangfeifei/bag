@@ -31,7 +31,7 @@
     <view class="shop_detil">
       <view class="_detil">
         <view class="_detail_v">
-          <image wx:if="{{imgurls+orDeteil.img}}" src="{{imgurls+orDeteil.img}}" />
+          <image wx:if="{{imgurls+goodsDetail.thumbnail_pic}}" src="{{imgurls+goodsDetail.thumbnail_pic}}" />
         </view>
         <view class="_detail_vs">
           <view class="_detail_sd">{{goodsDetail.goods_name}}</view>
@@ -239,7 +239,6 @@ export default class Order extends wepy.page {
     },
     userInputs(e) {
       this.usernums = e.detail.value;
-      console.log(this.usernums);
     },
     //去支付
     ontopay() {
@@ -247,9 +246,9 @@ export default class Order extends wepy.page {
         addressId: this.addressId.id, goodsId: this.goodsDetail.id, exclusiveId: this.specifications.exclusiveId, quantity: this.num, dealPrice: parseFloat(this.gjprice),
         actualPrice: parseFloat(this.total_price), unitPrice: this.sprice, couponId: this.couponId,couponAmount: this.cuprice, isUseCoupon: this.cuprice == 0 ? 0 : 1,remark: this.usernums
       }
-      console.log(order)
+      // console.log(order)
       wepy.$Api.createOrder( this.userinfo.unionid, order).then(res => { 
-          console.log(res.data)
+          // console.log(res.data)
           if (res.data.code == 200) {
             wepy.$store.dispatch({type:'orderMethods', payload: res.data.data})
             wx.navigateTo({
@@ -277,7 +276,7 @@ export default class Order extends wepy.page {
     let objs = this.gjprice + (this.freight - this.shipping);
     let wnumss = parseFloat(objs).toFixed(2);
     this.total_prices = wnumss;
-    console.log(this.total_prices);
+    // console.log(this.total_prices);
 
     let obj = this.gjprice - this.cuprice + (this.freight - this.shipping);
     let wnums = obj.toFixed(2);
@@ -289,7 +288,7 @@ export default class Order extends wepy.page {
     this.totalprice();
 
     wepy.$Api.listadress({ unionId: this.userinfo.unionid, limit: 50, current: 1 }).then(res => { 
-        console.log(res.data)
+        // console.log(res.data)
         if (res.data.code == 200) {
             this.addressList = res.data.data
             for(let val of res.data.data){
@@ -304,7 +303,7 @@ export default class Order extends wepy.page {
     })
 
     wepy.$Api.couponsAvailable({ unionId: this.userinfo.unionid, goodsId: this.goodsDetail.id, payAmount: this.total_prices }).then(res => { 
-        console.log(res.data)
+        // console.log(res.data)
         if (res.data.code == 200) {
             this.conum_list = res.data.data.couponList
             let snum = this.conum_list.length;

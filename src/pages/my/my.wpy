@@ -100,31 +100,33 @@ export default class My extends wepy.page {
         img: '../../images/my/HYZX_youhuiquan.png',
         url: './coupon/coupon'
       },
-      { title: '钱包', img: '../../images/my/HYZX_qianbao.png' },
-      { title: '客户服务', img: '../../images/my/HYZX_kehufuwu.png' }
+      { title: '钱包', img: '../../images/my/HYZX_qianbao.png', url:'./wallet/wallet' },
+      { title: '客户服务', img: '../../images/my/HYZX_kehufuwu.png', url:'' }
     ],
     order: ['待付款', '待发货', '待收货', '评价']
   };
   computed = {};
   methods = {
     linkTo(e) {
-      if(e.currentTarget.dataset.url == './order/myOrder'){
-        let index = e.currentTarget.dataset.index + 1
-        wepy.$store.dispatch({type:'ASYNC_INCREMENT', payload: index})
+      if(e.currentTarget.dataset.url != ''){
+        if(e.currentTarget.dataset.url == './order/myOrder'){
+          let index = e.currentTarget.dataset.index + 1
+          wepy.$store.dispatch({type:'ASYNC_INCREMENT', payload: index})
+        }
+        this.$navigate({ url: e.currentTarget.dataset.url });
       }
-      this.$navigate({ url: e.currentTarget.dataset.url });
     },
     chedkIn() {
       let a = {
         unionId: this.userinfo.unionid
       };
+        this.Checkin = true;
       if (a) {
         wepy.$Api.addFliat(a).then(
           res => {
             if (res.data.code == 200) {
               let mrgkm;
               wepy.$store.dispatch({ type: 'mrgkmuser', payload: mrgkm });
-              this.Checkin = true;
               this.chendLst = res.data.data;
               this.$apply();
             } else {

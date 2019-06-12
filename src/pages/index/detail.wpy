@@ -395,17 +395,9 @@ export default class Detail extends wepy.page {
       if (this.scolor && this.ssexd && this.ssexd != '暂无货') {
         let list = {scolor: this.scolor, ssexd: this.ssexd, exclusiveId: this.exclusiveId}
         wepy.$store.dispatch({type:'specificationsMethods', payload: list})
-        let a = {
-          name: this.ssexd,
-          color: this.scolor,
-          img:this.poat_List.thumbnail_pic
-        };
-        if (a) {
-          wx.navigateTo({
-            url: '/pages/index/order'
-          });
-           wepy.$store.dispatch({ type : 'orderDeteil', payload: a})
-        }
+        wx.navigateTo({
+          url: '/pages/index/order'
+        })
       } else {
         wx.showToast({
           title: '请选择商品属性',
