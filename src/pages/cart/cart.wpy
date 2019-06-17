@@ -50,8 +50,7 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image src="{{imgurl+home_liat[index].thumbnail_pic}}">
-            </image>
+            <image src="{{imgurl+home_liat[index].thumbnail_pic}}"/>
             <view class="ontbnt">
               <text>￥{{home_liat[index].market_price}}</text>
               <text wx:if="{{home_liat[index].is_accept==1}}">￥{{item.fall_price}}</text>
@@ -139,7 +138,10 @@ export default class Cart extends wepy.page {
     post_st: true,
     post_list: [],
     post_id: [],
-    home_liat: []
+    home_liat: [],
+    goods_id:'',
+    exclusiveId:''
+
   };
 
   computed = {};
@@ -197,18 +199,29 @@ export default class Cart extends wepy.page {
     //去结算
     goShopspric() {
       if (this.total_price > 0 && this.total_price != 0) {
-        let array = this.post_list;
         let a = {
-          name: this.size_name,
-          color: this.color_name,
-          img: this.thumbnail_pic
+          goodsId: this.goods_id,
+          unionId: this.userinfo.unionid
         };
-        if (a) {
-          wx.navigateTo({
-            url: '/pages/index/order'
-          });
-          wepy.$store.dispatch({ type: 'orderDeteil', payload: a });
-        }
+        wepy.$Api.shopDetail(a).then(
+          res => {
+            if (res.data.data) {
+              console.log(res);
+              wepy.$store.dispatch({
+                type: 'goodsDetailMethods',
+                payload: res.data.data
+              });
+              let list = {scolor: this.color_name, ssexd: this.size_name, exclusiveId: this.exclusiveId}
+              console.log(list)
+              wepy.$store.dispatch({ type: 'specificationsMethods', payload: list });
+              wx.navigateTo({
+                url: '/pages/index/order'
+              });
+            }
+            this.$apply();
+          },
+          err => {}
+        );
       } else {
         wx.showModal({
           content: '请选择要购买的商品',
@@ -234,6 +247,8 @@ export default class Cart extends wepy.page {
       this.color_name = array[index].color_name;
       this.size_name = array[index].size_name;
       this.thumbnail_pic = array[index].thumbnail_pic;
+      this.exclusiveId = this.post_list[index].exclusive_id
+      this.goods_id = this.post_list[index].goods_id
       if (array[index].goods_status == 0) {
         wx.showModal({
           content: '此商品已下架，请选择其他商品',
@@ -311,7 +326,7 @@ export default class Cart extends wepy.page {
       this.unselectall();
       this.selectds = !this.selectds;
       this.post_id = [];
-      console.log(this.post_id);
+      // console.log(this.post_id);
     },
     //完成
     manageall() {
@@ -475,6 +490,7 @@ export default class Cart extends wepy.page {
     if (a) {
       wepy.$Api.cartList(a).then(
         res => {
+          // console.log(res.data.data)
           if (res.data.data) {
             this.post_list = res.data.data;
           }

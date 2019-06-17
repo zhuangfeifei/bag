@@ -1,14 +1,18 @@
 <template>
     <view id="logistics">
-
+        
+        <view class="kdName">
+            <image src="/images/my/kdwuliu.png" mode="scaleToFill" lazy-load="false" />
+            <text>{{orderListItem.kdName}}</text>{{orderListItem.courier_num}}
+        </view>
         <view class="logisticsDetails">
-            <view class="logisticsList {{index == 0 || index == 1 ?'logisticsListActive':''}}" wx:for="{{logisticsList}}" wx:key="{{index}}">
+            <view class="logisticsList {{index == 0 || index == 1 ?'logisticsListActive':''}}" wx:for="{{kdDetail}}" wx:key="{{index}}">
                 <view class="logisticsTime">
-                    <h5 wx:if="{{index > 0}}">06-08</h5><text wx:if="{{index > 0}}">\n18:54</text><view class="logisticsSolid"></view>
+                    <h5 wx:if="{{index > 0}}">{{item.days}}</h5><text wx:if="{{index > 0}}">\n{{item.hours}}</text><view class="logisticsSolid"></view>
                     <view wx:if="{{index == 0}}" class="logisticsClosed">收</view>
                     <view wx:if="{{index == 1}}" class="logisticsClosed">✔</view>
                 </view>
-                <view class="logisticsStatus"><text class="{{index == 1 ?'logisticsStatusActive':''}}">{{item.status}}</text><view>{{item.cont}}</view></view>
+                <view class="logisticsStatus"><view>{{item.AcceptStation}}</view></view>
             </view>
         </view>
 
@@ -21,7 +25,12 @@ import { connect } from 'wepy-redux'
 import 'wepy-async-function'
 
 @connect({
-    
+    kdDetail(state){
+        return state.counter.kdDetail
+    },
+    orderListItem(state){
+        return state.counter.orderListItem.orderDetail
+    },
 })
     
 export default class Logistics extends wepy.page {
@@ -71,8 +80,16 @@ export default class Logistics extends wepy.page {
 }
 
 
+.kdName{
+    width: 490rpx; height: 70rpx; border-radius: 35rpx; background-color: white; display: flex; align-items: center; padding: 0 8rpx;
+    font-size: 26rpx; color: #363636; .font;
+    image{width: 54rpx; height: 54rpx;}
+    text{color: #7B9DFD; font-size: 28rpx; margin-left: 27rpx; margin-right: 22rpx;}
+}
+
+
 .logisticsDetails{
-    width: 100%; border-radius: 10rpx; background-color: white; padding-top: 35rpx; padding-bottom: 30rpx;
+    width: 100%; border-radius: 10rpx; background-color: white; padding-top: 35rpx; padding-bottom: 30rpx; margin-top: 20rpx;
     .logisticsList{
         width: 100%; display: flex; color: #999999;
         .logisticsTime{

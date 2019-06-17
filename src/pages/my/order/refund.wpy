@@ -2,21 +2,23 @@
     <view id="refund">
 
         <view class="refund_nav">
-            <card-item></card-item>
+            <repeat for="{{1}}" key="index" index="index" item="item">
+                <card-item :orderList.sync="orderListItem"></card-item>
+            </repeat>
         </view>
 
         <view class="refundWhy">
             <view class="why">
                 退款原因
-                <view class="changeWhy" @tap="changeCancelOrder"><text>请选择</text><image class="more" src="/images/my/jinru.png" mode="scaleToFill" lazy-load="false" /></view>
+                <view class="changeWhy" @tap="changeCancelOrder"><text>{{why ? why : '请选择'}}</text><image class="more" src="/images/my/jinru.png" mode="scaleToFill" lazy-load="false" /></view>
             </view>
             <view class="why">
                 退款金额
-                <view>￥280.00</view>
+                <view>￥{{orderListItem.actual_price}}</view>
             </view>
             <view class="why">
                 退款说明
-                <view><input type="text" placeholder="选填" /></view>
+                <view><input type="text" bindinput="bindValue" placeholder="选填" /></view>
             </view>
             <view class="why">
                 上传凭条
@@ -58,7 +60,12 @@ import 'wepy-async-function'
 import card from '../../../components/card'
 
 @connect({
-    
+    userinfo(state) {
+        return state.counter.userinfo;
+    },
+    orderListItem(state){
+        return state.counter.orderListItem.orderDetail
+    },
 })
     
 export default class Refund extends wepy.page {
@@ -76,7 +83,8 @@ export default class Refund extends wepy.page {
         images:[],
         isCancelOrder: false,
         cancelList:['多拍/错拍','不想要了','其他原因'], cancelIndex: 0,
-        animationTop:'',isAnimation: true
+        animationTop:'',isAnimation: true,
+        why:'',remark:'', files:[]
     }
     
     computed = {
@@ -89,7 +97,19 @@ export default class Refund extends wepy.page {
                 sizeType: ['original', 'compressed'],  //可选择原图或压缩后的图片
                 sourceType: ['album', 'camera'], //可选择性开放访问相册、相机
                 success: res => {
-                    console.log(res)
+                    // console.log(res)
+                    wx.uploadFile({
+                        url: 'http://192.168.0.109:8083/bag/api/basic/uploadPicture', // 仅为示例，非真实的接口地址
+                        filePath: res.tempFilePaths[0],
+                        name: 'file',
+                        success:res=> {
+                            let data = JSON.parse(res.data)
+                            // console.log(data)
+                            if(data.code == 200){
+                                this.files.push(data.message)
+                            }
+                        }
+                    })
                     const images = this.images.concat(res.tempFiles)
                     // 限制最多只能留下3张照片
                     this.images = images.length <= 3 ? images : images.slice(0, 3) 
@@ -97,23 +117,10 @@ export default class Refund extends wepy.page {
                 }
             })
         },
-        uploadFile(){
-            wx.uploadFile({
-                url: 'https://example.weixin.qq.com/upload', // 仅为示例，非真实的接口地址
-                filePath: tempFilePaths[0],
-                name: 'file',
-                formData: {
-                    user: 'test'
-                },
-                success(res) {
-                    const data = res.data
-                    // do something
-                }
-            })
-        },
         imagedelete(e){
             let index = e.currentTarget.dataset.index
             this.images.splice(index, 1)
+            this.files.splice(index, 1)
             this.$apply()
         },
         changeCancelOrder(){
@@ -123,8 +130,23 @@ export default class Refund extends wepy.page {
             this.cancelIndex = e.currentTarget.dataset.index
             this.$apply()
         },
+        Cance(){
+            this.why = this.cancelList[this.cancelIndex]
+            this.changeCancelOrder()
+        },
+        bindValue(e){
+            this.remark = e.detail.value
+        },
         linkTo(e){
-            this.$navigate({url: e.currentTarget.dataset.url})
+            wepy.$Api.returnOrder({ unionId: this.userinfo.unionid, orderNo: this.orderListItem.order_no, 
+                reason: this.why, remark: this.remark, slipPic: this.files.join(), type: 1 }).then( res => {
+                // console.log(res.data)
+                if (res.data.code == 200) {
+                    this.$navigate({ url: './refundDetails' });
+                }
+            },err => {
+                
+            });
         },
     }
     

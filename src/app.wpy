@@ -54,6 +54,7 @@ export default class extends wepy.app {
       'pages/my/Notice/commodity',
       'pages/my/Notice/announcement',
       'pages/my/sIgnRecord/record',
+      'pages/my/order/returnDetails',
     ],
     window: {
       backgroundTextStyle: 'light',

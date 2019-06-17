@@ -128,4 +128,36 @@ module.exports = {
   couponsAvailable:(data)=>{//下订单时查询某一商品会员拥有的可用优惠券信息
     return api.request('/bag/api/order/couponsAvailable', 'post', data)
   },
+  createOrder:(unionId, data)=>{//创建订单
+    return api.request('/bag/api/order/createOrder?unionId='+ unionId, 'post', data, 'application/json')
+  },
+  pay:(data)=>{//订单支付
+    return api.request('/bag/api/orderPay/pay', 'post', data)
+  },
+
+
+  myOrder:(data)=>{//我的订单列表
+    return api.request('/bag/api/order/myOrder', 'post', data)
+  },
+  orderDetail:(data)=>{//订单详情
+    return api.request('/bag/api/order/orderDetail', 'post', data)
+  },
+  cancelOrder:(data)=>{//取消订单
+    return api.request('/bag/api/order/cancelOrder', 'post', data)
+  },
+  remindOrder:(data)=>{//提醒发货
+    return api.request('/bag/api/order/remindOrder', 'post', data)
+  },
+  returnOrder:(data)=>{//申请退换货
+    return api.request('/bag/api/order/returnOrder', 'post', data)
+  },
+  returnHis:(data)=>{//获取换货失败审核历史信息
+    return api.request('/bag/api/order/returnHis', 'post', data)
+  },
+  confirmOrder:(data)=>{//确认收货
+    return api.request('/bag/api/order/confirmOrder', 'post', data)
+  },
+  addComments:(data)=>{//评论
+    return api.request('/bag/api/comments/addComments', 'post', data)
+  },
 }

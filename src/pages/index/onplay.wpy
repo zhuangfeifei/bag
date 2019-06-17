@@ -1,10 +1,10 @@
 <template>
-  <view>
+  <view wx:if="{{userinfo}}">
     <view class="ontop_play">
       <text>订单金额：</text>
       <view>
         <text>￥</text>
-        <text>128</text>
+        <text>{{order.actual_price}}</text>
       </view>
     </view>
     <view class="colocumn">请选择支付方式</view>
@@ -14,8 +14,8 @@
         <text>钱包支付</text>
       </view>
       <view @tap="secteds">
-        <text class="plain">余额不足</text>
-        <image wx:if="{{sreaidos}}" src="/images/notices/cxuanzhong.png" />
+        <text class="plain" wx:if="{{userinfo.balance < order.actual_price}}">余额不足</text>
+        <image wx:if="{{!isWx}}" src="/images/notices/cxuanzhong.png" />
         <image wx:else src="/images/notices/nnxuanzhong.png" />
       </view>
     </view>
@@ -25,16 +25,27 @@
         <text>微信支付</text>
       </view>
       <view @tap="sected_nt">
-        <image wx:if="{{sreaido}}" src="/images/notices/cxuanzhong.png" />
+        <image wx:if="{{isWx}}" src="/images/notices/cxuanzhong.png" />
         <image wx:else src="/images/notices/nnxuanzhong.png" />
       </view>
     </view>
     <view class="btom_button" @tap="playnone">确认支付</view>
-    <view class="ondce" wx:if="{{codeiph==1}}"></view>
-    <view class="ontabc" wx:if="{{codeiph==1}}">
+    <view class="ondce" wx:if="{{isPay}}"></view>
+    <view class="ontabc" wx:if="{{!userinfo.payPassword && isPay}}">
       <view class="payword">设置支付密码</view>
       <view class="word">您还未设置钱包支付密码</view>
       <view class="settign" @tap="toplay">立即设置</view>
+    </view>
+    <view wx:if="{{userinfo.payPassword && isPay}}" class="balancePayment">
+      <view class="balancePayment_title">请输入支付密码</view>
+      <h1>￥{{order.actual_price}} 元</h1>
+      <view class="balancePayment_password">
+        <view class="balancePayment_password_solid" wx:for="{{6}}" wx:key="{{index}}"></view>
+        <view class="passwordList">
+          <view class="balancePayment_password_list" wx:for="{{passwords}}" wx:key="{{index}}">●</view>
+        </view>
+        <input bindinput="bindKeyInput" maxlength="6" password type="number" auto-focus />
+      </view>
     </view>
     <view class="pamser" wx:if="{{cosde}}">
       <view class="uuimg">
@@ -50,7 +61,14 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+    userinfo(state){
+        return state.counter.userinfo
+    },
+    order(state){
+        return state.counter.order; 
+    }
+})
 export default class Onplay extends wepy.page {
   config = {
     navigationBarTitleText: '支付方式'
@@ -59,48 +77,84 @@ export default class Onplay extends wepy.page {
   components = {};
 
   data = {
-    sreaido: false,
-    sreaidos: false,
+    isWx: false, isPay: false,
     codeiph: '',
-    cosde: false
+    cosde: false,
+    password:'',
+    passwords:[],
   };
 
   computed = {};
 
   methods = {
     secteds() {
-      this.sreaidos = !this.sreaidos;
-      if (this.sreaido == true) {
-        this.sreaido = false;
-      }
+      this.isWx = false
     },
     sected_nt() {
-      this.sreaido = !this.sreaido;
-      if (this.sreaidos == true) {
-        this.sreaidos = false;
-      }
+      this.isWx = true
     },
     playnone() {
-      this.codeiph = 1;
+      if(this.isWx){
+
+      }else{
+        this.isPay = true
+        
+      }
+      this.$apply()
     },
     toplay() {
+      
       wx.navigateTo({
         url: '/pages/my/setting/playkey'
       });
-      this.codeiph = 0;
-      this.cosde = true;
-      setTimeout(() => {
-        this.cosde = false;
-        this.$apply();
-      }, 2000);
+      // this.codeiph = 0;
+      // this.cosde = true;
+      // setTimeout(() => {
+      //   this.cosde = false;
+      //   this.$apply();
+      // }, 2000);
 
       // wx.navigateTo({
       //   url: '/pages/index/payment'
       // });
+    },
+    bindKeyInput(e){
+      this.password = e.detail.value
+      this.passwords = e.detail.value.split('')
     }
   };
 
-  onLoad() {}
+  watch = {
+    password(value){
+      if(value.length == 6){
+        wepy.showLoading({
+            title: '支付中...',
+        })
+        let order = {
+          unionId: this.userinfo.unionid, orderId: this.order.id, payType: 2, payPwd: this.password, yueAmount: this.order.actual_price, wxAmount:0
+        }
+        console.log(order)
+        wepy.$Api.pay(order).then(res => { 
+            console.log(res.data)
+            if (res.data.code == 200) {
+              wx.reLaunch({
+                url: '/pages/index/payment'
+              });
+            }
+        }, err => {
+            this.cosde = true;
+            setTimeout(() => {
+              this.cosde = false;
+              this.$apply();
+            }, 2000);
+        })
+      }
+    }
+  }
+
+  onLoad() {
+    
+  }
 }
 </script>
 
@@ -294,5 +348,34 @@ page {
   color: rgba(255, 255, 255, 1);
   letter-spacing: 1.5rpx;
   margin-top: 36rpx;
+}
+
+
+
+
+.font{
+  font-family:PingFang-SC-Medium; font-weight:500;
+}
+.balancePayment{
+  width: 662rpx; height: 452rpx; background-color: white; border-radius: 6rpx; box-sizing: border-box;
+  position: absolute; top: 80rpx; left: 40rpx; z-index: 11; text-align: center;
+  .balancePayment_title{
+    width: 100%; height: 101rpx; border-bottom: 1px solid #DCDCDC; line-height: 101rpx;
+    font-size: 32rpx; .font;
+  }
+  h1{font-size: 70rpx; .font; line-height: 180rpx;}
+  .balancePayment_password{
+    width: 612rpx; height: 102rpx; margin: 0 auto; display: flex; text-align: center; line-height: 102rpx;
+    font-size: 40rpx; position: relative;
+    .balancePayment_password_solid,.balancePayment_password_list{ width: 102rpx; height: 100%; border: 1px solid #999999; border-left: 0;}
+    .balancePayment_password_solid:nth-child(1){border-left: 1px solid #999999!important;}
+    .passwordList,input{
+       position: absolute; top: 0; left: 0; display: flex;
+      .balancePayment_password_list{border: 0!important;}
+    }
+    input{
+      width: 100%; height: 100%; opacity: 0;
+    }
+  }
 }
 </style>

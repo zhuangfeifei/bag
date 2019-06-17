@@ -1,17 +1,26 @@
 <template>
     <view id="refundDetails">
 
-        <view class="refundDetails_nav">
-            等待买家付款
+        <view wx:if="{{returnDetail.status == -1}}" class="refundDetails_nav">
+            请等待商家处理退换申请
+            <text> \n商家将在23小时34分处理您的退换申请</text>
+        </view>
+        <view wx:if="{{returnDetail.status == 1}}" class="refundDetails_nav">
+            商家已同意你的退换申请
+            <text> \n商家收到退货后将会通过系统给您退款</text>
         </view>
 
-        <view class="refundDetails_status"> 
-            <h3>您已经成功发起退款申请，请耐心等待商家处理</h3>
-            <text>\n·商家同意或者超时未处理，系统会自动给您退款</text>
-            <text>\n·如果商家拒绝退款，请联系客服协商后再次发起申请</text>
+        <view wx:if="{{returnDetail.status == -1}}" class="refundDetails_status"> 
+            <h3>您已经成功发起退换申请，请耐心等待商家处理</h3>
+            <text>\n·商家超时未处理，系统会给商家发起提醒</text>
+            <text>\n·如果商家拒绝退换，请联系客服协商后再次发起申请</text>
+        </view>
+        <view wx:if="{{returnDetail.status == 1}}" class="refundDetails_status"> 
+            <h3>商家已同意你的退换申请，请耐心等待</h3>
+            <text>\n·如果商家关闭退款或者长时间未退款，请联系客服协商后再次发起申请</text>
         </view>
 
-       <view class="refundDetails_cont">
+        <view class="refundDetails_cont">
             <repeat for="{{1}}" key="index" index="index" item="item">
                 <card-item :orderList.sync="orderListItem"></card-item>
             </repeat>
@@ -44,7 +53,7 @@ import card from '../../../components/card'
 export default class RefundDetails extends wepy.page {
     
     config = {
-        navigationBarTitleText: '退款详情'
+        navigationBarTitleText: '退换详情'
     }
     
     components = {
