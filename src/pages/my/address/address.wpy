@@ -1,26 +1,26 @@
 <template>
-	<view id="address" class="{{addressList.length > 0 ? 'isAddress' : ''}}">
+  <view id="address" class="{{addressList.length > 0 ? 'isAddress' : ''}}">
 
-		<view wx:if="{{addressList.length > 0}}" class="addressList">
-			<view wx:for="{{addressList}}" wx:key="{{index}}" class="addressList_content">
-				<h5 @tap="changeList" data-item="{{item}}">{{item.ship_name}}<text>{{item.phone_num}}</text></h5>
-				<view class="addressList_address" @tap="changeList" data-item="{{item}}">{{item.province+' '+item.city+' '+item.area+' '+item.address}}</view>
-				<view class="addressList_Modify">
-					<view @tap="change" data-id="{{item.id}}">
-						<image src="{{checked[item.isdefault == 1 ? 1 : 0]}}" />设为默认地址</view>
-					<view><text @tap="editor" data-item="{{item}}">编辑</text><text @tap="deladress" data-id="{{item.id}}">删除</text></view>
-				</view>
-			</view>
-		</view>
+    <view wx:if="{{addressList.length > 0}}" class="addressList">
+      <view wx:for="{{addressList}}" wx:key="{{index}}" class="addressList_content">
+        <h5 @tap="changeList" data-item="{{item}}">{{item.ship_name}}<text>{{item.phone_num}}</text></h5>
+        <view class="addressList_address" @tap="changeList" data-item="{{item}}">{{item.province+' '+item.city+' '+item.area+' '+item.address}}</view>
+        <view class="addressList_Modify">
+          <view @tap="change" data-id="{{item.id}}" data-index="{{index}}">
+            <image src="{{checked[item.isdefault == 1 ? 1 : 0]}}" />设为默认地址</view>
+          <view><text @tap="editor" data-item="{{item}}">编辑</text><text @tap="deladress" data-id="{{item.id}}">删除</text></view>
+        </view>
+      </view>
+    </view>
 
-		<view wx:else class="noAddress">
-			<image src="/images/my/TB_zanwudizhi.png" />
-			<text>\n还没有收货地址哦，赶快添加吧~</text>
-		</view>
+    <view wx:else class="noAddress">
+      <image src="/images/my/TB_zanwudizhi.png" />
+      <text>\n还没有收货地址哦，赶快添加吧~</text>
+    </view>
 
-		<view class="address_btn" @tap="linkTo">添加收货地址</view>
+    <view class="address_btn" @tap="linkTo">添加收货地址</view>
 
-	</view>
+  </view>
 </template>
 
 <script>
@@ -32,9 +32,9 @@ import 'wepy-async-function';
   userinfo(state) {
     return state.counter.userinfo;
   },
-  isChangeAddress(state){
-      return state.counter.isChangeAddress
-  },
+  isChangeAddress(state) {
+    return state.counter.isChangeAddress;
+  }
 })
 export default class Address extends wepy.page {
   config = {
@@ -53,7 +53,7 @@ export default class Address extends wepy.page {
 
   methods = {
     change(e) {
-      // console.log(e.currentTarget.dataset.id);
+      let index = e.currentTarget.dataset.index
       wepy.$Api
         .defaultById({
           unionId: this.userinfo.unionid,
@@ -61,12 +61,15 @@ export default class Address extends wepy.page {
         })
         .then(
           res => {
-            // console.log(res.data)
             if (res.data.code == 200) {
               wepy.showToast({
                 title: '设置成功',
                 icon: 'success',
                 duration: 2000
+              });
+              wepy.$store.dispatch({
+                type: 'addressIdMethods',
+                payload: this.addressList[index]
               });
               this.onShow();
             }
@@ -105,10 +108,13 @@ export default class Address extends wepy.page {
           err => {}
         );
     },
-    changeList(e){
-      if(this.isChangeAddress){
-        wepy.$store.dispatch({type:'addressIdMethods', payload: e.currentTarget.dataset.item})
-        wepy.navigateBack({ delta: 1 })
+    changeList(e) {
+      if (this.isChangeAddress) {
+        wepy.$store.dispatch({
+          type: 'addressIdMethods',
+          payload: e.currentTarget.dataset.item
+        });
+        wepy.navigateBack({ delta: 1 });
       }
     }
   };
@@ -120,8 +126,8 @@ export default class Address extends wepy.page {
         res => {
           // console.log(res.data)
           if (res.data.code == 200) {
-						let addresCode;
-						wepy.$store.dispatch({ type : 'useraddres', payload: addresCode})
+            let addresCode;
+            wepy.$store.dispatch({ type: 'useraddres', payload: addresCode });
             this.addressList = res.data.data;
             this.$apply();
           }
@@ -130,8 +136,8 @@ export default class Address extends wepy.page {
       );
   }
 
-  onUnload(){
-      wepy.$store.dispatch({type:'isChangeAddressMethods', payload: false})
+  onUnload() {
+    wepy.$store.dispatch({ type: 'isChangeAddressMethods', payload: false });
   }
 }
 </script>

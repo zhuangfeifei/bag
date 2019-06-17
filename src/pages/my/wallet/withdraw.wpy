@@ -80,6 +80,9 @@ export default class Recharge extends wepy.page {
 </script>
 
 <style lang='less'>
+page{
+  background:#f2f2f2;
+}
 .topclass {
   width: 690rpx;
   height: 620rpx;

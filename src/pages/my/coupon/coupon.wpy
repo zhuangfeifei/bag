@@ -12,7 +12,7 @@
       </view>
       <view class="oncunloms">有效期：{{coupon[index].limitDate}}</view>
       <image src="/images/notices/lingqu.png" class="lincone" wx:if="{{id==0}}" data-pid='{{coupon[index].id}}' @tap="ontapto" />
-      <image src="/images/notices/qushiyong.png" class="lincone" wx:if="{{id==1}}" />
+      <image src="/images/notices/qushiyong.png" @tap='goToshops' class="lincone" wx:if="{{id==1}}" />
       <image src="/images/notices/yishiyong.png" class="lincones" wx:if="{{id==2}}" />
       <image src="/images/notices/yiguoqi.png" class="lincones" wx:if="{{id==3}}" />
     </view>
@@ -136,6 +136,11 @@ export default class Coupon extends wepy.page {
           err => {}
         );
       }
+    },
+    goToshops(){
+     wx.switchTab({
+        url: '/pages/index/index'
+      });
     }
   };
   couponts() {

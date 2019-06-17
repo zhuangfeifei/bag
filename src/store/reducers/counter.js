@@ -7,7 +7,7 @@ const Api = require('../../wxApi/api')
 const defaultState = {
   userinfo:'',
   orderIndex: 0,
-  imgUrl: 'http://192.168.0.109:8083/bag/static/modular/images',
+  imgUrl: Api.imgUrl+'/bag/static/modular/images',
   editor:'',
   category:'', // 收藏夹
   favoritesList:'', // 收藏夹
@@ -30,7 +30,7 @@ const defaultState = {
   orderListItem:'',  // 订单详情
   kdDetail:'',  // 物流信息
   mrgkm:1,//签到
-  orDeteil:''
+  orDeteil:'',
 }
 
 export default handleActions({
@@ -95,8 +95,6 @@ export default handleActions({
   isChangeAddressMethods(state, action){
     return { ...state, isChangeAddress:action.payload}
   },
-
-
 
   orderListItemMethod(state, action){
     return { ...state, orderListItem:action.payload}

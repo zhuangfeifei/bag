@@ -110,7 +110,7 @@ page {
     </view>
     <view class="vipyuan" @tap="myphone">
       <view class="tomgtitles">手机</view>
-      <text class="textbs" wx:if="{{phonenum}}">{{phonenum}}</text>
+      <text class="textbs" wx:if="{{phonenumber||phonenum}}">{{phonenum}}</text>
       <text class="textb" wx:else>绑定手机号</text>
       <image src="/images/notices/jinru.png" class="onimg" />
     </view>

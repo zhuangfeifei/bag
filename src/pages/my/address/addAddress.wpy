@@ -1,29 +1,29 @@
 <template>
-    <view id="addAddress">
+	<view id="addAddress">
 
-        <view class="consignee">
-            <text>收货人</text>
-            <input bindinput="bindNameInput" value="{{list.shipName}}" placeholder="请输入姓名" placeholder-style="color:#999999" />
-        </view>
-        <view class="consignee">
-            <text>手机号</text>
-            <input bindinput="bindPhoneInput" value="{{list.phoneNum}}" placeholder="请输入手机号" placeholder-style="color:#999999" />
-        </view>
-        <view class="consignee">
-            <text>所在地区</text>
-            <picker mode="region" bindchange="bindRegionChange" value="{{region}}" custom-item="{{customItem}}">
-                <view wx:if="{{region.length > 0 && region[0] != null}}" class="picker">
-                    {{region[0]}}，{{region[1]}}，{{region[2]}}
-                </view>
-                <view wx:else class="picker pickerDefault">
-                    请选择
-                </view>
-            </picker>
-        </view>
-        <view class="detailed_address">
-            <text>详细地址</text>
-            <textarea bindinput="bindTextAreaBlur" value="{{list.address}}" auto-height placeholder="如道路、门牌号、小区、楼栋号、单元室等" placeholder-style="color:#999999" />
-        </view>
+		<view class="consignee">
+			<text>收货人</text>
+			<input bindinput="bindNameInput" value="{{list.shipName}}" placeholder="请输入姓名" placeholder-style="color:#999999" />
+		</view>
+		<view class="consignee">
+			<text>手机号</text>
+			<input bindinput="bindPhoneInput" value="{{list.phoneNum}}" placeholder="请输入手机号" placeholder-style="color:#999999" />
+		</view>
+		<view class="consignee">
+			<text>所在地区</text>
+			<picker mode="region" bindchange="bindRegionChange" value="{{region}}" custom-item="{{customItem}}">
+				<view wx:if="{{region.length > 0 && region[0] != null}}" class="picker">
+					{{region[0]}}，{{region[1]}}，{{region[2]}}
+				</view>
+				<view wx:else class="picker pickerDefault">
+					请选择
+				</view>
+			</picker>
+		</view>
+		<view class="detailed_address">
+			<text>详细地址</text>
+			<textarea bindinput="bindTextAreaBlur" value="{{list.address}}" auto-height placeholder="如道路、门牌号、小区、楼栋号、单元室等" placeholder-style="color:#999999" />
+			</view>
 
         <view class="addAddress_btn" @tap="linkTo">保存</view>
 
@@ -31,139 +31,193 @@
 </template>
 
 <script>
-import wepy from 'wepy'
-import { connect } from 'wepy-redux'
-import 'wepy-async-function'
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import 'wepy-async-function';
 
 @connect({
-    userinfo(state){
-        return state.counter.userinfo
-    },
-    editor(state){
-        return state.counter.editor
-    },
+  userinfo(state) {
+    return state.counter.userinfo;
+  },
+  editor(state) {
+    return state.counter.editor;
+  }
 })
-    
 export default class AddAddress extends wepy.page {
-    
-    config = {
-        navigationBarTitleText: '我的收货地址'
-    }
-    
-    components = {
-    
-    }
-    
-    data = {
-        region: [],
-        customItem: '全部',
-        list:{
-            shipName:'', phoneNum:'', province: '', city: '', area: '', address:'', isdefault: 1
-        }
-    }
-    
-    computed = {
-    
-    }
-    
-    methods = {
-        bindNameInput(e){
-            this.list.shipName = e.detail.value
-        },
-        bindPhoneInput(e){
-            this.list.phoneNum = e.detail.value
-        },
-        bindRegionChange(e) {
-            this.region = e.detail.value
-            this.$apply()
-        },
-        bindTextAreaBlur(e){
-            this.list.address = e.detail.value
-        },
-        linkTo(){
-            this.list.province = this.region[0]
-            this.list.city = this.region[1]
-            this.list.area = this.region[2]
-            this.list.unionId = this.userinfo.unionid
-            // console.log(this.list)
-            if(this.editor){
-                this.list.id = this.editor.id
-                wepy.$Api.updateadress(this.list).then(res => { 
-                    // console.log(res.data)
-                    if (res.data.code == 200) {
-                        wepy.showToast({
-                            title: '更新成功',
-                            icon: 'success',
-                            duration: 2000
-                        })
-                        setTimeout(()=>{
-                            wepy.navigateBack({ delta: 1 })
-                        },2000)
-                    }
-                }, err => {
-                    
-                })
-            }else{
-                wepy.$Api.addadress(this.list).then(res => { 
-                    // console.log(res.data)
-                    if (res.data.code == 200) {
-                        wepy.showToast({
-                            title: '添加成功',
-                            icon: 'success',
-                            duration: 2000
-                        })
-                        setTimeout(()=>{
-                            wepy.navigateBack({ delta: 1 })
-                        },2000)
-                    }
-                    }, err => {
-                    
-                })
-            }
-        }
-    }
-    
-    onShow() {
-        this.list.shipName = this.editor.ship_name
-        this.list.phoneNum = this.editor.phone_num
-        this.list.address = this.editor.address
-        this.region[0] = this.editor.province
-        this.region[1] = this.editor.city
-        this.region[2] = this.editor.area
-    }
+  config = {
+    navigationBarTitleText: '我的收货地址'
+  };
 
-    onUnload(){
-        wepy.$store.dispatch({type:'editorMethod', payload: ''})
+  components = {};
+
+  data = {
+    region: [],
+    customItem: '全部',
+    list: {
+      shipName: '',
+      phoneNum: '',
+      province: '',
+      city: '',
+      area: '',
+      address: '',
+      isdefault: 1
     }
+  };
+
+  computed = {};
+
+  methods = {
+    bindNameInput(e) {
+      this.list.shipName = e.detail.value;
+    },
+    bindPhoneInput(e) {
+      this.list.phoneNum = e.detail.value;
+    },
+    bindRegionChange(e) {
+      this.region = e.detail.value;
+      this.$apply();
+    },
+    bindTextAreaBlur(e) {
+      this.list.address = e.detail.value;
+    },
+    linkTo() {
+      this.list.province = this.region[0];
+      this.list.city = this.region[1];
+      this.list.area = this.region[2];
+      this.list.unionId = this.userinfo.unionid;
+      // console.log(this.list)
+      if (this.editor) {
+        this.list.id = this.editor.id;
+        wepy.$Api.updateadress(this.list).then(
+          res => {
+            // console.log(res.data)
+            if (res.data.code == 200) {
+              wepy.showToast({
+                title: '更新成功',
+                icon: 'success',
+                duration: 2000
+							});
+							let list={
+								ship_name:this.list.shipName,
+								phone_num:this.list.phoneNum,
+								province: this.list.province,
+								city:this.list.city,
+								area:this.list.area,
+								address:this.list.address
+							}
+							wepy.$store.dispatch({
+                type: 'addressIdMethods',
+                payload: list
+              });
+              setTimeout(() => {
+                wepy.navigateBack({ delta: 1 });
+              }, 2000);
+            }
+          },
+          err => {}
+        );
+      } else {
+        wepy.$Api.addadress(this.list).then(
+          res => {
+            // console.log(res.data)
+            if (res.data.code == 200) {
+              wepy.showToast({
+                title: '添加成功',
+                icon: 'success',
+                duration: 2000
+              });
+              setTimeout(() => {
+                wepy.navigateBack({ delta: 1 });
+              }, 2000);
+            }
+          },
+          err => {}
+        );
+      }
+    }
+  };
+
+  onShow() {
+    this.list.shipName = this.editor.ship_name;
+    this.list.phoneNum = this.editor.phone_num;
+    this.list.address = this.editor.address;
+    this.region[0] = this.editor.province;
+    this.region[1] = this.editor.city;
+    this.region[2] = this.editor.area;
+  }
+
+  onUnload() {
+    wepy.$store.dispatch({ type: 'editorMethod', payload: '' });
+  }
 }
 </script>
 
 <style lang='less'>
-#addAddress{
-    width: 100%; min-height: 100%; box-sizing: border-box; background-color: #F2F2F2; padding: 20rpx 30rpx;
-    text{font-size: 34rpx; color: #363636;.font}
+#addAddress {
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  background-color: #f2f2f2;
+  padding: 20rpx 30rpx;
+  text {
+    font-size: 34rpx;
+    color: #363636;
+    .font;
+  }
 }
 
-.font{
-    font-family:PingFang-SC-Medium; font-weight:500;
+.font {
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
 }
 
-.consignee{
-    width: 100%; height: 120rpx; background-color: white; margin-bottom: 20rpx; border-radius: 10rpx;
-    display: flex; justify-content: space-between; align-items: center; padding: 0 32rpx; box-sizing: border-box;
-    input,picker{width: 70%;}
-    .pickerDefault{color: #999999;}
+.consignee {
+  width: 100%;
+  height: 120rpx;
+  background-color: white;
+  margin-bottom: 20rpx;
+  border-radius: 10rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32rpx;
+  box-sizing: border-box;
+  input,
+  picker {
+    width: 70%;
+  }
+  .pickerDefault {
+    color: #999999;
+  }
 }
-.detailed_address{
-    width: 100%; min-height: 137rpx; background-color: white; border-radius: 10rpx;
-    display: flex; justify-content: space-between; padding: 32rpx; box-sizing: border-box;
-    textarea{width: 70%; position: relative; top: -5rpx;}
+.detailed_address {
+  width: 100%;
+  min-height: 137rpx;
+  background-color: white;
+  border-radius: 10rpx;
+  display: flex;
+  justify-content: space-between;
+  padding: 32rpx;
+  box-sizing: border-box;
+  textarea {
+    width: 70%;
+    position: relative;
+    top: -5rpx;
+  }
 }
 
-.addAddress_btn{
-    width: 400rpx; height: 88rpx; text-align: center; line-height: 88rpx; color: white; background-color: #F4695F; 
-    border-radius: 44rpx; font-family:PingFang-SC-Bold; font-weight:bold; margin: 0 auto; margin-top: 119rpx; font-size: 36rpx;
+.addAddress_btn {
+  width: 400rpx;
+  height: 88rpx;
+  text-align: center;
+  line-height: 88rpx;
+  color: white;
+  background-color: #f4695f;
+  border-radius: 44rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  margin: 0 auto;
+  margin-top: 119rpx;
+  font-size: 36rpx;
 }
-
-
 </style>

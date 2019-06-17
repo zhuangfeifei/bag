@@ -22,7 +22,7 @@
               <text>￥{{item.original_price}}</text>
               <text>￥{{item.is_accept==1?item.fall_price:item.market_price}}</text>
             </view>
-            <view class="btnbuton" @tap="tapondetil" data-goods_id='{{item.id}}'>立即购买</view>
+            <view class="btnbuton" @tap="tapondetilsd" data-goods_id='{{item.id}}'>立即购买</view>
           </view>
         </view>
       </view>
@@ -58,8 +58,8 @@
       <view class="back_tops" @tap="clckhide">取消</view>
     </view>
 
-    <view class="ball_bil" wx:if="{{bulletbox==0}}"></view>
-    <view class="onback_img" wx:if="{{bulletbox==0}}">
+    <view class="ball_bil" wx:if="{{uscode==0}}"></view>
+    <view class="onback_img" wx:if="{{uscode==0}}">
       <view class="ontab">会员等级优势</view>
       <image mode="aspectFill" lazy-load="true" src="/images/notices/bulletbox.png" />
       <view class="ontabs">商城不同等级会员在商品结算时享有不同折扣，此折扣不可用于活动商品。会员等级享有折扣如下：</view>
@@ -70,8 +70,8 @@
           <view class="ons">{{item.text}}</view>
         </view>
       </view>
-    </view>
-    <view class="on_stop" wx:if="{{bulletbox==0}}">
+    </view> 
+    <view class="on_stop" wx:if="{{uscode==0}}">
       <image mode="aspectFill" lazy-load="true" @tap="hibulletbox" src="/images/notices/index_stop.png" />
     </view>
     <!--创建分享卡片-->
@@ -121,8 +121,8 @@ export default class Index extends wepy.page {
     onhiden: true,
     onhidup: true,
     current: 1, //分页参数
-    bulletbox: 1,
     shareit: '',
+    uscode:0,
     imgurl: '',
     isImg: true,
     home_liat: [],
@@ -169,7 +169,7 @@ export default class Index extends wepy.page {
       }
     },
     //跳转商品详情
-    tapondetil(e) {
+    tapondetilsd(e) {
       let a = {
         unionid: this.userinfo.unionid,
         goods_id: e.currentTarget.dataset.goods_id
@@ -197,7 +197,7 @@ export default class Index extends wepy.page {
       this.savePic();
     },
     hibulletbox() {
-      this.bulletbox = 1;
+      this.uscode = 1;
     }
   };
   onShareAppMessage(res) {
@@ -506,22 +506,19 @@ export default class Index extends wepy.page {
     wepy.$Api.goodsLis(a).then(
       res => {
         this.home_liat = res.data.data;
+        console.log(this.home_liat)
       },
       err => {}
     );
   }
   onLoad() {
-    this.bulletbox = 1;
     this.goodsLisd();
     this.imgurl = this.imgurls.imgurl;
     this.shareit = this.shareitMethods;
   }
-  onShow() {
-    this.goodsLisd();
-    this.onLoad();
-  }
   onReady() {
     this.animationRound();
+    this.uscode= wepy.getStorageSync('uusercodes');
   }
   animationRound() {
     //加载更多动画
@@ -547,8 +544,10 @@ export default class Index extends wepy.page {
     };
     wepy.$Api.goodsLis(a).then(
       res => {
-        if (res.data.data.length != 0) {
-          this.home_liat = this.home_liat.concat(res.data.data);
+        if (res.data.data==Array) {
+          let post_list = this.home_liat;
+          var newA = post_list.concat(res.data.data)
+          this.home_liat = newA
         } else {
           this.onhiden = false;
         }

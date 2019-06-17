@@ -122,6 +122,9 @@ module.exports = {
   goodsMessaged:(data)=>{//商品提醒
     return api.request('/bag/api/message/goodsMessage', 'post', data)
   },
+  topUpMessds:(data)=>{//微信充值(零钱充值)
+    return api.request('/bag/api/wallet/topUpAmount', 'post', data)
+  },
 
 
 

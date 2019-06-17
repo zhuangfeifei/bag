@@ -148,17 +148,19 @@
     <view class="ontabbtn">
       <view>
         <view @tap="next_index">
-          <image src='/images/notices/tab_shouye.png'/>
+          <image src='/images/notices/tab_shouye.png' />
           <text>首页</text>
         </view>
         <view>
-          <button open-type='contact'>
+          <button open-type='contact' send-message-title='{{poat_List.goods_specif}}'
+           send-message-path='/pages/index/detail?goodsId={{shop_detailsMethods.goods_id}}&&unionId={{userinfo.unionid}}' send-message-img='{{imgurls+poat_List.thumbnail_pic}}'
+           show-message-card='true'>
             <image src='/images/notices/tab_kefu.png' />
           </button>
           <text>客服</text>
         </view>
         <view @tap="next_cart">
-          <image src='/images/notices/tab_gouwuche.png'/>
+          <image src='/images/notices/tab_gouwuche.png' />
           <text>购物车</text>
         </view>
       </view>
@@ -305,7 +307,6 @@ export default class Detail extends wepy.page {
     sharePicUrl: '', //生成海报链接
     isShow: false,
     id: -1,
-    islikes: '',
     sizeName: '', //商品属性大小
     colorName: [], //商品属性颜色
     ida: -1,
@@ -394,11 +395,15 @@ export default class Detail extends wepy.page {
     },
     tap_playup() {
       if (this.scolor && this.ssexd && this.ssexd != '暂无货') {
-        let list = {scolor: this.scolor, ssexd: this.ssexd, exclusiveId: this.exclusiveId}
-        wepy.$store.dispatch({type:'specificationsMethods', payload: list})
+        let list = {
+          scolor: this.scolor,
+          ssexd: this.ssexd,
+          exclusiveId: this.exclusiveId
+        };
+        wepy.$store.dispatch({ type: 'specificationsMethods', payload: list });
         wx.navigateTo({
           url: '/pages/index/order'
-        })
+        });
       } else {
         wx.showToast({
           title: '请选择商品属性',
@@ -427,7 +432,6 @@ export default class Detail extends wepy.page {
     },
     clicksdf: function(e) {
       let name = e.currentTarget.dataset.name;
-      console.log(e)
       this.ssexd = name;
       this.idas = 0;
       if (this.scolor == '') {
@@ -510,10 +514,8 @@ export default class Detail extends wepy.page {
                 that.cosde = false;
                 that.$apply();
               }, 2500);
-            } else {
-              wx.navigateTo({
-                url: '/pages/my/setting/phone'
-              });
+            } else if(res.data.code == 413) {
+              this.cont = 0;
             }
           },
           err => {}
@@ -546,8 +548,12 @@ export default class Detail extends wepy.page {
     //立即购买
     tap_play() {
       if (this.ssexd != '暂无货') {
-        let list = {scolor: this.scolor, ssexd: this.ssexd, exclusiveId: this.exclusiveId}
-        wepy.$store.dispatch({type:'specificationsMethods', payload: list})
+        let list = {
+          scolor: this.scolor,
+          ssexd: this.ssexd,
+          exclusiveId: this.exclusiveId
+        };
+        wepy.$store.dispatch({ type: 'specificationsMethods', payload: list });
         let a = {
           name: this.ssexd,
           color: this.scolor,
@@ -578,24 +584,36 @@ export default class Detail extends wepy.page {
         goodsId: this.shop_detailsMethods.goods_id,
         unionId: this.userinfo.unionid
       };
-      let like = this.poat_List.islike;
-      if (like == 0 && a) {
-        console.log(a)
+      let b = {
+        clothIds: this.poat_List.id,
+        unionId: this.userinfo.unionid
+      };
+      let like = this.poat_List.isCollection;
+      if (like == 0) {
         wepy.$Api.collection(a).then(
           res => {
             this.poat_List.isCollection = 1;
+            wx.showToast({
+              title: '收藏成功',
+              icon: 'succes',
+              duration: 1000,
+              mask: true
+            });
           },
           err => {}
         );
       } else {
-        //取消收藏
-        wepy.$Api.uncollection(a).then(
-          res => {
-          },
-          err => {}
-        );
+        // 取消收藏
+        wepy.$Api.uncollection(b).then(res => {
+          wx.showToast({
+              title: '取消收藏',
+              icon: 'succes',
+              duration: 1000,
+              mask: true
+            });
+        }, err => {});
       }
-       this.poat_List.isCollection=!like
+      this.poat_List.isCollection = !like;
     },
     //喜欢
     uesrlike() {
@@ -608,16 +626,25 @@ export default class Detail extends wepy.page {
         wepy.$Api.userLike(a).then(
           res => {
             this.poat_List.islike = 1;
+            wx.showToast({
+              title: '已喜欢',
+              icon: 'succes',
+              duration: 1000,
+              mask: true
+            });
           },
           err => {}
         );
       } else {
         //取消
-        wepy.$Api.usernolike(a).then(
-          res => {
-          },
-          err => {}
-        );
+        wepy.$Api.usernolike(a).then(res => {
+          wx.showToast({
+              title: '取消喜欢',
+              icon: 'succes',
+              duration: 1000,
+              mask: true
+            });
+        }, err => {});
       }
       this.poat_List.islike = !like;
     }
@@ -919,7 +946,6 @@ export default class Detail extends wepy.page {
   onLoad() {
     this.imgurl = this.imgurls.imgurl;
     this.deatil();
-    this.islikes = this.poat_List.islike;
     this.recommendations();
     this.shareited = this.shop_detaiMethods;
   }
@@ -932,7 +958,6 @@ export default class Detail extends wepy.page {
     wepy.$Api.shopDetail(a).then(
       res => {
         if (res.data.data) {
-          console.log(res);
           wepy.$store.dispatch({
             type: 'goodsDetailMethods',
             payload: res.data.data
@@ -995,7 +1020,7 @@ export default class Detail extends wepy.page {
     };
     wepy.$Api.recommendation(a).then(
       res => {
-        if (res.data.data > 0) {
+        if (res.data.data==Array) {
           this.home_liat = this.home_liat.concat(res.data.data);
         } else {
           this.homelist = false;
