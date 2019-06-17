@@ -7,13 +7,13 @@
       </view>
       <view class="numchong">充值金额</view>
       <view class="nun_ong">
-        <image src="/images/notices/renminbijk.png" />
+        <image wx:if='{{imgUrl}}' src="{{imgUrl+'/notices/renminbijk.png'}}" />
         <view class="inoutcls">
           <input type="text" value="{{unbers}}" bindinput="uameInputs" />
         </view>
       </view>
       <view class="donrtnim">最低充值金额为¥50</view>
-      <image src="/images/notices/querenchongzhis.png" class="clsimg" @tap="titapnext" />
+      <image  wx:if='{{imgUrl}}' src="{{imgUrl+'/notices/querenchongzhis.png'}}" class="clsimg" @tap="titapnext" />
     </view>
   </view>
 </template>
@@ -26,6 +26,9 @@ import 'wepy-async-function';
 @connect({
   userinfo(state) {
     return state.counter.userinfo;
+  },
+  imgUrl(state) {
+    return state.counter.imgUrl;
   }
 })
 export default class Recharge extends wepy.page {
@@ -62,12 +65,12 @@ export default class Recharge extends wepy.page {
           money: b
         };
         if (a) {
-          // wepy.$Api.topUpMessds(a).then(
-          //   res => {
-          //     console.log(res)
-          //   },
-          //   err => {}
-          // );
+          wepy.$Api.topUpMessds(a).then(
+            res => {
+              console.log(res);
+            },
+            err => {}
+          );
         }
       }
     }

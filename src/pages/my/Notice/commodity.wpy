@@ -163,7 +163,7 @@ import 'wepy-async-function';
   },
   imgurls(state) {
     return state.counter;
-  }
+  },
 })
 export default class Commodity extends wepy.page {
   config = {

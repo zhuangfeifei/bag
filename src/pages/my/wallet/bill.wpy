@@ -10,16 +10,16 @@
     <picker mode="date" value="{{date}}" start="{{year}}-01" fields="month" end="{{years}}-12" bindchange="bindTimeChange">
       <view class="bill_timelist" @tap="list_down">
         <text>{{year}}年{{month}}月</text>
-        <image wx:if="{{anmiaon==false}}" src="/images/notices/sc_xialaup.png"  />
-        <image wx:else src="/images/notices/sc_xiala.png"  />
+        <image wx:if="{{anmiaon==false&&imgUrl}}" src="{{imgUrl+'/notices/sc_xialaup.png'}}" />
+        <image wx:if="{{anmiaon==true&&imgUrl}}" src="{{imgUrl+'/notices/sc_xiala.png'}}" />
       </view>
     </picker>
     <!--账单列表-->
     <view class="bill_up_list" wx:for="{{bill_list}}" wx:key="{{bill_list}}">
       <view>
-        <image src="/images/notices/tbweixinqianbao.png" wx:if='{{item.stat==0}}' />
-        <image src="/images/notices/qb_yongjin.png" wx:if='{{item.stat==1}}' />
-        <image src="/images/notices/qb_xiaogeqianbao.png" wx:if='{{item.stat==2}}' />
+        <image src="{{imgUrl+'/notices/tbweixinqianbao.png'}}" wx:if='{{item.stat==0&&imgUrl}}' />
+        <image src="{{imgUrl+'/notices/qb_yongjin.png'}}" wx:if='{{item.stat==1&&imgUrl}}' />
+        <image src="{{imgUrl+'/notices/qb_xiaogeqianbao.png'}}" wx:if='{{item.stat==2&&imgUrl}}' />
       </view>
       <view>
         <view>
@@ -55,7 +55,11 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  imgUrl(state) {
+    return state.counter.imgUrl;
+  }
+})
 export default class Bill extends wepy.page {
   config = {
     navigationBarTitleText: '账单'

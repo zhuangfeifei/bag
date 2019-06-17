@@ -1,6 +1,6 @@
 <template>
   <view>
-    <image src='/images/my/loading.png' class="om_loading" wx:if="{{isImg&&clckcode==false&&post_list.length>0}}" animation="{{animationRound}}" />
+    <image src="{{imgUrl+'/my/loading.png'}}" class="om_loading" wx:if="{{isImg&&imgUrl}}" animation="{{animationRound}}" />
     <view class="tap_back" wx:if="{{post_list.length>0}}"></view>
     <view class="top_v" wx:if="{{clckcode==false&&post_list.length>0}}" @tap="management">管理</view>
     <view class="top_v" wx:if="{{clckcode==true&&post_list.length>0}}" @tap="manageall">完成</view>
@@ -8,12 +8,12 @@
       <view class="top_ve" wx:for="{{post_list}}" wx:key="{{post_list}}">
         <view class="_detil">
           <view class="_dr_list" wx:if="{{selection==true}}" @tap="selectdck" data-id="{{index}}" data-price="{{post_list[index].market_price}}" data-count="{{post_list[index].num}}">
-            <image wx:if="{{index==idx||item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
-            <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
+            <image wx:if="{{index==idx||item.selectd}}" data-id="{{index}}" src="{{imgUrl+'/notices/cxuanzhong.png'}}" />
+            <image wx:else data-id="{{index}}" src="{{imgUrl+'/notices/nnxuanzhong.png'}}" />
           </view>
           <view class="_dr_list" wx:else @tap="selectdcks" data-id="{{index}}" data-price="{{post_list[index].market_price}}" data-count="{{post_list[index].num}}">
-            <image wx:if="{{item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
-            <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
+            <image wx:if="{{item.selectd}}" data-id="{{index}}"  src="{{imgUrl+'/notices/cxuanzhong.png'}}" />
+            <image wx:else data-id="{{index}}" src="{{imgUrl+'/notices/nnxuanzhong.png'}}" />
           </view>
           <view class="_detail_v">
             <image mode="aspectFill" bindload="isImg" lazy-load="true" src="{{imgurl+post_list[index].thumbnail_pic}}" />
@@ -76,8 +76,8 @@
     </view>
     <view class="btno" wx:if="{{clckcode==true&&post_list.length>0}}">
       <view>
-        <image wx:if="{{selectds==true}}" @tap="unselectalls" src="/images/notices/cxuanzhong.png" />
-        <image wx:else @tap="selectall" src="/images/notices/nnxuanzhong.png" />
+        <image wx:if="{{selectds==true}}" @tap="unselectalls"  src="{{imgUrl+'/notices/cxuanzhong.png'}}" />
+        <image wx:else @tap="selectall" src="{{imgUrl+'/notices/nnxuanzhong.png'}}" />
         <text>全选</text>
       </view>
       <view>
@@ -113,6 +113,9 @@ import 'wepy-async-function';
   },
   shop_detailsMethods(state) {
     return state.counter.shop_detail;
+  },
+  imgUrl(state) {
+    return state.counter.imgUrl;
   }
 })
 export default class Cart extends wepy.page {

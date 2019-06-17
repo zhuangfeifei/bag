@@ -102,7 +102,7 @@ import 'wepy-async-function';
   },
   mrgkmMethods(state) {
     return state.counter.mrgkm;
-  }
+  },
 })
 export default class Record extends wepy.page {
   config = {

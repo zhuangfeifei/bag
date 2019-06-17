@@ -1,7 +1,7 @@
 <template>
   <view>
     <view class="payment">
-      <image mode="aspectFill" lazy-load="true" src='/images/notices/playment.png' />
+      <image mode="aspectFill" lazy-load="true" wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/playment.png'}}" />
     </view>
     <view class="pay_ment">订单支付成功￥{{order.actual_price}}</view>
     <view class="pay_menta">恭喜您此次支付获得{{order.actual_price}}积分</view>
@@ -20,6 +20,9 @@ import 'wepy-async-function';
 @connect({
   order(state){
       return state.counter.order; 
+  },
+  imgUrl(state) {
+    return state.counter.imgUrl;
   }
 })
 export default class Payment extends wepy.page {

@@ -10,8 +10,8 @@
     </view>
     <view class="titleli">提示：密码为6位数数字密码</view>
     <view class="obtn">
-      <image wx:if="{{stsat==0}}" src="/images/notices/querenjinyong.png" class="btnimg" />
-      <image wx:else src="/images/notices/querenqiyongt.png" class="btnimg" @tap="ontapy" />
+      <image wx:if="{{stsat==0&&imgUrl}}" src="{{imgUrl+'/notices/querenjinyong.png'}}" class="btnimg" />
+      <image wx:if="{{stsat==1&&imgUrl}}" src="{{imgUrl+'/notices/querenqiyongt.png'}}" class="btnimg" @tap="ontapy" />
     </view>
   </view>
 </template>
@@ -24,6 +24,9 @@ import 'wepy-async-function';
 @connect({
   userinfo(state) {
     return state.counter.userinfo;
+  },
+  imgUrl(state) {
+    return state.counter.imgUrl;
   }
 })
 export default class Playkey extends wepy.page {
