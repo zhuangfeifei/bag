@@ -1,5 +1,5 @@
 <template>
-    <view id="orderDetail">
+    <view id="orderDetail" wx:if="{{imgUrl}}">
 
         <view class="orderDetail_nav">
             <image wx:if="{{orderDetails.orderDetail.status == 0}}" src="{{imgUrl+'/my/bg_6xin.png'}}" mode="scaleToFill" lazy-load="false" />

@@ -2,7 +2,7 @@
   <view>
     <!--地址-->
     <view class="top_addres" @tap="linkTo" data-url="../my/address/address">
-      <view class="addres" wx:if="{{addressList==''}}">
+      <view class="addres" wx:if="{{addressList.length == 0}}">
         <view class="addr">
           <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/dingwei.png'}}" class="_imgas" />
           <text>添加收货地址</text>
@@ -306,7 +306,7 @@ export default class Order extends wepy.page {
       .listadress({ unionId: this.userinfo.unionid, limit: 50, current: 1 })
       .then(
         res => {
-          // console.log(res.data)
+          console.log(res.data)
           if (res.data.code == 200) {
             this.addressList = res.data.data;
             for (let val of res.data.data) {
@@ -342,7 +342,6 @@ export default class Order extends wepy.page {
         err => {}
       );
   }
-  onShow() {}
 }
 </script>
 

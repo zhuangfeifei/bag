@@ -1,5 +1,5 @@
 <template>
-  <view id="address" class="{{addressList.length > 0 ? 'isAddress' : ''}}">
+  <view wx:if="{{imgUrl}}" id="address" class="{{addressList.length > 0 ? 'isAddress' : ''}}">
 
     <view wx:if="{{addressList.length > 0}}" class="addressList">
       <view wx:for="{{addressList}}" wx:key="{{index}}" class="addressList_content">
