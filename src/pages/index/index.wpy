@@ -17,7 +17,7 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}" @tap="tapondetilsd" />
+            <image wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}" data-goods_id='{{item.id}}' @tap="tapondetilsd" />
             <view class="ontbnt">
               <text>￥{{item.original_price}}</text>
               <text>￥{{item.is_accept==1?item.fall_price:item.market_price}}</text>
