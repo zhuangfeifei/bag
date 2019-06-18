@@ -725,8 +725,7 @@ export default class Detail extends wepy.page {
       // let tid = this._selData.tid;
 
       wx.downloadFile({
-        url:
-          'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3091440975,3250070917&fm=27&gp=0.jpg',
+        url:this.imgUrl+'/my/applets.jpg',
         success: res => {
           resolve(res.tempFilePath);
         },

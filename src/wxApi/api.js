@@ -125,6 +125,12 @@ module.exports = {
   topUpMessds:(data)=>{//微信充值(零钱充值)
     return api.request('/bag/api/wallet/topUpAmount', 'post', data)
   },
+  withDrawal:(data)=>{//零钱提现(零钱充值)
+    return api.request('/bag/api/wallet/withdrawalAmount', 'post', data)
+  },
+  walletBillMothose:(data)=>{//账单
+    return api.request('/bag/api/wallet/walletBill', 'post', data)
+  },
 
 
 

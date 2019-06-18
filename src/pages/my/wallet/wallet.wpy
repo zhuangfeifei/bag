@@ -6,7 +6,7 @@
         <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/zhangdan.png'}}" @tap="nextbill" />
         <text @tap="nextbill">账单</text>
       </view>
-      <view class="playnumb">450.50</view>
+      <view class="playnumb">{{userinfo.balance}}</view>
       <view class="playnumbs">钱包余额</view>
     </view>
     <view class="ontliat" @tap="regularto">
@@ -30,6 +30,9 @@ import 'wepy-async-function';
 @connect({
    imgUrl(state) {
     return state.counter.imgUrl;
+  },
+  userinfo(state) {
+    return state.counter.userinfo;
   }
 })
 export default class Wallet extends wepy.page {

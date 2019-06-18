@@ -13,7 +13,7 @@
         </view>
       </view>
       <view class="donrtnim">最低充值金额为¥50</view>
-      <image  wx:if='{{imgUrl}}' src="{{imgUrl+'/notices/querenchongzhis.png'}}" class="clsimg" @tap="titapnext" />
+      <image wx:if='{{imgUrl}}' src="{{imgUrl+'/notices/querenchongzhis.png'}}" class="clsimg" @tap="titapnext" />
     </view>
   </view>
 </template>
@@ -67,13 +67,67 @@ export default class Recharge extends wepy.page {
         if (a) {
           wepy.$Api.topUpMessds(a).then(
             res => {
-              console.log(res);
+              wx.requestPayment({
+                timeStamp: res.data.data.timestamp,
+                nonceStr: res.data.data.nonce,
+                package: res.data.data.packageName,
+                signType: 'MD5',
+                paySign: res.data.data.signature,
+                success: function(res) {
+                  wepy.showModal({
+                    title: '温馨提示',
+                    content: '充值成功',
+                    success(res) {
+                      wepy.navigateTo({
+                        url: '/pages/my/setting/setting'
+                      });
+                    }
+                  });
+                },
+                fail: function(res) {},
+                complete: function(res) {}
+              });
             },
             err => {}
           );
         }
       }
     }
+    // titapnext() {
+    //   let num = this.unbers;
+    //   let b = parseFloat(num).toFixed(2);
+    //   let a = {
+    //     unionId: this.userinfo.unionid,
+    //     money: b
+    //   };
+    //   if (a) {
+    //     wepy.$Api.topUpMessds(a).then(
+    //       res => {
+    //         wx.requestPayment({
+    //           timeStamp: res.data.data.timestamp,
+    //           nonceStr: res.data.data.nonce,
+    //           package: res.data.data.packageName,
+    //           signType: 'MD5',
+    //           paySign: res.data.data.signature,
+    //           success: function(res) {
+    //             wepy.showModal({
+    //               title: '温馨提示',
+    //               content: '充值成功',
+    //               success(res) {
+    //                 wepy.navigateTo({
+    //                   url: '/pages/my/setting/setting'
+    //                 });
+    //               }
+    //             });
+    //           },
+    //           fail: function(res) {},
+    //           complete: function(res) {}
+    //         });
+    //       },
+    //       err => {}
+    //     );
+    //   }
+    // }
   };
 
   onLoad() {}
