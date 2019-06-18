@@ -17,7 +17,7 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}" />
+            <image wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}" @tap="tapondetilsd" />
             <view class="ontbnt">
               <text>￥{{item.original_price}}</text>
               <text>￥{{item.is_accept==1?item.fall_price:item.market_price}}</text>
@@ -58,7 +58,7 @@
       <view class="back_tops" @tap="clckhide">取消</view>
     </view>
 
-    <view class="ball_bil" wx:if="{{uscode==0}}"></view>
+    <view class="ball_bil" wx:if="{{uscode==0}}" ></view>
     <view class="onback_img" wx:if="{{uscode==0}}">
       <view class="ontab">会员等级优势</view>
       <image mode="aspectFill" lazy-load="true" wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/bulletbox.png'}}" />
@@ -672,7 +672,7 @@ export default class Index extends wepy.page {
     rgba(233, 74, 64, 1)
   );
   border-radius: 30rpx 0rpx 0rpx 0rpx;
-  margin: -59rpx 210rpx;
+  margin: -59rpx 212rpx;
   display: flex;
   flex-direction: column;
   text-align: right;
@@ -922,13 +922,13 @@ button::after {
   width: 550rpx;
   height: 670rpx;
   position: fixed;
-  bottom: 247rpx;
+  bottom: 275rpx;
   left: 100rpx;
 }
 
 .onback_img image {
   width: 550rpx;
-  height: 670rpx;
+  height: 720rpx;
   position: fixed;
   z-index: -1;
 }
@@ -957,7 +957,7 @@ button::after {
 .text_li {
   width: 360rpx;
   height: 189rpx;
-  margin: -263rpx auto;
+  margin: -275rpx auto;
 }
 .text_list {
   width: 100%;
@@ -992,7 +992,7 @@ button::after {
   height: 60rpx;
   text-align: center;
   position: fixed;
-  bottom: 145rpx;
+  bottom: 115rpx;
   z-index: 66;
 }
 .on_stop image {
