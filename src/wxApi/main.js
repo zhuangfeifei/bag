@@ -21,7 +21,7 @@ const request = (url, method, data, headers = 'application/x-www-form-urlencoded
             success(res) {
               if (res.confirm) {
                 // console.log('用户点击确定')
-                if(request.data.code == 9999){
+                if(request.data.code == 413){
                   wepy.navigateTo({
                     url: '/pages/my/setting/phone'
                   })
@@ -33,6 +33,11 @@ const request = (url, method, data, headers = 'application/x-www-form-urlencoded
                 }
               } else if (res.cancel) {
                 // console.log('用户点击取消')
+                if(request.data.code == 413){
+                  wx.switchTab({
+                    url: '/pages/index/index'
+                  });
+                }
               }
             }
           })

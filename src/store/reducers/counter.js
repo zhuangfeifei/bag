@@ -30,7 +30,7 @@ const defaultState = {
   orderListItem:'',  // 订单详情
   kdDetail:'',  // 物流信息
   mrgkm:1,//签到
-  orDeteil:''
+  orDeteil:'',
 }
 
 export default handleActions({
@@ -95,8 +95,6 @@ export default handleActions({
   isChangeAddressMethods(state, action){
     return { ...state, isChangeAddress:action.payload}
   },
-
-
 
   orderListItemMethod(state, action){
     return { ...state, orderListItem:action.payload}

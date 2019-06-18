@@ -1,6 +1,6 @@
 <template>
   <view>
-    <image src='/images/my/loading.png' class="om_loading" wx:if="{{isImg}}" animation="{{animationRound}}" />
+    <image src="{{imgUrl+'/my/loading.png'}}" class="om_loading" wx:if="{{isImg&&imgUrl}}" animation="{{animationRound}}" />
     <view class="tap_back" wx:if="{{post_list.length>0}}"></view>
     <view class="top_v" wx:if="{{clckcode==false&&post_list.length>0}}" @tap="management">管理</view>
     <view class="top_v" wx:if="{{clckcode==true&&post_list.length>0}}" @tap="manageall">完成</view>
@@ -8,12 +8,12 @@
       <view class="top_ve" wx:for="{{post_list}}" wx:key="{{post_list}}">
         <view class="_detil">
           <view class="_dr_list" wx:if="{{selection==true}}" @tap="selectdck" data-id="{{index}}" data-price="{{post_list[index].market_price}}" data-count="{{post_list[index].num}}">
-            <image wx:if="{{index==idx||item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
-            <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
+            <image wx:if="{{index==idx||item.selectd}}" data-id="{{index}}" src="{{imgUrl+'/notices/cxuanzhong.png'}}" />
+            <image wx:else data-id="{{index}}" src="{{imgUrl+'/notices/nnxuanzhong.png'}}" />
           </view>
           <view class="_dr_list" wx:else @tap="selectdcks" data-id="{{index}}" data-price="{{post_list[index].market_price}}" data-count="{{post_list[index].num}}">
-            <image wx:if="{{item.selectd}}" data-id="{{index}}" src="/images/notices/cxuanzhong.png" />
-            <image wx:else data-id="{{index}}" src="/images/notices/nnxuanzhong.png" />
+            <image wx:if="{{item.selectd}}" data-id="{{index}}"  src="{{imgUrl+'/notices/cxuanzhong.png'}}" />
+            <image wx:else data-id="{{index}}" src="{{imgUrl+'/notices/nnxuanzhong.png'}}" />
           </view>
           <view class="_detail_v">
             <image mode="aspectFill" bindload="isImg" lazy-load="true" src="{{imgurl+post_list[index].thumbnail_pic}}" />
@@ -50,7 +50,7 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image src="{{imgurl+home_liat[index].thumbnail_pic}}"/>
+            <image src="{{imgurl+home_liat[index].thumbnail_pic}}" />
             <view class="ontbnt">
               <text>￥{{home_liat[index].market_price}}</text>
               <text wx:if="{{home_liat[index].is_accept==1}}">￥{{item.fall_price}}</text>
@@ -76,8 +76,8 @@
     </view>
     <view class="btno" wx:if="{{clckcode==true&&post_list.length>0}}">
       <view>
-        <image wx:if="{{selectds==true}}" @tap="unselectalls" src="/images/notices/cxuanzhong.png" />
-        <image wx:else @tap="selectall" src="/images/notices/nnxuanzhong.png" />
+        <image wx:if="{{selectds==true}}" @tap="unselectalls"  src="{{imgUrl+'/notices/cxuanzhong.png'}}" />
+        <image wx:else @tap="selectall" src="{{imgUrl+'/notices/nnxuanzhong.png'}}" />
         <text>全选</text>
       </view>
       <view>
@@ -113,6 +113,9 @@ import 'wepy-async-function';
   },
   shop_detailsMethods(state) {
     return state.counter.shop_detail;
+  },
+  imgUrl(state) {
+    return state.counter.imgUrl;
   }
 })
 export default class Cart extends wepy.page {
@@ -139,9 +142,8 @@ export default class Cart extends wepy.page {
     post_list: [],
     post_id: [],
     home_liat: [],
-    goods_id:'',
-    exclusiveId:''
-
+    goods_id: '',
+    exclusiveId: ''
   };
 
   computed = {};
@@ -206,14 +208,19 @@ export default class Cart extends wepy.page {
         wepy.$Api.shopDetail(a).then(
           res => {
             if (res.data.data) {
-              console.log(res);
               wepy.$store.dispatch({
                 type: 'goodsDetailMethods',
                 payload: res.data.data
               });
-              let list = {scolor: this.color_name, ssexd: this.size_name, exclusiveId: this.exclusiveId}
-              console.log(list)
-              wepy.$store.dispatch({ type: 'specificationsMethods', payload: list });
+              let list = {
+                scolor: this.color_name,
+                ssexd: this.size_name,
+                exclusiveId: this.exclusiveId
+              };
+              wepy.$store.dispatch({
+                type: 'specificationsMethods',
+                payload: list
+              });
               wx.navigateTo({
                 url: '/pages/index/order'
               });
@@ -247,8 +254,8 @@ export default class Cart extends wepy.page {
       this.color_name = array[index].color_name;
       this.size_name = array[index].size_name;
       this.thumbnail_pic = array[index].thumbnail_pic;
-      this.exclusiveId = this.post_list[index].exclusive_id
-      this.goods_id = this.post_list[index].goods_id
+      this.exclusiveId = this.post_list[index].exclusive_id;
+      this.goods_id = this.post_list[index].goods_id;
       if (array[index].goods_status == 0) {
         wx.showModal({
           content: '此商品已下架，请选择其他商品',
@@ -408,8 +415,8 @@ export default class Cart extends wepy.page {
                 duration: 1500,
                 mask: false
               });
+              this.cartlist();
             }
-            this.cartlist();
           },
           err => {}
         );
@@ -530,6 +537,7 @@ export default class Cart extends wepy.page {
   onShow() {
     this.idx = -1;
     this.total_price = 0;
+    this.cartlist();
   }
   onReachBottom() {
     let a = {
@@ -540,7 +548,7 @@ export default class Cart extends wepy.page {
     if (a) {
       wepy.$Api.userlike(a).then(
         res => {
-          if (res.data.data > 0) {
+          if (res.data.data == Array) {
             this.home_liat = this.home_liat.concat(res.data.data);
           } else {
             this.post_st = false;

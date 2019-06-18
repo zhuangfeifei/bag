@@ -20,7 +20,11 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  userinfo(state) {
+    return state.counter.userinfo;
+  }
+})
 export default class Recharge extends wepy.page {
   config = {
     navigationBarTitleText: '提现'
@@ -50,7 +54,7 @@ export default class Recharge extends wepy.page {
   methods = {
     click: function(e) {
       var ids = e.currentTarget.dataset.id;
-      var pics = e.currentTarget.dataset.pick;
+      this.pics = e.currentTarget.dataset.pick;
       this.id = ids;
       this.pics = pics;
     },
@@ -65,12 +69,22 @@ export default class Recharge extends wepy.page {
         });
         return false;
       } else {
-        wx.showToast({
-          title: '提现成功',
-          icon: 'none',
-          duration: 1100,
-          mask: true
-        });
+        let num = this.pics;
+        let b = parseFloat(num).toFixed(2);
+        let a = {
+          unionId: this.userinfo.unionid,
+          money: b
+        };
+        if (a) {
+          console.log(a)
+          // wepy.$Api.withDrawal(a).then(
+          //   res => {
+          //     console.log(res)
+             
+          //   },
+          //   err => {}
+          // );
+        }
       }
     }
   };
@@ -80,6 +94,9 @@ export default class Recharge extends wepy.page {
 </script>
 
 <style lang='less'>
+page {
+  background: #f2f2f2;
+}
 .topclass {
   width: 690rpx;
   height: 620rpx;

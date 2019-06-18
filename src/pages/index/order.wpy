@@ -2,19 +2,19 @@
   <view>
     <!--地址-->
     <view class="top_addres" @tap="linkTo" data-url="../my/address/address">
-      <view class="addres" wx:if="{{addressList.length==0}}">
+      <view class="addres" wx:if="{{addressList==''}}">
         <view class="addr">
-          <image src="/images/notices/dingwei.png" class="_imgas" />
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/dingwei.png'}}" class="_imgas" />
           <text>添加收货地址</text>
         </view>
         <view class="addrs">
-          <image src="/images/notices/jinru.png" class="_imgass" />
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}" class="_imgass" />
         </view>
       </view>
       <view class="address" wx:else>
         <view class="addred">
           <view style="width:60rpx;height:60rpx;">
-            <image src="/images/notices/dingwei.png" class="_imgas_a" />
+            <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/dingwei.png'}}" class="_imgas_a" />
           </view>
           <view class="adder_nan">
             <text>{{addressId.ship_name}}</text>
@@ -23,7 +23,7 @@
           </view>
         </view>
         <view class="addrs" @tap="addresTos">
-          <image src="/images/notices/jinru.png" class="_imgass_a" />
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}" class="_imgass_a" />
         </view>
       </view>
     </view>
@@ -72,10 +72,10 @@
       <view class="on_priced" @tap="seylist">
         <view>选择优惠券</view>
         <view>
-          <text style="color:red;" wx:if="{{cuprice}}">-{{cuprice}}元</text>
+          <text style="color:red;margin-left:32rpx;" wx:if="{{cuprice}}">-{{cuprice}}元</text>
           <text style="color:#999999;" wx:if="{{snum==''}}">无优惠券</text>
           <text style="color:#363636;" wx:if="{{snum>1&&cuprice==''}}">{{snum}}张可用</text>
-          <image src="/images/notices/jinru.png" />
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}" />
         </view>
       </view>
       <view class="on_price">
@@ -110,21 +110,21 @@
       <view class="om_uy">
         <view>选择优惠券</view>
         <view>
-          <image src="/images/notices/sguanbi.png" @tap="seylist" />
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/sguanbi.png'}}" @tap="seylist" />
         </view>
       </view>
       <scroll-view scroll-y='true' style='height:550rpx'>
         <view class="om" wx:for="{{conum_list}}" wx:key="{{conum_list}}" data-id="{{item.id}}" data-name="{{item.price}}" @tap="cuonpicr">
-          <image src="/images/notices/youhuibacki.png" />
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/youhuibacki.png'}}" />
           <view class="onpricf">
-            <image src="/images/notices/renminbi.png" />
+            <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/renminbi.png'}}" />
             <text>{{item.price}}</text>
             <view>【{{item.title}}】</view>
           </view>
           <view class="wipics">有效期：{{item.limit_date_start}}-{{item.limit_date_end}}</view>
         </view>
         <view class="oms" @tap="pricnone">
-          <image src="/images/notices/youhuibacki.png" />
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/youhuibacki.png'}}"  />
           <view>不使用任何优惠券</view>
         </view>
       </scroll-view>
@@ -139,24 +139,27 @@ import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
 @connect({
-    userinfo(state){
-        return state.counter.userinfo
-    },
-    goodsDetail(state) {
-      return state.counter.goodsDetail;
-    },
-    specifications(state) {
-      return state.counter.specifications;
-    },
-    addressId(state) {
-      return state.counter.addressId;
-    },
-    orDeteil(state) {
-      return state.counter.orDeteil;
-    },
-    imgurls(state) {
-      return state.counter.imgurl;
-    }
+  userinfo(state) {
+    return state.counter.userinfo;
+  },
+  goodsDetail(state) {
+    return state.counter.goodsDetail;
+  },
+  specifications(state) {
+    return state.counter.specifications;
+  },
+  addressId(state) {
+    return state.counter.addressId;
+  },
+  orDeteil(state) {
+    return state.counter.orDeteil;
+  },
+  imgurls(state) {
+    return state.counter.imgurl;
+  },
+  imgUrl(state) {
+    return state.counter.imgUrl;
+  }
 })
 export default class Order extends wepy.page {
   config = {
@@ -180,8 +183,8 @@ export default class Order extends wepy.page {
     sprice: '', //售价
     cuprice: 0, //优惠券价格
     conum_list: [],
-    addressList:[],
-    couponId: '', // 优惠券id
+    addressList: [],
+    couponId: '' // 优惠券id
   };
 
   computed = {};
@@ -235,33 +238,45 @@ export default class Order extends wepy.page {
     pricnone() {
       this.cuprice = 0;
       this.sected = false;
-      this.totalprice()
+      this.totalprice();
     },
     userInputs(e) {
       this.usernums = e.detail.value;
     },
     //去支付
     ontopay() {
-      let order = { 
-        addressId: this.addressId.id, goodsId: this.goodsDetail.id, exclusiveId: this.specifications.exclusiveId, quantity: this.num, dealPrice: parseFloat(this.gjprice),
-        actualPrice: parseFloat(this.total_price), unitPrice: this.sprice, couponId: this.couponId,couponAmount: this.cuprice, isUseCoupon: this.cuprice == 0 ? 0 : 1,remark: this.usernums
-      }
+      let order = {
+        addressId: this.addressId.id,
+        goodsId: this.goodsDetail.id,
+        exclusiveId: this.specifications.exclusiveId,
+        quantity: this.num,
+        dealPrice: parseFloat(this.gjprice),
+        actualPrice: parseFloat(this.total_price),
+        unitPrice: this.sprice,
+        couponId: this.couponId,
+        couponAmount: this.cuprice,
+        isUseCoupon: this.cuprice == 0 ? 0 : 1,
+        remark: this.usernums
+      };
       // console.log(order)
-      wepy.$Api.createOrder( this.userinfo.unionid, order).then(res => { 
+      wepy.$Api.createOrder(this.userinfo.unionid, order).then(
+        res => {
           // console.log(res.data)
           if (res.data.code == 200) {
-            wepy.$store.dispatch({type:'orderMethods', payload: res.data.data})
+            wepy.$store.dispatch({
+              type: 'orderMethods',
+              payload: res.data.data
+            });
             wx.navigateTo({
               url: '/pages/index/onplay'
             });
           }
-      }, err => {
-          
-      })
-      
+        },
+        err => {}
+      );
     },
     linkTo(e) {
-      wepy.$store.dispatch({type:'isChangeAddressMethods', payload: true})
+      wepy.$store.dispatch({ type: 'isChangeAddressMethods', payload: true });
       this.$navigate({ url: e.currentTarget.dataset.url });
     }
   };
@@ -287,34 +302,47 @@ export default class Order extends wepy.page {
     this.discount = this.userinfo.discount
     this.totalprice();
 
-    wepy.$Api.listadress({ unionId: this.userinfo.unionid, limit: 50, current: 1 }).then(res => { 
-        // console.log(res.data)
-        if (res.data.code == 200) {
-            this.addressList = res.data.data
-            for(let val of res.data.data){
-              if(val.isdefault == 1){
-                wepy.$store.dispatch({type:'addressIdMethods', payload: val})
+    wepy.$Api
+      .listadress({ unionId: this.userinfo.unionid, limit: 50, current: 1 })
+      .then(
+        res => {
+          // console.log(res.data)
+          if (res.data.code == 200) {
+            this.addressList = res.data.data;
+            for (let val of res.data.data) {
+              if (val.isdefault == 1) {
+                wepy.$store.dispatch({
+                  type: 'addressIdMethods',
+                  payload: val
+                });
               }
             }
-            this.$apply()
-        }
-    }, err => {
-        
-    })
+            this.$apply();
+          }
+        },
+        err => {}
+      );
 
-    wepy.$Api.couponsAvailable({ unionId: this.userinfo.unionid, goodsId: this.goodsDetail.id, payAmount: this.total_prices }).then(res => { 
-        // console.log(res.data)
-        if (res.data.code == 200) {
-            this.conum_list = res.data.data.couponList
+    wepy.$Api
+      .couponsAvailable({
+        unionId: this.userinfo.unionid,
+        goodsId: this.goodsDetail.id,
+        payAmount: this.total_prices
+      })
+      .then(
+        res => {
+          // console.log(res.data)
+          if (res.data.code == 200) {
+            this.conum_list = res.data.data.couponList;
             let snum = this.conum_list.length;
             this.snum = snum;
-            this.$apply()
-        }
-    }, err => {
-        
-    })
+            this.$apply();
+          }
+        },
+        err => {}
+      );
   }
-
+  onShow() {}
 }
 </script>
 
@@ -633,7 +661,7 @@ page {
   letter-spacing: 1.5rpx;
   display: flex;
   position: relative;
-  left: 215rpx;
+  left: 185rpx;
 }
 .on_priced view:nth-child(2) image {
   width: 13rpx;

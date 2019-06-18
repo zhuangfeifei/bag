@@ -3,7 +3,7 @@
   <view>
     <import src="../../wxParse/wxParse.wxml" />
     <view class="swprice">
-      <image src='/images/my/loading.png' class="om_loading" wx:if="{{isImg}}" animation="{{animationRound}}" />
+      <image src="{{imgUrl+'/my/loading.png'}}" class="om_loading" wx:if="{{isImg&&imgUrl}}" animation="{{animationRound}}" />
       <swiper class="topswiper" indicator-dots="{{indicatorDots}}" circular="true" indicator-active-color="white" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
         <block wx:for="{{imgurlsd}}" wx:key="{{imgurlsd}}">
           <swiper-item>
@@ -26,27 +26,27 @@
           <view class="omnb_text">{{poat_List.goods_specif}}
           </view>
           <view class="fenxi" @tap="clckhide">
-            <image src="/images/notices/fenxiangsk.png" />
+            <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/fenxiangsk.png'}}" />
             <text>分享</text>
           </view>
         </view>
       </view>
       <view class="onters">
         <view class="fenxia">
-          <image wx:if="{{poat_List.isCollection==0}}" @tap="Collection" src="/images/notices/shoucang.png" />
-          <image wx:else @tap="Collection" src="/images/notices/yishoucang.png" />
+          <image wx:if="{{poat_List.isCollection==0&&imgUrl}}" @tap="Collection" src="{{imgUrl+'/notices/shoucang.png'}}" />
+          <image wx:if="{{poat_List.isCollection==1&&imgUrl}}" @tap="Collection" src="{{imgUrl+'/notices/yishoucang.png'}}" />
           <text>收藏</text>
         </view>
         <view class="fenxib">
-          <image wx:if="{{poat_List.islike==0}}" @tap="uesrlike" src="/images/notices/xihaun.png" />
-          <image wx:else @tap="uesrlike" src="/images/notices/yixihuan.png" />
+          <image wx:if="{{poat_List.islike==0&&imgUrl}}" @tap="uesrlike" src="{{imgUrl+'/notices/xihaun.png'}}" />
+          <image wx:if="{{poat_List.islike==1&&imgUrl}}" @tap="uesrlike" src="{{imgUrl+'/notices/yixihuan.png'}}" />
           <text>喜欢</text>
         </view>
       </view>
     </view>
     <view style="height:20rpx;background:#f2f2f2"></view>
     <view class="onho">
-      <image src="/images/notices/labaimg.png" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/labaimg.png'}}" />
       <text>暂无活动~</text>
     </view>
     <view style="height:20rpx;background:#f2f2f2"></view>
@@ -63,7 +63,7 @@
               <text wx:if="{{cont==0&&scolor}}">已选："{{scolor}}"</text>
             </view>
             <view style="text-align: right;">
-              <image src="/images/notices/jinruop.png" />
+              <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinruop.png'}}" />
             </view>
           </view>
           <view class="onbtn">
@@ -86,7 +86,7 @@
         </view>
         <view @tap="evaldetail">
           <text>查看全部</text>
-          <image src="/images/notices/jinruhong.png" />
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinruhong.png'}}"  />
         </view>
       </view>
       <view class="lsnull">
@@ -148,17 +148,17 @@
     <view class="ontabbtn">
       <view>
         <view @tap="next_index">
-          <image src='/images/notices/tab_shouye.png'/>
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/tab_shouye.png'}}" />
           <text>首页</text>
         </view>
         <view>
-          <button open-type='contact'>
-            <image src='/images/notices/tab_kefu.png' />
+          <button open-type='contact' send-message-title='{{poat_List.goods_specif}}' send-message-path='/pages/index/detail?goodsId={{shop_detailsMethods.goods_id}}&&unionId={{userinfo.unionid}}' send-message-img='{{imgurls+poat_List.thumbnail_pic}}' show-message-card='true'>
+            <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/tab_kefu.png'}}" />
           </button>
           <text>客服</text>
         </view>
         <view @tap="next_cart">
-          <image src='/images/notices/tab_gouwuche.png'/>
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/tab_gouwuche.png'}}"  />
           <text>购物车</text>
         </view>
       </view>
@@ -172,11 +172,11 @@
       </view>
     </view>
     <view class="bomtrnfxid" wx:if="{{cosde}}">
-      <image src='/images/notices/tab_tanjiangc.png' />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/tab_tanjiangc.png'}}"  />
       <text>添加成功，在购物车等你哦~</text>
     </view>
     <view class="fixedsd">
-      <image mode="aspectFill" lazy-load="true" src="/images/notices/fanhuidingceng.png" @tap="goTop" />
+      <image mode="aspectFill" lazy-load="true" wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/fanhuidingceng.png'}}" @tap="goTop" />
     </view>
     <view class="fenxs">返回顶部</view>
     <!--底部属性弹窗-->
@@ -233,14 +233,14 @@
         <view class="onm">
           <view class="hlpelist_list">
             <button open-type="share">
-              <image mode="aspectFill" lazy-load="true" src="/images/notices/fenxiangweixin.png" />
+              <image mode="aspectFill" lazy-load="true" wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/fenxiangweixin.png'}}" />
             </button>
           </view>
           <view class="on">分享给好友和微信群</view>
         </view>
         <view class="onm">
           <view class="hlpelist_list">
-            <image mode="aspectFill" lazy-load="true" src="/images/notices/shengchenghaibao.png" @tap='showPics' />
+            <image mode="aspectFill" lazy-load="true" wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/shengchenghaibao.png'}}" @tap='showPics' />
           </view>
           <view class="on">生成海报 保存分享</view>
         </view>
@@ -252,7 +252,7 @@
     <view class="share-cover" wx:if="{{showSharePic}}" catchtouchmove='true' style="display:{{hinde}}">
       <scroll-view scroll-y="true" style="height:1300rpx;">
         <view class="topimg_sd">
-          <image src="/images/notices/stopimg.png" class="stopimg" @tap="onhiden" />
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/stopimg.png'}}" class="stopimg" @tap="onhiden" />
         </view>
         <view class="share-pic-box">
           <view class="share-pic">
@@ -278,6 +278,9 @@ import WxParse from '../../wxParse/wxParse.js';
   },
   imgurls(state) {
     return state.counter.imgurl;
+  },
+   imgUrl(state) {
+    return state.counter.imgUrl;
   },
   shareitMethods(state) {
     return state.counter.shareit;
@@ -393,11 +396,15 @@ export default class Detail extends wepy.page {
     },
     tap_playup() {
       if (this.scolor && this.ssexd && this.ssexd != '暂无货') {
-        let list = {scolor: this.scolor, ssexd: this.ssexd, exclusiveId: this.exclusiveId}
-        wepy.$store.dispatch({type:'specificationsMethods', payload: list})
+        let list = {
+          scolor: this.scolor,
+          ssexd: this.ssexd,
+          exclusiveId: this.exclusiveId
+        };
+        wepy.$store.dispatch({ type: 'specificationsMethods', payload: list });
         wx.navigateTo({
           url: '/pages/index/order'
-        })
+        });
       } else {
         wx.showToast({
           title: '请选择商品属性',
@@ -426,7 +433,6 @@ export default class Detail extends wepy.page {
     },
     clicksdf: function(e) {
       let name = e.currentTarget.dataset.name;
-      console.log(e)
       this.ssexd = name;
       this.idas = 0;
       if (this.scolor == '') {
@@ -509,10 +515,8 @@ export default class Detail extends wepy.page {
                 that.cosde = false;
                 that.$apply();
               }, 2500);
-            } else {
-              wx.navigateTo({
-                url: '/pages/my/setting/phone'
-              });
+            } else if(res.data.code == 413) {
+              this.cont = 0;
             }
           },
           err => {}
@@ -545,18 +549,22 @@ export default class Detail extends wepy.page {
     //立即购买
     tap_play() {
       if (this.ssexd != '暂无货') {
-        let list = {scolor: this.scolor, ssexd: this.ssexd, exclusiveId: this.exclusiveId}
-        wepy.$store.dispatch({type:'specificationsMethods', payload: list})
+        let list = {
+          scolor: this.scolor,
+          ssexd: this.ssexd,
+          exclusiveId: this.exclusiveId
+        };
+        wepy.$store.dispatch({ type: 'specificationsMethods', payload: list });
         let a = {
           name: this.ssexd,
           color: this.scolor,
-          img:this.poat_List.thumbnail_pic
+          img: this.poat_List.thumbnail_pic
         };
         if (a) {
           wx.navigateTo({
             url: '/pages/index/order'
           });
-           wepy.$store.dispatch({ type : 'orderDeteil', payload: a})
+          wepy.$store.dispatch({ type: 'orderDeteil', payload: a });
         }
       } else {
         wx.showToast({
@@ -575,47 +583,71 @@ export default class Detail extends wepy.page {
     Collection() {
       let a = {
         goodsId: this.shop_detailsMethods.goods_id,
-        unionId: this.shop_detailsMethods.unionid
+        unionId: this.userinfo.unionid
       };
-      if (this.poat_List.isCollection == 0 && a) {
+      let b = {
+        clothIds: this.poat_List.id,
+        unionId: this.userinfo.unionid
+      };
+      let like = this.poat_List.isCollection;
+      if (like == 0) {
         wepy.$Api.collection(a).then(
           res => {
             this.poat_List.isCollection = 1;
+            wx.showToast({
+              title: '收藏成功',
+              icon: 'succes',
+              duration: 1000,
+              mask: true
+            });
           },
           err => {}
         );
       } else {
-        //取消收藏
-        wepy.$Api.uncollection(a).then(
-          res => {
-            this.poat_List.isCollection = 0;
-          },
-          err => {}
-        );
+        // 取消收藏
+        wepy.$Api.uncollection(b).then(res => {
+          wx.showToast({
+              title: '取消收藏',
+              icon: 'succes',
+              duration: 1000,
+              mask: true
+            });
+        }, err => {});
       }
+      this.poat_List.isCollection = !like;
     },
     //喜欢
     uesrlike() {
       let a = {
         goodsId: this.shop_detailsMethods.goods_id,
-        unionId: this.shop_detailsMethods.unionid
+        unionId: this.userinfo.unionid
       };
-      if (this.poat_List.isCollection == 0) {
-        wepy.$Api.userlike(a).then(
+      let like = this.poat_List.islike;
+      if (like == 0 && a) {
+        wepy.$Api.userLike(a).then(
           res => {
             this.poat_List.islike = 1;
+            wx.showToast({
+              title: '已喜欢',
+              icon: 'succes',
+              duration: 1000,
+              mask: true
+            });
           },
           err => {}
         );
       } else {
         //取消
-        wepy.$Api.usernolike(a).then(
-          res => {
-            this.poat_List.islike = 0;
-          },
-          err => {}
-        );
+        wepy.$Api.usernolike(a).then(res => {
+          wx.showToast({
+              title: '取消喜欢',
+              icon: 'succes',
+              duration: 1000,
+              mask: true
+            });
+        }, err => {});
       }
+      this.poat_List.islike = !like;
     }
   };
   onShareAppMessage(res) {
@@ -693,8 +725,7 @@ export default class Detail extends wepy.page {
       // let tid = this._selData.tid;
 
       wx.downloadFile({
-        url:
-          'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3091440975,3250070917&fm=27&gp=0.jpg',
+        url:this.imgUrl+'/my/applets.jpg',
         success: res => {
           resolve(res.tempFilePath);
         },
@@ -717,7 +748,7 @@ export default class Detail extends wepy.page {
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, (w / 750) * 670 * 2, (w / 750) * 744 * 2);
     ctx.drawImage(
-      '/images/notices/zhuangshi1.png',
+      this.imgUrl+'/notices/zhuangshi1.png',
       (w / 750) * 500 * 2,
       (w / 750) * 42 * 2,
       (w / 750) * 125 * 2,
@@ -726,7 +757,7 @@ export default class Detail extends wepy.page {
       0
     );
     ctx.drawImage(
-      '/images/notices/haowutuijian.png',
+      this.imgUrl+'/notices/haowutuijian.png',
       (w / 750) * 225 * 2,
       (w / 750) * 36 * 2,
       (w / 750) * 218 * 2,
@@ -735,7 +766,7 @@ export default class Detail extends wepy.page {
       0
     );
     ctx.drawImage(
-      '/images/notices/zhaungshi.png',
+     this.imgUrl+'/notices/zhaungshi.png',
       (w / 750) * 42 * 2,
       (w / 750) * 49 * 2,
       (w / 750) * 125 * 2,
@@ -927,7 +958,6 @@ export default class Detail extends wepy.page {
     wepy.$Api.shopDetail(a).then(
       res => {
         if (res.data.data) {
-          console.log(res);
           wepy.$store.dispatch({
             type: 'goodsDetailMethods',
             payload: res.data.data
@@ -990,7 +1020,7 @@ export default class Detail extends wepy.page {
     };
     wepy.$Api.recommendation(a).then(
       res => {
-        if (res.data.data > 0) {
+        if (res.data.data==Array) {
           this.home_liat = this.home_liat.concat(res.data.data);
         } else {
           this.homelist = false;

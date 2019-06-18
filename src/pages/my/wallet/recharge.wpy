@@ -7,13 +7,13 @@
       </view>
       <view class="numchong">充值金额</view>
       <view class="nun_ong">
-        <image src="/images/notices/renminbijk.png" />
+        <image wx:if='{{imgUrl}}' src="{{imgUrl+'/notices/renminbijk.png'}}" />
         <view class="inoutcls">
-          <input type="text" value="{{unbers}}" bindinput="uameInputs"/>
+          <input type="text" value="{{unbers}}" bindinput="uameInputs" />
         </view>
       </view>
       <view class="donrtnim">最低充值金额为¥50</view>
-      <image src="/images/notices/querenchongzhis.png" class="clsimg" @tap="titapnext" />
+      <image wx:if='{{imgUrl}}' src="{{imgUrl+'/notices/querenchongzhis.png'}}" class="clsimg" @tap="titapnext" />
     </view>
   </view>
 </template>
@@ -23,7 +23,14 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  userinfo(state) {
+    return state.counter.userinfo;
+  },
+  imgUrl(state) {
+    return state.counter.imgUrl;
+  }
+})
 export default class Recharge extends wepy.page {
   config = {
     navigationBarTitleText: '充值'
@@ -42,6 +49,8 @@ export default class Recharge extends wepy.page {
       this.unbers = e.detail.value;
     },
     titapnext() {
+      let num = this.unbers;
+      let b = parseFloat(num).toFixed(2);
       if (this.unbers < 50 || this.unbers == '') {
         wx.showToast({
           title: '充值金额不能低于50',
@@ -50,8 +59,75 @@ export default class Recharge extends wepy.page {
           mask: true
         });
         return false;
+      } else {
+        let a = {
+          unionId: this.userinfo.unionid,
+          money: b
+        };
+        if (a) {
+          wepy.$Api.topUpMessds(a).then(
+            res => {
+              wx.requestPayment({
+                timeStamp: res.data.data.timestamp,
+                nonceStr: res.data.data.nonce,
+                package: res.data.data.packageName,
+                signType: 'MD5',
+                paySign: res.data.data.signature,
+                success: function(res) {
+                  wepy.showModal({
+                    title: '温馨提示',
+                    content: '充值成功',
+                    success(res) {
+                      wepy.navigateTo({
+                        url: '/pages/my/setting/setting'
+                      });
+                    }
+                  });
+                },
+                fail: function(res) {},
+                complete: function(res) {}
+              });
+            },
+            err => {}
+          );
+        }
       }
     }
+    // titapnext() {
+    //   let num = this.unbers;
+    //   let b = parseFloat(num).toFixed(2);
+    //   let a = {
+    //     unionId: this.userinfo.unionid,
+    //     money: b
+    //   };
+    //   if (a) {
+    //     wepy.$Api.topUpMessds(a).then(
+    //       res => {
+    //         wx.requestPayment({
+    //           timeStamp: res.data.data.timestamp,
+    //           nonceStr: res.data.data.nonce,
+    //           package: res.data.data.packageName,
+    //           signType: 'MD5',
+    //           paySign: res.data.data.signature,
+    //           success: function(res) {
+    //             wepy.showModal({
+    //               title: '温馨提示',
+    //               content: '充值成功',
+    //               success(res) {
+    //                 wepy.navigateTo({
+    //                   url: '/pages/my/setting/setting'
+    //                 });
+    //               }
+    //             });
+    //           },
+    //           fail: function(res) {},
+    //           complete: function(res) {}
+    //         });
+    //       },
+    //       err => {}
+    //     );
+    //   }
+    // }
   };
 
   onLoad() {}
@@ -59,6 +135,9 @@ export default class Recharge extends wepy.page {
 </script>
 
 <style lang='less'>
+page {
+  background: #f2f2f2;
+}
 .topclass {
   width: 690rpx;
   height: 620rpx;
@@ -111,7 +190,7 @@ export default class Recharge extends wepy.page {
   margin-top: 1rpx;
 }
 .inoutcls {
-  width: 300rpx;
+  width: 350rpx;
   margin-left: 35rpx;
   position: relative;
   top: -10rpx;

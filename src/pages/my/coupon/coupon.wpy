@@ -4,20 +4,20 @@
       <view wx:for="{{list}}" wx:key="{{list}}" data-id="{{index}}" style="{{index == id?'color:#F4695F;border-bottom:1px solid #F4695F':'color:rgba(54, 54, 54, 1);border:none'}}" @tap="click">{{item.text}}</view>
     </view>
     <view class="oncouplist" wx:for="{{coupon}}" wx:key="{{coupon}}" wx:if="{{coupon}}">
-      <image src="/images/notices/quandi.png" class="quandi" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/quandi.png'}}" class="quandi" />
       <view class="oncunlom">
-        <image src="/images/notices/renminbi.png" class="quandis" />
+        <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/renminbi.png'}}" class="quandis" />
         <view class="clatextb">{{coupon[index].price}}</view>
         <view>【{{coupon[index].title}}】</view>
       </view>
       <view class="oncunloms">有效期：{{coupon[index].limitDate}}</view>
-      <image src="/images/notices/lingqu.png" class="lincone" wx:if="{{id==0}}" data-pid='{{coupon[index].id}}' @tap="ontapto" />
-      <image src="/images/notices/qushiyong.png" class="lincone" wx:if="{{id==1}}" />
-      <image src="/images/notices/yishiyong.png" class="lincones" wx:if="{{id==2}}" />
-      <image src="/images/notices/yiguoqi.png" class="lincones" wx:if="{{id==3}}" />
+      <image src="{{imgUrl+'/notices/lingqu.png'}}" class="lincone" wx:if="{{id==0&&imgUrl}}" data-pid='{{coupon[index].id}}' @tap="ontapto" />
+      <image src="{{imgUrl+'/notices/qushiyong.png'}}" @tap='goToshops' class="lincone" wx:if="{{id==1&&imgUrl}}" />
+      <image src="{{imgUrl+'/notices/yishiyong.png'}}" class="lincones" wx:if="{{id==2&&imgUrl}}" />
+      <image src="{{imgUrl+'/notices/yiguoqi.png'}}" class="lincones" wx:if="{{id==3&&imgUrl}}" />
     </view>
     <view class="conone" wx:if="{{coupon==''}}">
-      <image src="/images/notices/zanwuyouhuiquan.png" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/zanwuyouhuiquan.png'}}" />
       <view class="con_text">亲，你还没有优惠券哦～</view>
     </view>
   </view>
@@ -31,6 +31,9 @@ import 'wepy-async-function';
 @connect({
   userinfo(state) {
     return state.counter.userinfo;
+  },
+  imgUrl(state) {
+    return state.counter.imgUrl;
   }
 })
 export default class Coupon extends wepy.page {
@@ -136,6 +139,11 @@ export default class Coupon extends wepy.page {
           err => {}
         );
       }
+    },
+    goToshops() {
+      wx.switchTab({
+        url: '/pages/index/index'
+      });
     }
   };
   couponts() {

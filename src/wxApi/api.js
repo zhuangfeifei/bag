@@ -50,7 +50,7 @@ module.exports = {
   uncollection:(data)=>{//取消商品收藏 删除收藏
     return api.request('/bag/api/boutique/deleteCollotion', 'post', data)
   },
-  userlike:(data)=>{//商品喜欢
+  userLike:(data)=>{//商品喜欢
     return api.request('/bag/api/boutique/clickLike', 'post', data)
   },
   usernolike:(data)=>{//取消喜欢
@@ -121,6 +121,15 @@ module.exports = {
   },
   goodsMessaged:(data)=>{//商品提醒
     return api.request('/bag/api/message/goodsMessage', 'post', data)
+  },
+  topUpMessds:(data)=>{//微信充值(零钱充值)
+    return api.request('/bag/api/wallet/topUpAmount', 'post', data)
+  },
+  withDrawal:(data)=>{//零钱提现(零钱充值)
+    return api.request('/bag/api/wallet/withdrawalAmount', 'post', data)
+  },
+  walletBillMothose:(data)=>{//账单
+    return api.request('/bag/api/wallet/walletBill', 'post', data)
   },
 
 

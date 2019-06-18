@@ -10,31 +10,30 @@
     <picker mode="date" value="{{date}}" start="{{year}}-01" fields="month" end="{{years}}-12" bindchange="bindTimeChange">
       <view class="bill_timelist" @tap="list_down">
         <text>{{year}}年{{month}}月</text>
-        <image wx:if="{{anmiaon==false}}" src="/images/notices/sc_xialaup.png"  />
-        <image wx:else src="/images/notices/sc_xiala.png"  />
+        <image wx:if="{{anmiaon==false&&imgUrl}}" src="{{imgUrl+'/notices/sc_xialaup.png'}}" />
+        <image wx:if="{{anmiaon==true&&imgUrl}}" src="{{imgUrl+'/notices/sc_xiala.png'}}" />
       </view>
     </picker>
     <!--账单列表-->
     <view class="bill_up_list" wx:for="{{bill_list}}" wx:key="{{bill_list}}">
       <view>
-        <image src="/images/notices/tbweixinqianbao.png" wx:if='{{item.stat==0}}' />
-        <image src="/images/notices/qb_yongjin.png" wx:if='{{item.stat==1}}' />
-        <image src="/images/notices/qb_xiaogeqianbao.png" wx:if='{{item.stat==2}}' />
+        <image src="{{imgUrl+'/notices/tbweixinqianbao.png'}}" wx:if='{{item.transaction_type==1&&imgUrl}}' />
+        <image src="{{imgUrl+'/notices/qb_yongjin.png'}}" wx:if='{{item.transaction_type==3&&imgUrl}}' />
+        <image src="{{imgUrl+'/notices/qb_xiaogeqianbao.png'}}" wx:if='{{item.transaction_type==0&&imgUrl}}' />
       </view>
       <view>
-        <view>
-          <view wx:if="{{item.stat==0}}">微信钱包</view>
-          <view wx:if="{{item.stat==1}}">佣金</view>
-          <view wx:if="{{item.stat==2}}">小鸽钱包</view>
-          <view wx:if="{{item.codes==0}}">充值</view>
-          <view wx:if="{{item.codes==1}}">提现</view>
-          <view wx:if="{{item.codes==2}}">购物退款</view>
-          <view wx:if="{{item.codes==3}}">购物支付</view>
+        <view style="margin-top:5rpx;">
+          <view wx:if="{{item.transaction_type==0}}">小鸽钱包</view>
+          <view wx:if="{{item.transaction_type==1}}">微信钱包</view>
+          <view wx:if="{{item.transaction_type==3}}">佣金</view>
+          <view wx:if="{{item.transaction_type==1&&item.cash_num!=''}}">充值</view>
+          <view wx:if="{{item.transaction_type==3}}">{{item.remark}}</view>
+          <view wx:if="{{item.transaction_type==0}}">{{item.remark}}</view>
         </view>
-        <view>{{item.time}}</view>
+        <view>{{item.pay_date}}</view>
       </view>
-      <view wx:if="{{item.statce==0}}">+￥{{item.price}}</view>
-      <view wx:if="{{item.statce==1}}" style="color: rgba(102, 102, 102, 1);">-￥{{item.price}}</view>
+      <view wx:if="{{item.consumption_type==0}}">+￥{{item.cash_num}}</view>
+      <view wx:if="{{item.consumption_type==1}}" style="color: rgba(102, 102, 102, 1);">-￥{{item.cash_num}}</view>
     </view>
 
     <view class="btsbackj" wx:if="{{hidend==false}}"></view>
@@ -47,6 +46,7 @@
       </view>
       <view class="back_tops" @tap="clckhide">取消</view>
     </view>
+    <view class="onnone" wx:if="{{onhiden==false}}">没有更多了哦~</view>
   </view>
 </template>
 
@@ -55,7 +55,14 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+  imgUrl(state) {
+    return state.counter.imgUrl;
+  },
+  userinfo(state) {
+    return state.counter.userinfo;
+  }
+})
 export default class Bill extends wepy.page {
   config = {
     navigationBarTitleText: '账单'
@@ -69,18 +76,12 @@ export default class Bill extends wepy.page {
     years: '',
     hidend: true,
     sceted: false,
+    onhiden: true,
     anmiaon: false,
     month: '',
-    codes: '',
-    stat: '',
-    statce: '',
+    currents: '1',
     month: '',
-    bill_list: [
-      { time: '2019.05.08 12:39', price: '50', codes: 0, stat: 0, statce: 0 },
-      { time: '2019.05.08 12:39', price: '100', codes: 1, stat: 1, statce: 1 },
-      { time: '2019.05.08 12:39', price: '50', codes: 2, stat: 2, statce: 0 },
-      { time: '2019.05.08 12:39', price: '200', codes: 3, stat: 0, statce: 1 }
-    ],
+    bill_list: [],
     list: [
       { text: '全部' },
       { text: '小鸽钱包' },
@@ -101,15 +102,100 @@ export default class Bill extends wepy.page {
     },
     bindTimeChange(e) {
       let time = e.detail.value.substring(5, 7);
-      time = time.replace(/^0/, '');
+      // time = time.replace(/^0/, '');
       let year = e.detail.value.substring(0, 4);
       this.month = time;
       this.year = year;
       this.anmiaon = !this.anmiaon;
+      this.walletBillMoths();
     },
     click: function(e) {
       var ids = e.currentTarget.dataset.id;
       this.id = ids;
+      if (this.id == ids && ids == 0) {
+        this.walletBillMoths();
+        this.hidend = true;
+        this.onhiden = true;
+      }
+      if (this.id == ids && ids == 1) {
+        let yaerTime = this.year + '-' + this.month;
+        let limit = '25';
+        let a = {
+          unionId: this.userinfo.unionid,
+          transactionType: '0',
+          operatingTime: yaerTime,
+          limit: limit,
+          current: this.currents
+        };
+        if (a) {
+          wepy.$Api.walletBillMothose(a).then(
+            res => {
+              if (res.data.code == 200) {
+                this.bill_list = res.data.data;
+                this.hidend = true;
+                this.onhiden = true;
+                this.$apply();
+              }
+            },
+            err => {}
+          );
+        }
+      }
+      if (this.id == ids && ids == 2) {
+        let yaerTime = this.year + '-' + this.month;
+        let limit = '25';
+        let a = {
+          unionId: this.userinfo.unionid,
+          transactionType: '1',
+          operatingTime: yaerTime,
+          limit: limit,
+          current: this.currents
+        };
+        if (a) {
+          wepy.$Api.walletBillMothose(a).then(
+            res => {
+              if (res.data.code == 200) {
+                this.bill_list = res.data.data;
+                this.hidend = true;
+                this.onhiden = true;
+                this.$apply();
+              }
+            },
+            err => {}
+          );
+        }
+      }
+      // if (this.id == ids && ids == 3) {
+      //   let yaerTime = this.year + '-' + this.month;
+      //   let limit = '25';
+      //   let a = {
+      //     unionId: this.userinfo.unionid,
+      //     transactionType: '3',
+      //     operatingTime: yaerTime,
+      //     limit: limit,
+      //     current: this.currents
+      //   };
+      //   if (a) {
+      //     wepy.$Api.walletBillMothose(a).then(
+      //       res => {
+      //         if (res.data.code == 200) {
+      //           this.bill_list = res.data.data;
+      //           this.hidend = true;
+      //           this.$apply();
+      //         }
+      //       },
+      //       err => {}
+      //     );
+      //   }
+      // }
+      if (this.id == ids && ids == 3) {
+        wx.showToast({
+          title: '敬请期待',
+          icon: 'none',
+          duration: 1100,
+          mask: true
+        });
+      }
     },
     clckhide() {
       this.hidend = true;
@@ -123,7 +209,61 @@ export default class Bill extends wepy.page {
     var years = now.getFullYear() + 3;
     this.year = year;
     this.years = years;
-    this.month = month;
+    if (month < 10) {
+      this.month = '0' + month;
+    } else {
+      this.month = month;
+    }
+    this.walletBillMoths();
+  }
+  walletBillMoths() {
+    let yaerTime = this.year + '-' + this.month;
+    let limit = '25';
+    let a = {
+      unionId: this.userinfo.unionid,
+      transactionType: '',
+      operatingTime: yaerTime,
+      limit: limit,
+      current: this.currents
+    };
+    if (a) {
+      wepy.$Api.walletBillMothose(a).then(
+        res => {
+          if (res.data.code == 200) {
+            console.log(res)
+            this.bill_list = res.data.data;
+            this.$apply();
+          }
+        },
+        err => {}
+      );
+    }
+  }
+  onReachBottom() {
+    let yaerTime = this.year + '-' + this.month;
+    let limit = '25';
+    let a = {
+      unionId: this.userinfo.unionid,
+      transactionType: '',
+      operatingTime: yaerTime,
+      limit: limit,
+      current: this.currents++
+    };
+    if (a) {
+      wepy.$Api.walletBillMothose(a).then(
+        res => {
+          if (res.data.data == Array) {
+            let post_list = this.bill_list;
+            let newA = post_list.concat(res.data.data);
+            this.bill_list = newA;
+            this.$apply();
+          } else {
+            this.onhiden = false;
+          }
+        },
+        err => {}
+      );
+    }
   }
 }
 </script>
@@ -318,5 +458,17 @@ page {
   font-size: 34rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
+}
+.onnone {
+  width: 100%;
+  height: 63rpx;
+  font-size: 20rpx;
+  font-family: PingFang-SC-Medium;
+  background: #f2f2f2;
+  font-weight: 500;
+  color: rgba(153, 153, 153, 1);
+  text-align: center;
+  line-height: 63rpx;
+  letter-spacing: 1rpx;
 }
 </style>

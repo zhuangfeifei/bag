@@ -99,32 +99,32 @@ page {
   <view>
     <view class="topconniars">
       <view class="tomgtitle">头像</view>
-      <image src="{{userinfo.avatar}}" wx:if="{{userinfo.avatar}}" />
-      <image wx:else src="/images/notices/weishangchuan.png" />
+      <image wx:if="{{userinfo.avatar&&imgUrl}}" src="{{userinfo.avatar}}" />
+      <image wx:if="{{userinfo.avatar==''&&imgUrl}}" src="{{imgUrl+'/notices/weishangchuan.png'}}" />
     </view>
     <view class="vipyuan">
       <view class="tomgtitles">会员名</view>
       <input type="text" class="texta" wx:if="{{userinfo.name}}" placeholder='{{userinfo.name}}' confirm-type="done" bindconfirm="userameex" name="usernum" bindinput="userInput" placeholder-class='clastyle' />
       <input type="text" class="texta" wx:else placeholder='设置会员名' confirm-type="done" bindconfirm="userameex" name="usernum" bindinput="userInput" placeholder-class='clastyle' />
-      <image src="/images/notices/jinru.png" class="onimg" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}"  class="onimg" />
     </view>
     <view class="vipyuan" @tap="myphone">
       <view class="tomgtitles">手机</view>
-      <text class="textbs" wx:if="{{phonenum}}">{{phonenum}}</text>
+      <text class="textbs" wx:if="{{phonenumber||phonenum}}">{{phonenum}}</text>
       <text class="textb" wx:else>绑定手机号</text>
-      <image src="/images/notices/jinru.png" class="onimg" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}" class="onimg" />
     </view>
     <view class="vipyuan" @tap="myphonekey">
       <view class="tomgtitles">钱包支付密码</view>
-      <text class="textc" wx:if="{{userinfo.payPassword}}">已设置</text>
+      <text class="textc" wx:if="{{userinfo.payPassword!=''}}">已设置</text>
       <text class="textc" wx:else>设置密码</text>
-      <image src="/images/notices/jinru.png" class="onimg" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}" class="onimg" />
     </view>
     <view class="vipyuan" @tap="tapaddres">
       <view class="tomgtitles">我的收获地址</view>
       <text class="textc" wx:if="{{useraddres==1}}">查看地址</text>
       <text class="textc" wx:else>添加地址</text>
-      <image src="/images/notices/jinru.png" class="onimg" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}" class="onimg" />
     </view>
   </view>
 </template>
@@ -140,6 +140,9 @@ import 'wepy-async-function';
   },
   useraddres(state) {
     return state.counter.addresCode;
+  },
+  imgUrl(state) {
+    return state.counter.imgUrl;
   }
 })
 export default class Setting extends wepy.page {
@@ -164,7 +167,7 @@ export default class Setting extends wepy.page {
       });
     },
     myphonekey() {
-      if (this.userinfo.phonenumber) {
+      if (this.userinfo.payPassword) {
         wx.navigateTo({
           url: '/pages/my/setting/easitplay'
         });

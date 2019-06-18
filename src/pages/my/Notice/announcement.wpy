@@ -56,14 +56,14 @@ page {
     <import src="../../../wxParse/wxParse.wxml" />
     <view class="topcement">
       <view class="back">会员等级优势</view>
-      <image src='/images/notices/bg_4.png'/>
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/bg_4.png'}}"/>
       <view class="bat">
         <template is="wxParse" data="{{wxParseData:article.nodes}}" />
       </view>
     </view>
     <view class="topcement" wx:if="{{list}}">
       <view class="back">佣金获得规则</view>
-      <image src='/images/notices/bg_4.png'/>
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/bg_4.png'}}"/>
       <view class="bat">
         <template is="wxParse" data="{{wxParseData:articles.nodes}}" />
       </view>
@@ -76,7 +76,11 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 import WxParse from '../../../wxParse/wxParse.js';
-@connect({})
+@connect({
+  imgUrl(state) {
+    return state.counter.imgUrl;
+  }
+})
 export default class Announcement extends wepy.page {
   config = {
     navigationBarTitleText: '公告'

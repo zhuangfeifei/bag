@@ -88,6 +88,8 @@ export default class My extends wepy.page {
   components = {};
 
   data = {
+    Checkin:false,
+    chendLst:[],
     level: ['普卡', '银卡', '金卡', '翠玉卡', '钻石卡'],
     service: [
       {
@@ -120,13 +122,13 @@ export default class My extends wepy.page {
       let a = {
         unionId: this.userinfo.unionid
       };
-        this.Checkin = true;
       if (a) {
         wepy.$Api.addFliat(a).then(
           res => {
             if (res.data.code == 200) {
               let mrgkm;
               wepy.$store.dispatch({ type: 'mrgkmuser', payload: mrgkm });
+              this.Checkin = true;
               this.chendLst = res.data.data;
               this.$apply();
             } else {

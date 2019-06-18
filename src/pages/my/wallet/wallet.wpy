@@ -1,23 +1,23 @@
 <template>
   <view>
     <view class="bchd">
-      <image src="/images/notices/bg-5.png" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/bg-5.png'}}" />
       <view class="dort">
-        <image src="/images/notices/zhangdan.png" @tap="nextbill" />
+        <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/zhangdan.png'}}" @tap="nextbill" />
         <text @tap="nextbill">账单</text>
       </view>
-      <view class="playnumb">450.50</view>
+      <view class="playnumb">{{userinfo.balance}}</view>
       <view class="playnumbs">钱包余额</view>
     </view>
     <view class="ontliat" @tap="regularto">
-      <image src='/images/notices/chongzhi.png' class="onliimg" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/chongzhi.png'}}" class="onliimg" />
       <text class="cltextsdf">充值</text>
-      <image src='/images/notices/jinru.png' class="onliimged" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}"  class="onliimged" />
     </view>
-    <view class="ontliats">
-      <image src='/images/notices/tixian.png' class="onliimg" />
-      <text class="cltextsdf" @tap="withdraw">提现</text>
-      <image src='/images/notices/jinru.png' class="onliimged" />
+    <view class="ontliats" @tap="withdraws">
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/tixian.png'}}" class="onliimg" />
+      <text  class="cltextsdf">提现</text>
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}" class="onliimged" />
     </view>
   </view>
 </template>
@@ -27,7 +27,14 @@ import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
-@connect({})
+@connect({
+   imgUrl(state) {
+    return state.counter.imgUrl;
+  },
+  userinfo(state) {
+    return state.counter.userinfo;
+  }
+})
 export default class Wallet extends wepy.page {
   config = {
     navigationBarTitleText: '钱包'
@@ -45,7 +52,7 @@ export default class Wallet extends wepy.page {
         url: '/pages/my/wallet/recharge'
       });
     },
-    withdraw() {
+    withdraws() {
       wx.navigateTo({
         url: '/pages/my/wallet/withdraw'
       });
@@ -62,6 +69,9 @@ export default class Wallet extends wepy.page {
 </script>
 
 <style lang='less'>
+page{
+  background:#f2f2f2;
+}
 .bchd {
   width: 690rpx;
   height: 260rpx;
