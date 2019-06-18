@@ -15,13 +15,13 @@
         <text class="touxiang_name">\n{{userinfo.nickname}}</text>
       </view>
       <view @tap="linkTo" data-url="./setting/setting">
-        <image class="HYZX_xiaoxi" src="/images/my/HYZX_shezhi.png" mode="scaleToFill" lazy-load="false" />
+        <image class="HYZX_xiaoxi" src="{{imgUrl+'/my/HYZX_shezhi.png'}}" mode="scaleToFill" lazy-load="false" />
         <text>\n设置</text>
       </view>
-      <image class="sign" src="/images/my/HYZX_qiandao.png" @tap="chedkIn" />
+      <image class="sign" src="{{imgUrl+'/my/HYZX_qiandao.png'}}" @tap="chedkIn" />
     </view>
     <view class="vip_level">
-      <image src="/images/my/bg_2.png" />
+      <image src="{{imgUrl+'/my/bg_2.png'}}" />
       <view class="vip_rules" @tap="linkTo" data-url="./membershipRules">您是普卡会员，查看折扣权限>></view>
       <view class="vip_level_bar">
         <view style="width:{{20*userinfo.userType}}%"></view>
@@ -46,23 +46,23 @@
       <navigator url="./order/myOrder">
         <view class="My_allOrder">
           全部订单
-          <image src="/images/my/QBDD_tubiao.png" />
+          <image src="{{imgUrl+'/my/QBDD_tubiao.png'}}" />
         </view>
       </navigator>
     </view>
     <view class="My-back" wx:if="{{Checkin==true}}"></view>
     <view class="My_chedk" wx:if="{{Checkin==true}}">
-      <image src='/images/my/chexkd_list.png' />
+      <image src="{{imgUrl+'/my/chexkd_list.png'}}" />
       <view class="My_context">{{chendLst.experienceValue}}</view>
       <view class="My_contitle">当前积分</view>
       <view>
         <text class="My_qday">你已经连续签到{{chendLst.count}}天，今日积分<text class="ontext">+{{chendLst.changed}}</text></text>
       </view>
       <view class="My_qianlist">
-        <image src="/images/my/achankanjiluanniu.png" @tap="tapTo" />
+        <image src="{{imgUrl+'/my/achankanjiluanniu.png'}}" @tap="tapTo" />
       </view>
       <view class="My_simgs">
-        <image src="/images/notices/stopimg.png" @tap="hidechedk" />
+        <image src="{{imgUrl+'/notices/stopimg.png'}}" @tap="hidechedk" />
       </view>
     </view>
   </view>

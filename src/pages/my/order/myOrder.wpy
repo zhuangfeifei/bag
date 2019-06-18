@@ -10,7 +10,7 @@
                 <view class="orderList" @tap="details" data-index="{{index}}" data-item="{{item}}">
                     <h3>
                         <view wx:if="{{orderIndex == 1}}" @tap.stop="isPay" data-index="{{index}}" data-item="{{item}}" class="orderList_checked">
-                            <image wx:if="{{payIndex == index}}" src="/images/my/WDDD__xuanzhonganniu.png" mode="scaleToFill" lazy-load="false" />
+                            <image wx:if="{{payIndex == index}}" src="{{imgUrl+'/my/WDDD__xuanzhonganniu.png'}}" mode="scaleToFill" lazy-load="false" />
                         </view>
                         <text wx:if="{{item.after_status == 0 && item.status == 0}}">等待买家付款</text>
                         <text wx:if="{{item.status == 1}}">买家已付款</text>
@@ -34,13 +34,13 @@
         </view>
 
         <view class='noMore' wx:if="{{current > 2}}">
-          <image wx:if="{{!isMore}}" src="/images/my/loading.png" animation="{{animationRounds}}" />
+          <image wx:if="{{!isMore}}" src="{{imgUrl+'/my/loading.png'}}" animation="{{animationRounds}}" />
           <text wx:if="{{!isMore}}">正在加载...</text>
           <text wx:if="{{current > 1 && isMore}}">~没有更多了~</text>
         </view>
 
         <view wx:if="{{orderList.length == 0}}" class="noOrderList" style="height: {{screenHeight+'px'}};">
-            <image src="/images/my/YHQ_zaneudingdan.png" mode="scaleToFill" lazy-load="false" />
+            <image src="{{imgUrl+'/my/YHQ_zaneudingdan.png'}}" mode="scaleToFill" lazy-load="false" />
             <view>亲，你还没有相关订单哦～</view>
         </view>
 
@@ -59,6 +59,9 @@ import card from '../../../components/card'
     },
     userinfo(state) {
         return state.counter.userinfo;
+    },
+    imgUrl(state) {
+        return state.counter.imgUrl;
     },
 })
     

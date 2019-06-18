@@ -1,59 +1,59 @@
 <template>
-  <view id="favorites" class="{{allCategory || allState ? 'scroll' : ''}}" style="padding-bottom: {{!isAnimation ? '60rpx' : '0'}}">
+  <view wx:if="{{imgUrl}}" id="favorites" class="{{allCategory || allState ? 'scroll' : ''}}" style="padding-bottom: {{!isAnimation ? '60rpx' : '0'}}">
 
-    <view>
-      <view class='favorites'>
-        <view class='favorites_nav'>
-          <view>
-            <text @tap='allCategory' class="{{allCategory ? 'active' : ''}}">全部类目</text>
-            <image @tap='allCategory' src="/images/my/{{allCategory ? 'down' : 'up'}}.png" />
-            <text @tap='allState' class="{{allState ? 'active' : ''}}">全部状态</text>
-            <image @tap='allState' src="/images/my/{{allState ? 'down' : 'up'}}.png" />
-          </view>
-          <view>
-            <image src="/images/my/SCJ_guanli.png" />
-            <text @tap='management' class="{{!isAnimation ? 'complete' : ''}}">{{isAnimation ? '管理' : '完成'}}</text>
-          </view>
+
+        <view>
+            <view class='favorites'>
+                <view class='favorites_nav'>
+                <view>
+                    <text @tap='allCategory' class="{{allCategory ? 'active' : ''}}">全部类目</text>
+                    <image @tap='allCategory' src="/images/my/{{allCategory ? 'down' : 'up'}}.png"/>
+                    <text @tap='allState' class="{{allState ? 'active' : ''}}">全部状态</text>
+                    <image @tap='allState' src="/images/my/{{allState ? 'down' : 'up'}}.png"/>
+                </view>
+                <view>
+                    <image src="{{imgUrl+'/my/SCJ_guanli.png'}}" />
+                    <text @tap='management' class="{{!isAnimation ? 'complete' : ''}}">{{isAnimation ? '管理' : '完成'}}</text>
+                </view>
+                </view>
+                <view class='divider'></view>
+            </view>
         </view>
-        <view class='divider'></view>
-      </view>
-    </view>
 
-    <!-- 全部分类 -->
-    <view class="allCategory" wx:if="{{allCategory}}">
-      <category :category.sync="category"></category>
-    </view>
-    <!-- 全部状态 -->
-    <view class="allCategory" wx:if="{{allState}}">
-      <allState :category.sync="category"></allState>
-    </view>
-
-    <view class='favorites_list'>
-      <view wx:if="{{isChange}}" class='goodsList_checked' animation="{{animationRight}}">
-        <view class='goodsList_checked_' wx:for="{{favoritesList}}" wx:key="{{index}}" @tap='checke' data-data="{{item}}" data-index="{{index}}">
-          <view>
-            <image wx:if="{{item.checked}}" src='/images/my/checked.png' />
-          </view>
+        <!-- 全部分类 -->
+        <view class="allCategory" wx:if="{{allCategory}}">
+            <category :category.sync="category"></category>
         </view>
-      </view>
-      <view wx:if="{{isChange}}" class='goodsList' animation="{{animationLeft}}" style="min-height: {{screenHeight+'px'}};">
-        <favoritesGoodsList :favoritesList.sync="favoritesList"></favoritesGoodsList>
-      </view>
-      <view wx:else class='goodsList_' animation="{{animationLeft}}">
-        <segmentation></segmentation>
-      </view>
-    </view>
+        <!-- 全部状态 -->
+        <view class="allCategory" wx:if="{{allState}}">
+            <allState :category.sync="category"></allState>
+        </view>
 
-    <view class='noMore'>
-      <image wx:if="{{!isMore}}" src="/images/my/loading.png" animation="{{animationRound}}" />
-      <text wx:if="{{!isMore}}">正在加载...</text>
-      <text wx:if="{{favoritesList.length >= 10 && isMore}}">~没有更多了~</text>
-    </view>
+        <view class='favorites_list'>
+            <view wx:if="{{isChange}}" class='goodsList_checked' animation="{{animationRight}}">
+                <view class='goodsList_checked_' wx:for="{{favoritesList}}" wx:key="{{index}}" @tap='checke' data-data="{{item}}" data-index="{{index}}">
+                    <view><image wx:if="{{item.checked}}" src="{{imgUrl+'/my/checked.png'}}"/></view>
+                </view>
+            </view>
+            <view wx:if="{{isChange}}" class='goodsList' animation="{{animationLeft}}" style="min-height: {{screenHeight+'px'}};">
+                <favoritesGoodsList :favoritesList.sync="favoritesList"></favoritesGoodsList>
+            </view>
+            <view wx:else class='goodsList_' animation="{{animationLeft}}">
+                <segmentation></segmentation>
+            </view>
+        </view>
+
+
+        <view class='noMore'>
+          <image wx:if="{{!isMore}}" src="{{imgUrl+'/my/loading.png'}}" animation="{{animationRound}}" />
+          <text wx:if="{{!isMore}}">正在加载...</text>
+          <text wx:if="{{favoritesList.length >= 10 && isMore}}">~没有更多了~</text>
+        </view>
 
     <view class='management' wx:if="{{!isAnimation}}">
       <view @tap='checkedAll'>
         <view>
-          <image wx:if="{{isCheckedAll}}" src='/images/my/checked.png' />
+          <image wx:if="{{isCheckedAll}}" src="{{imgUrl+'/my/checked.png'}}" />
         </view><text>全选</text>
       </view>
       <view>
@@ -77,6 +77,9 @@ import allState from '../../../components/allState';
 @connect({
   userinfo(state) {
     return state.counter.userinfo;
+  },
+  imgUrl(state){
+      return state.counter.imgUrl
   },
   category(state) {
     return state.counter.category;
@@ -354,9 +357,9 @@ export default class Favorites extends wepy.page {
   }
 
   onReady() {
-    this.animationRound();
+    this.animationRounds();
   }
-  animationRound() {
+  animationRounds() {
     //加载更多动画
     const animation = wx.createAnimation({
       duration: 500,

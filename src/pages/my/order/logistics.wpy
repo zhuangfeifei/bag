@@ -2,7 +2,7 @@
     <view id="logistics">
         
         <view class="kdName">
-            <image src="/images/my/kdwuliu.png" mode="scaleToFill" lazy-load="false" />
+            <image src="{{imgUrl+'/my/kdwuliu.png'}}" mode="scaleToFill" lazy-load="false" />
             <text>{{orderListItem.kdName}}</text>{{orderListItem.courier_num}}
         </view>
         <view class="logisticsDetails">
@@ -30,6 +30,9 @@ import 'wepy-async-function'
     },
     orderListItem(state){
         return state.counter.orderListItem.orderDetail
+    },
+    imgUrl(state){
+        return state.counter.imgUrl
     },
 })
     

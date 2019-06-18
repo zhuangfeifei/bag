@@ -1,5 +1,5 @@
 <template>
-  <view id="address" class="{{addressList.length > 0 ? 'isAddress' : ''}}">
+  <view wx:if="{{imgUrl}}" id="address" class="{{addressList.length > 0 ? 'isAddress' : ''}}">
 
     <view wx:if="{{addressList.length > 0}}" class="addressList">
       <view wx:for="{{addressList}}" wx:key="{{index}}" class="addressList_content">
@@ -13,10 +13,10 @@
       </view>
     </view>
 
-    <view wx:else class="noAddress">
-      <image src="/images/my/TB_zanwudizhi.png" />
-      <text>\n还没有收货地址哦，赶快添加吧~</text>
-    </view>
+		<view wx:else class="noAddress">
+			<image src="{{imgUrl+'/my/TB_zanwudizhi.png'}}" />
+			<text>\n还没有收货地址哦，赶快添加吧~</text>
+		</view>
 
     <view class="address_btn" @tap="linkTo">添加收货地址</view>
 
@@ -32,9 +32,12 @@ import 'wepy-async-function';
   userinfo(state) {
     return state.counter.userinfo;
   },
-  isChangeAddress(state) {
-    return state.counter.isChangeAddress;
-  }
+  imgUrl(state) {
+    return state.counter.imgUrl;
+  },
+  isChangeAddress(state){
+      return state.counter.isChangeAddress
+  },
 })
 export default class Address extends wepy.page {
   config = {

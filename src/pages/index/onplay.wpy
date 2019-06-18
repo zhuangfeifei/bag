@@ -98,9 +98,35 @@ export default class Onplay extends wepy.page {
       this.isWx = true;
     },
     playnone() {
-      if (this.isWx) {
-      } else {
-        this.isPay = true;
+      if(this.isWx){
+        let order = {
+          unionId: this.userinfo.unionid, orderId: this.order.id, payType: 1, payPwd: '', yueAmount: 0, wxAmount:this.order.actual_price
+        }
+        console.log(order)
+        wepy.$Api.pay(order).then(res => { 
+            console.log(res.data)
+            if (res.data.code == 200) {
+              wx.requestPayment({
+                timeStamp: res.data.data.timestamp,
+                nonceStr: res.data.data.nonce,
+                package: res.data.data.packageName,
+                signType: 'MD5',
+                paySign: res.data.data.signature,
+                success:res=> { 
+                  console.log(res)
+                  wx.reLaunch({
+                    url: '/pages/index/payment'
+                  });
+                },
+                fail (res) { }
+              })
+            }
+        }, err => {
+            
+        })
+      }else{
+        this.isPay = true
+        
       }
       this.$apply();
     },
@@ -108,16 +134,6 @@ export default class Onplay extends wepy.page {
       wx.navigateTo({
         url: '/pages/my/setting/playkey'
       });
-      // this.codeiph = 0;
-      // this.cosde = true;
-      // setTimeout(() => {
-      //   this.cosde = false;
-      //   this.$apply();
-      // }, 2000);
-
-      // wx.navigateTo({
-      //   url: '/pages/index/payment'
-      // });
     },
     bindKeyInput(e) {
       this.password = e.detail.value;
