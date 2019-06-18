@@ -17,9 +17,9 @@
                 <h3>添加图片（最多可添加3张图片）</h3>
                 <view wx:for="{{images}}" wx:key="{{index}}">
                     <image src="{{item.path}}" mode="scaleToFill" lazy-load="false" />
-                    <image @tap="imagedelete" class="delete" data-index="{{index}}" src="/images/my/tuikuanguanbi.png" mode="scaleToFill" lazy-load="false" />
+                    <image @tap="imagedelete" class="delete" data-index="{{index}}" src="{{imgUrl+'/my/tuikuanguanbi.png'}}" mode="scaleToFill" lazy-load="false" />
                 </view>
-                <image wx:if="{{images.length < 3}}" @tap="chooseImage" src="/images/my/shangchuantupian.png" mode="scaleToFill" lazy-load="false" />
+                <image wx:if="{{images.length < 3}}" @tap="chooseImage" src="{{imgUrl+'/my/shangchuantupian.png'}}" mode="scaleToFill" lazy-load="false" />
             </view>
         </view>
 
@@ -40,6 +40,9 @@ import card from '../../../components/card';
     },
     orderListItem(state){
         return state.counter.orderListItem.orderDetail
+    },
+    imgUrl(state){
+        return state.counter.imgUrl
     },
 })
 export default class Evaluation extends wepy.page {

@@ -10,7 +10,7 @@
         <view class="refundWhy">
             <view class="why">
                 退款原因
-                <view class="changeWhy" @tap="changeCancelOrder"><text>{{why ? why : '请选择'}}</text><image class="more" src="/images/my/jinru.png" mode="scaleToFill" lazy-load="false" /></view>
+                <view class="changeWhy" @tap="changeCancelOrder"><text>{{why ? why : '请选择'}}</text><image class="more" src="{{imgUrl+'/my/jinru.png'}}" mode="scaleToFill" lazy-load="false" /></view>
             </view>
             <view class="why">
                 退款金额
@@ -26,9 +26,9 @@
             <view class="file">
                 <view wx:for="{{images}}" wx:key="{{index}}">
                     <image src="{{item.path}}" mode="scaleToFill" lazy-load="false" />
-                    <image @tap="imagedelete" class="delete" data-index="{{index}}" src="/images/my/tuikuanguanbi.png" mode="scaleToFill" lazy-load="false" />
+                    <image @tap="imagedelete" class="delete" data-index="{{index}}" src="{{imgUrl+'/my/tuikuanguanbi.png'}}" mode="scaleToFill" lazy-load="false" />
                 </view>
-                <image wx:if="{{images.length < 3}}" @tap="chooseImage" src="/images/my/shangchuantupian.png" mode="scaleToFill" lazy-load="false" />
+                <image wx:if="{{images.length < 3}}" @tap="chooseImage" src="{{imgUrl+'/my/shangchuantupian.png'}}" mode="scaleToFill" lazy-load="false" />
                 <text>最多可上传3张</text>
             </view>
         </view>
@@ -44,7 +44,7 @@
                 <view class="changeWhyTitle">选择退款原因</view>
                 <view class="changeWhy" wx:for="{{cancelList}}" wx:key="{{index}}" @tap="changecancel" data-index="{{index}}">
                     <text>{{item}}</text>
-                    <view class="changeWhyback"><image wx:if="{{index == cancelIndex}}" src="/images/my/WDDD__xuanzhonganniu.png" mode="scaleToFill" lazy-load="false" /></view>
+                    <view class="changeWhyback"><image wx:if="{{index == cancelIndex}}" src="{{imgUrl+'/my/WDDD__xuanzhonganniu.png'}}" mode="scaleToFill" lazy-load="false" /></view>
                 </view>
                 <view class="choose"><view @tap="changeCancelOrder">取消</view><view @tap="Cance">确认</view></view>
             </view>
@@ -65,6 +65,9 @@ import card from '../../../components/card'
     },
     orderListItem(state){
         return state.counter.orderListItem.orderDetail
+    },
+    imgUrl(state){
+        return state.counter.imgUrl
     },
 })
     

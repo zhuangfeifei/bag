@@ -1,6 +1,6 @@
 <template>
     <view class="orderList_content">
-        <image src="/images/my/WDDD_TU_shangpintu.png" mode="scaleToFill" lazy-load="false" />
+        <image src="{{imgUrl+'/my/WDDD_TU_shangpintu.png'}}" mode="scaleToFill" lazy-load="false" />
         <view class="orderList_contents">
             <view class="orderList_title">{{orderList.goods_name}}</view>
             <view class="orderList_specifications">颜色({{orderList.colorName}}）；尺码({{orderList.sizeName}})</view>
@@ -15,7 +15,9 @@ import { connect } from 'wepy-redux'
 import 'wepy-async-function'
 
 @connect({
-    
+    imgUrl(state){
+        return state.counter.imgUrl
+    },
 })
     
 export default class Card extends wepy.component {

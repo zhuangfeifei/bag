@@ -3,7 +3,7 @@
         <block wx:for="{{10}}" wx:key="index">
             <view class='segmentation_list' bindtap='checke' data-data="{{item}}" data-index="{{index}}">
                 <image src='https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1906062556,3201568577&fm=27&gp=0.jpg'/>
-                <view wx:if="{{!isAnimation}}"><image wx:if="{{item.checked}}" src='/images/my/checked.png'/></view>
+                <view wx:if="{{!isAnimation}}"><image wx:if="{{item.checked}}" src="{{imgurl+'/my/checked.png'}}"/></view>
             </view>
         </block>
     </view>
@@ -15,7 +15,9 @@ import { connect } from 'wepy-redux'
 import 'wepy-async-function'
 
 @connect({
-    
+    imgurl(state){
+        return state.counter.imgurl
+    },
 })
     
 export default class Segmentation extends wepy.component {

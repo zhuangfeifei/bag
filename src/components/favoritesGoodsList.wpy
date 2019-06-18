@@ -15,7 +15,7 @@
         </block>
 
         <view wx:if="{{favoritesList.length == 0}}" class='no_favorites_goodsList'>
-            <image src='/images/my/TB_zanwudizhi.png'/>
+            <image src="{{imgUrl+'/my/TB_zanwudizhi.png'}}"/>
             <view>亲，你还没有收藏哦～</view>
         </view>
 

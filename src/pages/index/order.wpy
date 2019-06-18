@@ -11,7 +11,7 @@
           <image src="/images/notices/jinru.png" class="_imgass" />
         </view>
       </view>
-      <view class="address">
+      <view class="address" wx:else>
         <view class="addred">
           <view style="width:60rpx;height:60rpx;">
             <image src="/images/notices/dingwei.png" class="_imgas_a" />
@@ -282,7 +282,7 @@ export default class Order extends wepy.page {
     let wnums = obj.toFixed(2);
     this.total_price = wnums;
   }
-  onLoad(option) {
+  onShow(option) {
     this.sprice = this.goodsDetail.is_accept == 1 ? this.goodsDetail.fall_price : this.goodsDetail.market_price
     this.discount = this.userinfo.discount
     this.totalprice();

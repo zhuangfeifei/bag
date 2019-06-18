@@ -14,7 +14,7 @@
 		</view>
 
 		<view wx:else class="noAddress">
-			<image src="/images/my/TB_zanwudizhi.png" />
+			<image src="{{imgUrl+'/my/TB_zanwudizhi.png'}}" />
 			<text>\n还没有收货地址哦，赶快添加吧~</text>
 		</view>
 
@@ -31,6 +31,9 @@ import 'wepy-async-function';
 @connect({
   userinfo(state) {
     return state.counter.userinfo;
+  },
+  imgUrl(state) {
+    return state.counter.imgUrl;
   },
   isChangeAddress(state){
       return state.counter.isChangeAddress

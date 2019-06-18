@@ -1,5 +1,5 @@
 import wepy from 'wepy'
-const API_BASE_URL = true ? 'http://192.168.0.109:8083' : 'https://www.zjwl.shop'
+const API_BASE_URL = true ? 'http://192.168.0.112:8080' : 'https://www.zjwl.shop'
 const request = (url, method, data, headers = 'application/x-www-form-urlencoded') => {
   let _url = API_BASE_URL + url
   return new Promise((resolve, reject) => {
@@ -23,7 +23,12 @@ const request = (url, method, data, headers = 'application/x-www-form-urlencoded
                 // console.log('用户点击确定')
                 if(request.data.code == 9999){
                   wepy.navigateTo({
-                    url: '/pages/my/bindphone/bindphone'
+                    url: '/pages/my/setting/phone'
+                  })
+                }
+                if(request.data.code == 400){
+                  wepy.navigateTo({
+                    url: '/pages/my/address/address'
                   })
                 }
               } else if (res.cancel) {

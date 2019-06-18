@@ -117,7 +117,7 @@ export default class Playkey extends wepy.page {
                       encryptedData: res.encryptedData,
                       iv: res.iv
                     }
-                    Api.userinfo(jsonData).then(res => { 
+                     wepy.$Api.userinfo(jsonData).then(res => { 
                       console.log(res.data)
                       if (res.data.code == 200) {
                         wepy.setStorageSync('userinfo', res.data.data)

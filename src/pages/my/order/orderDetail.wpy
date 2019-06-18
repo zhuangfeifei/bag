@@ -2,10 +2,10 @@
     <view id="orderDetail">
 
         <view class="orderDetail_nav">
-            <image wx:if="{{orderDetails.orderDetail.status == 0}}" src="/images/my/bg_6xin.png" mode="scaleToFill" lazy-load="false" />
-            <image wx:if="{{orderDetails.orderDetail.status == 1}}" src="/images/my/bg_7xin.png" mode="scaleToFill" lazy-load="false" />
-            <image wx:if="{{orderDetails.orderDetail.status == 2}}" src="/images/my/bg_8xin.png" mode="scaleToFill" lazy-load="false" />
-            <image wx:if="{{orderDetails.orderDetail.status == 3}}" src="/images/my/bg_9xin.png" mode="scaleToFill" lazy-load="false" />
+            <image wx:if="{{orderDetails.orderDetail.status == 0}}" src="{{imgUrl+'/my/bg_6xin.png'}}" mode="scaleToFill" lazy-load="false" />
+            <image wx:if="{{orderDetails.orderDetail.status == 1}}" src="{{imgUrl+'/my/bg_7xin.png'}}" mode="scaleToFill" lazy-load="false" />
+            <image wx:if="{{orderDetails.orderDetail.status == 2}}" src="{{imgUrl+'/my/bg_8xin.png'}}" mode="scaleToFill" lazy-load="false" />
+            <image wx:if="{{orderDetails.orderDetail.status == 3}}" src="{{imgUrl+'/my/bg_9xin.png'}}" mode="scaleToFill" lazy-load="false" />
             <view wx:if="{{orderDetails.orderDetail.status == 0}}" class="Waiting">
                 等待买家付款
             </view>
@@ -15,16 +15,16 @@
         </view>
 
         <view wx:if="{{orderDetails.orderDetail.status == 2 || orderDetails.orderDetail.status == 3}}" class="orderDetail_logistics" @tap="linkTo" data-url="./logistics">
-            <image src="/images/my/TB_wuliu.png" mode="scaleToFill" lazy-load="false" />
+            <image src="{{imgUrl+'/my/TB_wuliu.png'}}" mode="scaleToFill" lazy-load="false" />
             <view class="orderDetail_logistics_cont">
                 <view class="orderDetail_logistics_">{{orderDetails.kdDetail.Traces[orderDetails.kdDetail.Traces.length - 1].AcceptStation}}</view>
                 <text>{{orderDetails.kdDetail.Traces[orderDetails.kdDetail.Traces.length - 1].AcceptTime}}</text>
             </view>
-            <image class="more" src="/images/my/jinru.png" mode="scaleToFill" lazy-load="false" />
+            <image class="more" src="{{imgUrl+'/my/jinru.png'}}" mode="scaleToFill" lazy-load="false" />
         </view>
 
         <view class="orderDetail_address">
-            <image src="/images/my/DDXQ_TB_dingwei.png" mode="scaleToFill" lazy-load="false" />
+            <image src="{{imgUrl+'/my/DDXQ_TB_dingwei.png'}}" mode="scaleToFill" lazy-load="false" />
             <view class="orderDetail_address_cont">
                 {{orderDetails.address.ship_name}}<text>{{orderDetails.address.phone_num}}</text>
                 <view class="orderDetail_address_">{{orderDetails.address.address}}</view>
@@ -70,7 +70,7 @@
                 <view class="changeWhyTitle">选择取消订单原因</view>
                 <view class="changeWhy" wx:for="{{cancelList}}" wx:key="{{index}}" @tap="changecancel" data-index="{{index}}">
                     <text>{{item}}</text>
-                    <view class="changeWhyback"><image wx:if="{{index == cancelIndex}}" src="/images/my/WDDD__xuanzhonganniu.png" mode="scaleToFill" lazy-load="false" /></view>
+                    <view class="changeWhyback"><image wx:if="{{index == cancelIndex}}" src="{{imgUrl+'/my/WDDD__xuanzhonganniu.png'}}" mode="scaleToFill" lazy-load="false" /></view>
                 </view>
                 <view class="Tip">温馨提示<text>\n订单取消后，使用的优惠券支持退回，为避免过期请尽快使用。</text></view>
                 <view class="choose"><view @tap="changeCancelOrder">暂不取消</view><view @tap="Cance">确认取消</view></view>
@@ -92,6 +92,9 @@ import card from '../../../components/card'
     },
     order(state){
         return state.counter.order
+    },
+    imgUrl(state){
+        return state.counter.imgUrl
     },
 })
     

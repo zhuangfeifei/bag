@@ -12,7 +12,7 @@
                     <image @tap='allState' src="/images/my/{{allState ? 'down' : 'up'}}.png"/>
                 </view>
                 <view>
-                    <image src="/images/my/SCJ_guanli.png" />
+                    <image src="{{imgUrl+'/my/SCJ_guanli.png'}}" />
                     <text @tap='management' class="{{!isAnimation ? 'complete' : ''}}">{{isAnimation ? '管理' : '完成'}}</text>
                 </view>
                 </view>
@@ -32,7 +32,7 @@
         <view class='favorites_list'>
             <view wx:if="{{isChange}}" class='goodsList_checked' animation="{{animationRight}}">
                 <view class='goodsList_checked_' wx:for="{{favoritesList}}" wx:key="{{index}}" @tap='checke' data-data="{{item}}" data-index="{{index}}">
-                    <view><image wx:if="{{item.checked}}" src='/images/my/checked.png'/></view>
+                    <view><image wx:if="{{item.checked}}" src="{{imgUrl+'/my/checked.png'}}"/></view>
                 </view>
             </view>
             <view wx:if="{{isChange}}" class='goodsList' animation="{{animationLeft}}" style="min-height: {{screenHeight+'px'}};">
@@ -45,7 +45,7 @@
 
 
         <view class='noMore'>
-          <image wx:if="{{!isMore}}" src="/images/my/loading.png" animation="{{animationRound}}" />
+          <image wx:if="{{!isMore}}" src="{{imgUrl+'/my/loading.png'}}" animation="{{animationRound}}" />
           <text wx:if="{{!isMore}}">正在加载...</text>
           <text wx:if="{{favoritesList.length >= 10 && isMore}}">~没有更多了~</text>
         </view>
@@ -53,7 +53,7 @@
 
         <view class='management' wx:if="{{!isAnimation}}">
           <view @tap='checkedAll'>
-            <view><image wx:if="{{isCheckedAll}}" src='/images/my/checked.png'/></view><text>全选</text>
+            <view><image wx:if="{{isCheckedAll}}" src="{{imgUrl+'/my/checked.png'}}"/></view><text>全选</text>
           </view>
           <view>
             <button @tap="emptyShelves">清空下架</button>
@@ -76,6 +76,9 @@ import allState from '../../../components/allState'
 @connect({
     userinfo(state){
         return state.counter.userinfo
+    },
+    imgUrl(state){
+        return state.counter.imgUrl
     },
     category(state){
         return state.counter.category

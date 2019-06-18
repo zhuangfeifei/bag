@@ -7,7 +7,7 @@ const Api = require('../../wxApi/api')
 const defaultState = {
   userinfo:'',
   orderIndex: 0,
-  imgUrl: 'http://192.168.0.109:8083/bag/static/modular/images',
+  imgUrl: Api.imgUrl + '/bag/static/modular/images',
   editor:'',
   category:'', // 收藏夹
   favoritesList:'', // 收藏夹
