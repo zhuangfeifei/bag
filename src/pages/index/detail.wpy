@@ -1545,7 +1545,7 @@ image.quiet {
     rgba(233, 74, 64, 1)
   );
   border-radius: 30rpx 0rpx 0rpx 0rpx;
-  margin: -59rpx 210rpx;
+  margin: -59rpx 212rpx;
   display: flex;
   flex-direction: column;
   text-align: right;
