@@ -132,7 +132,7 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image src="{{imgurls+home_liat[index].thumbnail_pic}}" />
+            <image src="{{imgurls+home_liat[index].thumbnail_pic}}" data-id="{{home_liat[index].id}}" @tap="tap_playto" />
             <view class="ontbnt">
               <text>￥{{home_liat[index].original_price}}</text>
               <text>￥{{home_liat[index].is_accept==1?home_liat[index].fall_price:home_liat[index].market_price}}</text>
@@ -481,7 +481,7 @@ export default class Detail extends wepy.page {
       }
     },
     jiaru_up() {
-      if (this.sexcale && this.scolor) {
+      if (this.sexcale && this.scolor&&this.poat_List.isCart==1) {
         wx.showToast({
           title: '此商品已加入购物车',
           icon: 'none',
