@@ -21,7 +21,7 @@ const request = (url, method, data, headers = 'application/x-www-form-urlencoded
             success(res) {
               if (res.confirm) {
                 // console.log('用户点击确定')
-                if(request.data.code == 412||request.data.code == 413){
+                if(request.data.code == 412){
                   wepy.navigateTo({
                     url: '/pages/my/setting/setting'
                   })
