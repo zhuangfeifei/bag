@@ -12,11 +12,11 @@
     <view class="ontliat" @tap="regularto">
       <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/chongzhi.png'}}" class="onliimg" />
       <text class="cltextsdf">充值</text>
-      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}"  class="onliimged" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}" class="onliimged" />
     </view>
     <view class="ontliats" @tap="withdraws">
       <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/tixian.png'}}" class="onliimg" />
-      <text  class="cltextsdf">提现</text>
+      <text class="cltextsdf">提现</text>
       <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}" class="onliimged" />
     </view>
   </view>
@@ -28,7 +28,7 @@ import { connect } from 'wepy-redux';
 import 'wepy-async-function';
 
 @connect({
-   imgUrl(state) {
+  imgUrl(state) {
     return state.counter.imgUrl;
   },
   userinfo(state) {
@@ -53,8 +53,12 @@ export default class Wallet extends wepy.page {
       });
     },
     withdraws() {
-      wx.navigateTo({
-        url: '/pages/my/wallet/withdraw'
+      // wx.navigateTo({
+      //   url: '/pages/my/wallet/withdraw'
+      // });
+      wepy.showModal({
+        title: '温馨提示',
+        content: '开发中，敬请期待'
       });
     },
     nextbill() {
@@ -69,8 +73,8 @@ export default class Wallet extends wepy.page {
 </script>
 
 <style lang='less'>
-page{
-  background:#f2f2f2;
+page {
+  background: #f2f2f2;
 }
 .bchd {
   width: 690rpx;
