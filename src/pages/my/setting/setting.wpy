@@ -58,12 +58,14 @@ page {
   text-align: right;
 }
 .textb {
+  width: 200rpx;
   font-size: 28rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
   color: rgba(153, 153, 153, 1);
-  margin-left: 371rpx;
+  margin-left: 305rpx;
   letter-spacing: 1rpx;
+   text-align: right;
 }
 .textbs {
   width: 200rpx;
@@ -212,7 +214,9 @@ export default class Setting extends wepy.page {
 
   onLoad() {
     let phone = this.userinfo.phonenumber;
-    this.phonenum = phone.substr(0, 3) + '****' + phone.substr(7);
+    if( this.userinfo.phonenumber!=''){
+      this.phonenum = phone.substr(0, 3) + '****' + phone.substr(7);
+    }
     wepy.login({
       success: res_login => {
         // 获取用户信息
