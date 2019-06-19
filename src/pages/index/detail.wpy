@@ -86,7 +86,7 @@
         </view>
         <view @tap="evaldetail">
           <text>查看全部</text>
-          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinruhong.png'}}"  />
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinruhong.png'}}" />
         </view>
       </view>
       <view class="lsnull">
@@ -158,7 +158,7 @@
           <text>客服</text>
         </view>
         <view @tap="next_cart">
-          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/tab_gouwuche.png'}}"  />
+          <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/tab_gouwuche.png'}}" />
           <text>购物车</text>
         </view>
       </view>
@@ -172,7 +172,7 @@
       </view>
     </view>
     <view class="bomtrnfxid" wx:if="{{cosde}}">
-      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/tab_tanjiangc.png'}}"  />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/tab_tanjiangc.png'}}" />
       <text>添加成功，在购物车等你哦~</text>
     </view>
     <view class="fixedsd">
@@ -279,7 +279,7 @@ import WxParse from '../../wxParse/wxParse.js';
   imgurls(state) {
     return state.counter.imgurl;
   },
-   imgUrl(state) {
+  imgUrl(state) {
     return state.counter.imgUrl;
   },
   shareitMethods(state) {
@@ -515,15 +515,29 @@ export default class Detail extends wepy.page {
                 that.cosde = false;
                 that.$apply();
               }, 2500);
-            } else if(res.data.code == 413) {
+            } else if (res.data.code == 413) {
               this.cont = 0;
+              that.cosde = false;
             }
           },
           err => {}
         );
+      } else if (that.ssexd == '') {
+        wx.showToast({
+          title: '请选择商品尺码',
+          icon: 'none',
+          duration: 2000
+        });
+        that.sod_up = 1;
+      } else if (that.scolor == '') {
+        wx.showToast({
+          title: '请选择商品颜色',
+          icon: 'none',
+          duration: 2000
+        });
       } else {
         wx.showToast({
-          title: '请选择商品属性',
+          title: '暂无货，请选择其他商品',
           icon: 'none',
           duration: 2000
         });
@@ -548,31 +562,51 @@ export default class Detail extends wepy.page {
     },
     //立即购买
     tap_play() {
-      if (this.ssexd != '暂无货') {
+      let that = this;
+      if (that.ssexd != '暂无货') {
         let list = {
-          scolor: this.scolor,
-          ssexd: this.ssexd,
-          exclusiveId: this.exclusiveId
+          scolor: that.scolor,
+          ssexd: that.ssexd,
+          exclusiveId: that.exclusiveId
         };
         wepy.$store.dispatch({ type: 'specificationsMethods', payload: list });
         let a = {
-          name: this.ssexd,
-          color: this.scolor,
-          img: this.poat_List.thumbnail_pic
+          name: that.ssexd,
+          color: that.scolor,
+          img: that.poat_List.thumbnail_pic
         };
-        if (a) {
+        if (
+          a &&
+          that.ssexd != '' &&
+          that.scolor != '' &&
+          that.ssexd != '暂无货'
+        ) {
           wx.navigateTo({
             url: '/pages/index/order'
           });
           wepy.$store.dispatch({ type: 'orderDeteil', payload: a });
+        } else if (that.ssexd == '') {
+          wx.showToast({
+            title: '请选择商品尺码',
+            icon: 'none',
+            duration: 2000
+          });
+          that.sod_up = 1;
+        } else if (that.scolor == '') {
+          wx.showToast({
+            title: '请选择商品颜色',
+            icon: 'none',
+            duration: 2000
+          });
         }
-      } else {
-        wx.showToast({
-          title: '请选择商品属性',
-          icon: 'none',
-          duration: 2000
-        });
-      }
+      }else if (that.ssexd == '暂无货') {
+          wx.showToast({
+            title: '暂无货，请选择其他商品',
+            icon: 'none',
+            duration: 2000
+          });
+          that.sod_up = 1;
+        }
     },
     evaldetail() {
       wx.navigateTo({
@@ -605,14 +639,17 @@ export default class Detail extends wepy.page {
         );
       } else {
         // 取消收藏
-        wepy.$Api.uncollection(b).then(res => {
-          wx.showToast({
+        wepy.$Api.uncollection(b).then(
+          res => {
+            wx.showToast({
               title: '取消收藏',
               icon: 'succes',
               duration: 1000,
               mask: true
             });
-        }, err => {});
+          },
+          err => {}
+        );
       }
       this.poat_List.isCollection = !like;
     },
@@ -638,14 +675,17 @@ export default class Detail extends wepy.page {
         );
       } else {
         //取消
-        wepy.$Api.usernolike(a).then(res => {
-          wx.showToast({
+        wepy.$Api.usernolike(a).then(
+          res => {
+            wx.showToast({
               title: '取消喜欢',
               icon: 'succes',
               duration: 1000,
               mask: true
             });
-        }, err => {});
+          },
+          err => {}
+        );
       }
       this.poat_List.islike = !like;
     }
@@ -725,7 +765,7 @@ export default class Detail extends wepy.page {
       // let tid = this._selData.tid;
 
       wx.downloadFile({
-        url:this.imgUrl+'/my/applets.jpg',
+        url: this.imgUrl + '/my/applets.jpg',
         success: res => {
           resolve(res.tempFilePath);
         },
@@ -748,7 +788,7 @@ export default class Detail extends wepy.page {
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, (w / 750) * 670 * 2, (w / 750) * 744 * 2);
     ctx.drawImage(
-      this.imgUrl+'/notices/zhuangshi1.png',
+      this.imgUrl + '/notices/zhuangshi1.png',
       (w / 750) * 500 * 2,
       (w / 750) * 42 * 2,
       (w / 750) * 125 * 2,
@@ -757,7 +797,7 @@ export default class Detail extends wepy.page {
       0
     );
     ctx.drawImage(
-      this.imgUrl+'/notices/haowutuijian.png',
+      this.imgUrl + '/notices/haowutuijian.png',
       (w / 750) * 225 * 2,
       (w / 750) * 36 * 2,
       (w / 750) * 218 * 2,
@@ -766,7 +806,7 @@ export default class Detail extends wepy.page {
       0
     );
     ctx.drawImage(
-     this.imgUrl+'/notices/zhaungshi.png',
+      this.imgUrl + '/notices/zhaungshi.png',
       (w / 750) * 42 * 2,
       (w / 750) * 49 * 2,
       (w / 750) * 125 * 2,
@@ -949,6 +989,11 @@ export default class Detail extends wepy.page {
     this.recommendations();
     this.shareited = this.shop_detaiMethods;
   }
+  onShow() {
+    this.onLoad();
+    this.sod_up = 0;
+    this.cosde = false;
+  }
   //轮播图
   deatil() {
     let a = {
@@ -1020,7 +1065,7 @@ export default class Detail extends wepy.page {
     };
     wepy.$Api.recommendation(a).then(
       res => {
-        if (res.data.data==Array) {
+        if (res.data.data == Array) {
           this.home_liat = this.home_liat.concat(res.data.data);
         } else {
           this.homelist = false;

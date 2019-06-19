@@ -23,7 +23,7 @@ const request = (url, method, data, headers = 'application/x-www-form-urlencoded
                 // console.log('用户点击确定')
                 if(request.data.code == 413){
                   wepy.navigateTo({
-                    url: '/pages/my/setting/phone'
+                    url: '/pages/my/setting/setting'
                   })
                 }
                 if(request.data.code == 400){

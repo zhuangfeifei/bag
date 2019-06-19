@@ -66,12 +66,14 @@ page {
   letter-spacing: 1rpx;
 }
 .textbs {
+  width: 200rpx;
   font-size: 28rpx;
   font-family: PingFang-SC-Medium;
   font-weight: 500;
   color: rgba(153, 153, 153, 1);
-  margin-left: 340rpx;
+  margin-left: 305rpx;
   letter-spacing: 1rpx;
+  text-align: right;
 }
 .textc {
   width: 300rpx;
@@ -106,11 +108,11 @@ page {
       <view class="tomgtitles">会员名</view>
       <input type="text" class="texta" wx:if="{{userinfo.name}}" placeholder='{{userinfo.name}}' confirm-type="done" bindconfirm="userameex" name="usernum" bindinput="userInput" placeholder-class='clastyle' />
       <input type="text" class="texta" wx:else placeholder='设置会员名' confirm-type="done" bindconfirm="userameex" name="usernum" bindinput="userInput" placeholder-class='clastyle' />
-      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}"  class="onimg" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}" class="onimg" />
     </view>
     <view class="vipyuan" @tap="myphone">
       <view class="tomgtitles">手机</view>
-      <text class="textbs" wx:if="{{phonenumber||phonenum}}">{{phonenum}}</text>
+      <text class="textbs" wx:if="{{phonenum}}">{{phonenum}}</text>
       <text class="textb" wx:else>绑定手机号</text>
       <image wx:if="{{imgUrl}}" src="{{imgUrl+'/notices/jinru.png'}}" class="onimg" />
     </view>
@@ -198,7 +200,7 @@ export default class Setting extends wepy.page {
                 title: '设置会员名成功',
                 icon: 'none',
                 duration: 1500,
-                mask: false
+                mask: false,
               });
             }
           },

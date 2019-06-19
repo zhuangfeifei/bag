@@ -2,13 +2,13 @@
   <view id="membershipRules">
     <import src="../../wxParse/wxParse.wxml" />
     <view class="nav_bak">
-      <image src="{{imgUrl+'/my/bg_5.png'}}" />
+      <image wx:if="{{imgUrl}}" src="{{imgUrl+'/my/bg_5.png'}}" />
       <view class="nav_">
         <view>
           <h3>{{userinfo.experienceValue}}</h3>
           <text>\n当前积分</text>
         </view>
-        <image class="integral" src="{{imgUrl+'/my/HYGZ_jifenmingxi.png'}}" @tap="tomaengt" />
+        <image class="integral" wx:if="{{imgUrl}}" src="{{imgUrl+'/my/HYGZ_jifenmingxi.png'}}" @tap="tomaengt" />
       </view>
     </view>
 

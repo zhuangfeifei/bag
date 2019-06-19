@@ -79,9 +79,9 @@ export default class Playkey extends wepy.page {
                     duration: 2000
                 })
                 this.bindGetUserInfo()
-                setTimeout(()=>{
-                    wepy.navigateBack({ delta: 1 })
-                },2000)
+                // setTimeout(()=>{
+                //     wepy.navigateBack({ delta: 1 })
+                // },2000)
                 // wx.showModal({
                 //   content: '密码设置成功，快去购物吧~',
                 //   confirmText: '确定',
@@ -128,7 +128,6 @@ export default class Playkey extends wepy.page {
                         wepy.navigateBack();
                       }
                     }, err => {
-                      
                     })
                   }
                 })
