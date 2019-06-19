@@ -26,6 +26,11 @@ const request = (url, method, data, headers = 'application/x-www-form-urlencoded
                     url: '/pages/my/setting/phone'
                   })
                 }
+                if(request.data.code == 412){
+                  wepy.navigateTo({
+                    url: '/pages/my/setting/setting'
+                  })
+                }
                 if(request.data.code == 400){
                   wepy.navigateTo({
                     url: '/pages/my/address/address'
@@ -33,7 +38,7 @@ const request = (url, method, data, headers = 'application/x-www-form-urlencoded
                 }
               } else if (res.cancel) {
                 // console.log('用户点击取消')
-                if(request.data.code == 413){
+                if(request.data.code == 412){
                   wx.switchTab({
                     url: '/pages/index/index'
                   });

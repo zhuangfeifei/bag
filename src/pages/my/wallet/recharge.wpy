@@ -48,86 +48,86 @@ export default class Recharge extends wepy.page {
     uameInputs(e) {
       this.unbers = e.detail.value;
     },
-    titapnext() {
-      let num = this.unbers;
-      let b = parseFloat(num).toFixed(2);
-      if (this.unbers < 50 || this.unbers == '') {
-        wx.showToast({
-          title: '充值金额不能低于50',
-          icon: 'none',
-          duration: 1100,
-          mask: true
-        });
-        return false;
-      } else {
-        let a = {
-          unionId: this.userinfo.unionid,
-          money: b
-        };
-        if (a) {
-          wepy.$Api.topUpMessds(a).then(
-            res => {
-              wx.requestPayment({
-                timeStamp: res.data.data.timestamp,
-                nonceStr: res.data.data.nonce,
-                package: res.data.data.packageName,
-                signType: 'MD5',
-                paySign: res.data.data.signature,
-                success: function(res) {
-                  wepy.showModal({
-                    title: '温馨提示',
-                    content: '充值成功',
-                    success(res) {
-                      wepy.navigateTo({
-                        url: '/pages/my/setting/setting'
-                      });
-                    }
-                  });
-                },
-                fail: function(res) {},
-                complete: function(res) {}
-              });
-            },
-            err => {}
-          );
-        }
-      }
-    }
     // titapnext() {
     //   let num = this.unbers;
     //   let b = parseFloat(num).toFixed(2);
-    //   let a = {
-    //     unionId: this.userinfo.unionid,
-    //     money: b
-    //   };
-    //   if (a) {
-    //     wepy.$Api.topUpMessds(a).then(
-    //       res => {
-    //         wx.requestPayment({
-    //           timeStamp: res.data.data.timestamp,
-    //           nonceStr: res.data.data.nonce,
-    //           package: res.data.data.packageName,
-    //           signType: 'MD5',
-    //           paySign: res.data.data.signature,
-    //           success: function(res) {
-    //             wepy.showModal({
-    //               title: '温馨提示',
-    //               content: '充值成功',
-    //               success(res) {
-    //                 wepy.navigateTo({
-    //                   url: '/pages/my/setting/setting'
-    //                 });
-    //               }
-    //             });
-    //           },
-    //           fail: function(res) {},
-    //           complete: function(res) {}
-    //         });
-    //       },
-    //       err => {}
-    //     );
+    //   if (this.unbers < 50 || this.unbers == '') {
+    //     wx.showToast({
+    //       title: '充值金额不能低于50',
+    //       icon: 'none',
+    //       duration: 1100,
+    //       mask: true
+    //     });
+    //     return false;
+    //   } else {
+    //     let a = {
+    //       unionId: this.userinfo.unionid,
+    //       money: b
+    //     };
+    //     if (a) {
+    //       wepy.$Api.topUpMessds(a).then(
+    //         res => {
+    //           wx.requestPayment({
+    //             timeStamp: res.data.data.timestamp,
+    //             nonceStr: res.data.data.nonce,
+    //             package: res.data.data.packageName,
+    //             signType: 'MD5',
+    //             paySign: res.data.data.signature,
+    //             success: function(res) {
+    //               wepy.showModal({
+    //                 title: '温馨提示',
+    //                 content: '充值成功',
+    //                 success(res) {
+    //                   wepy.navigateTo({
+    //                     url: '/pages/my/setting/setting'
+    //                   });
+    //                 }
+    //               });
+    //             },
+    //             fail: function(res) {},
+    //             complete: function(res) {}
+    //           });
+    //         },
+    //         err => {}
+    //       );
+    //     }
     //   }
     // }
+    titapnext() {
+      let num = this.unbers;
+      let b = parseFloat(num).toFixed(2);
+      let a = {
+        unionId: this.userinfo.unionid,
+        money: b
+      };
+      if (a) {
+        wepy.$Api.topUpMessds(a).then(
+          res => {
+            wx.requestPayment({
+              timeStamp: res.data.data.timestamp,
+              nonceStr: res.data.data.nonce,
+              package: res.data.data.packageName,
+              signType: 'MD5',
+              paySign: res.data.data.signature,
+              success: function(res) {
+                wepy.showModal({
+                  title: '温馨提示',
+                  content: '充值成功',
+                  success(res) {
+                    wepy.navigateTo({
+                      url: '/pages/my/setting/setting'
+                    });
+                  }
+                });
+              },
+              fail: function(res) {},
+              complete: function(res) {}
+            });
+          },
+          err => {}
+        );
+      }
+    }
   };
 
   onLoad() {}
