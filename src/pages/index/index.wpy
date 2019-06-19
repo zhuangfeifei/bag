@@ -213,7 +213,7 @@ export default class Index extends wepy.page {
     };
   }
   showPic() {
-    let sharePicUrl = this.data.sharePicUrl;
+    let sharePicUrl = this.sharePicUrl;
     if (sharePicUrl != '') {
       //如果已经生成过一次直接显示
       this.showSharePic = true;
@@ -229,19 +229,16 @@ export default class Index extends wepy.page {
       let logo = '';
       let headIcon = '';
       let code = '';
-      this.getHead()
-        .then(headUrl => {
-          headIcon = headUrl;
-          return this.getLogo();
-        })
-        .then(logoUrl => {
-          logo = logoUrl;
-          return this.getCode();
-        })
-        .then(codeUrl => {
-          code = codeUrl;
-          this.drawImg(logo, headIcon, code);
-        });
+      this.getHead().then(headUrl => {
+        headIcon = headUrl
+        return this.getLogo();
+      }).then(logoUrl => {
+        logo = logoUrl;
+        return this.getCode();
+      }).then(codeUrl => {
+        code = codeUrl;
+        this.drawImg(logo, headIcon, code);
+      })
     }
   }
 
@@ -289,6 +286,7 @@ export default class Index extends wepy.page {
 
   //绘图
   drawImg(logo, headIcon, code) {
+    let sharePicUrl = this.sharePicUrl
     let w = 0;
     wx.getSystemInfo({
       success: function(res) {
@@ -435,7 +433,7 @@ export default class Index extends wepy.page {
 
   //保存图片
   savePic() {
-    let sharePicUrl = this.data.sharePicUrl;
+    let sharePicUrl = this.sharePicUrl;
     wx.getSetting({
       success: res => {
         if (res.authSetting['scope.writePhotosAlbum'] == true) {

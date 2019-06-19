@@ -50,7 +50,7 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image src="{{imgurl+home_liat[index].thumbnail_pic}}" />
+            <image src="{{imgurl+home_liat[index].thumbnail_pic}}" data-id="{{home_liat[index].id}}" @tap="tap_play"  />
             <view class="ontbnt">
               <text>￥{{home_liat[index].market_price}}</text>
               <text wx:if="{{home_liat[index].is_accept==1}}">￥{{item.fall_price}}</text>
@@ -377,6 +377,7 @@ export default class Cart extends wepy.page {
                       mask: false
                     });
                   }
+                  this.post_st=true
                   // console.log(res.data.code)
                   this.cartlist();
                   if (wx.pageScrollTo) {
@@ -415,6 +416,7 @@ export default class Cart extends wepy.page {
                 duration: 1500,
                 mask: false
               });
+              this.post_st=true
               this.cartlist();
             }
           },
@@ -485,13 +487,14 @@ export default class Cart extends wepy.page {
   onLoad() {
     this.cartlist();
     this.userlike();
+    this.post_st=true
     this.imgurl = this.imgurls;
   }
   //购物车
   cartlist() {
     let a = {
       unionId: this.userinfo.unionid,
-      limit: 10,
+      limit: 100,
       current: this.current
     };
     if (a) {
@@ -539,6 +542,7 @@ export default class Cart extends wepy.page {
     this.userlike();
     this.idx = -1;
     this.total_price = 0;
+    this.post_st=true
   }
   onReachBottom() {
     let a = {

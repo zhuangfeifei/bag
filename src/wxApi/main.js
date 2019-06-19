@@ -38,7 +38,7 @@ const request = (url, method, data, headers = 'application/x-www-form-urlencoded
                 }
               } else if (res.cancel) {
                 // console.log('用户点击取消')
-                if(request.data.code == 412){
+                if(request.data.code == 412||request.data.code == 413){
                   wx.switchTab({
                     url: '/pages/index/index'
                   });
