@@ -145,9 +145,6 @@ export default class Onplay extends wepy.page {
     password(value) {
       if (value.length == 6) {
         this.isPay = false
-        this.password = ''
-        this.passwords = []
-        this.$apply();
         wepy.showLoading({
           title: '支付中...'
         });
@@ -163,6 +160,9 @@ export default class Onplay extends wepy.page {
         wepy.$Api.pay(order).then(
           res => {
             console.log(res.data);
+            this.password = ''
+            this.passwords = []
+            this.$apply();
             if (res.data.code == 200) {
               wx.reLaunch({
                 url: '/pages/index/payment'

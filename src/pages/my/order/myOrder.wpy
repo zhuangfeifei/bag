@@ -15,7 +15,8 @@
                         <text wx:if="{{item.after_status == 0 && item.status == 0}}">等待买家付款</text>
                         <text wx:if="{{item.status == 1}}">买家已付款</text>
                         <text wx:if="{{item.status == 2}}">卖家已发货</text>
-                        <text wx:if="{{item.status == 3 || item.status == 4}}">交易成功（未评价）</text>
+                        <text wx:if="{{item.status == 3}}">交易成功（未评价）</text>
+                        <text wx:if="{{item.status == 4}}">交易成功（已评价）</text>
                     </h3>
                     <card-item :orderList.sync="item"></card-item>
                     <view class="orderList_combined">共{{item.quantity}}件商品 合计：<text>￥{{item.actual_price}}</text></view>
@@ -93,7 +94,7 @@ export default class MyOrder extends wepy.page {
             wepy.$store.dispatch({type:'ASYNC_INCREMENT', payload: index})
             this.current = 1
             this.isMore = false
-            this.onLoad()
+            this.onShow()
         },
         isPay(e){
             this.payIndex = e.currentTarget.dataset.index
@@ -113,8 +114,9 @@ export default class MyOrder extends wepy.page {
         return rpx / 750 * systemInfo.windowWidth
     }
     
-    onLoad() {
+    onShow() {
         this.onReachBottom()
+        this.animationRound()
         let screenHeight = wx.getSystemInfoSync().windowHeight
         this.screenHeight = screenHeight - this.px(101)
     }
@@ -137,9 +139,6 @@ export default class MyOrder extends wepy.page {
         }
     }
 
-    onReady () {
-      this.animationRound()
-    }
     animationRound(){ //加载更多动画
       const animation = wx.createAnimation({
         duration: 500,
