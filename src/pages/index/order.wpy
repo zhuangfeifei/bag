@@ -306,7 +306,7 @@ export default class Order extends wepy.page {
       .listadress({ unionId: this.userinfo.unionid, limit: 50, current: 1 })
       .then(
         res => {
-          console.log(res.data)
+          // console.log(res.data)
           if (res.data.code == 200) {
             this.addressList = res.data.data;
             for (let val of res.data.data) {

@@ -53,7 +53,7 @@ export default class Card extends wepy.component {
     }
 
     onLoad () {
-        console.log(this.category); 
+        // console.log(this.category); 
         let screenHeight = wx.getSystemInfoSync().windowHeight
         this.screenHeight = screenHeight - this.px(120)
         this.$apply()
