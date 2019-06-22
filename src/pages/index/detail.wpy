@@ -132,7 +132,7 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image src="{{imgurls+home_liat[index].thumbnail_pic}}" data-id="{{home_liat[index].id}}" @tap="tap_playto" />
+            <image mode="aspectFill" lazy-load="true" src="{{imgurls+home_liat[index].thumbnail_pic}}" data-id="{{home_liat[index].id}}" @tap="tap_playto" />
             <view class="ontbnt">
               <text>￥{{home_liat[index].original_price}}</text>
               <text>￥{{home_liat[index].is_accept==1?home_liat[index].fall_price:home_liat[index].market_price}}</text>
@@ -480,7 +480,14 @@ export default class Detail extends wepy.page {
       }
     },
     jiaru_up() {
-      this.sod_up = 1;
+      if (this.poat_List.isCart == 1) {
+         wepy.showModal({
+            title: '温馨提示',
+            content: '此商品已加入购物车',
+          })
+      }else{
+        this.sod_up = 1;
+      }
     },
     //点击加入购车隐藏商品属性弹框
     jiashop_list() {
@@ -498,11 +505,11 @@ export default class Detail extends wepy.page {
           res => {
             if (res.data.code == 200) {
               wx.showToast({
-              title: '加入购物车成功',
-              icon: 'succes',
-              duration: 2000,
-              mask: true
-            });
+                title: '加入购物车成功',
+                icon: 'succes',
+                duration: 2000,
+                mask: true
+              });
             }
           },
           err => {}
@@ -680,7 +687,7 @@ export default class Detail extends wepy.page {
     }
     return {
       title: this.poat_List.goods_specif,
-      path: '/pages/detail/detail',
+      path: '/pages/index/detail?goodsId=this.shop_detailsMethods.goods_id&&unionId=this.userinfo.unionid',
       imageUrl: this.imgurls + this.imgurlsd[0]
     };
   }
@@ -1259,6 +1266,7 @@ export default class Detail extends wepy.page {
   width: 100%;
   height: 190rpx;
   background: white;
+  overflow: hidden;
 }
 .cuogai {
   width: 90%;
@@ -1325,6 +1333,7 @@ export default class Detail extends wepy.page {
   height: 300rpx;
   background: white;
   margin-top: 20rpx;
+  overflow: hidden;
 }
 .ondise {
   width: 90%;

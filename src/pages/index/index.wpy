@@ -17,7 +17,7 @@
       <view class="btn_list">
         <view class="ontab_list">
           <view wx:for="{{home_liat}}" wx:key="{{home_liat}}" data-id="{{index}}" class="price">
-            <image wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}" data-goods_id='{{item.id}}' @tap="tapondetilsd" />
+            <image mode="aspectFill" lazy-load="true" wx:if="{{imgurl+item.thumbnail_pic}}" src="{{imgurl+item.thumbnail_pic}}" data-goods_id='{{item.id}}' @tap="tapondetilsd" />
             <view class="ontbnt">
               <text>￥{{item.original_price}}</text>
               <text>￥{{item.is_accept==1?item.fall_price:item.market_price}}</text>
@@ -208,7 +208,7 @@ export default class Index extends wepy.page {
     }
     return {
       title: '白鸽优购',
-      path: '/pages/index/index',
+      path: '/pages/index/index?order=0&&limit=20&&current=this.current',
       imageUrl: this.shareit + '/my/shareIt.png'
     };
   }
@@ -500,7 +500,7 @@ export default class Index extends wepy.page {
   goodsLisd() {
     let a = {
       order: 0,
-      limit: 10,
+      limit: 20,
       current: this.current
     };
     wepy.$Api.goodsLis(a).then(
