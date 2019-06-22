@@ -115,6 +115,7 @@ export default class MyOrder extends wepy.page {
     }
     
     onShow() {
+        this.isMore = false
         this.onReachBottom()
         this.animationRound()
         let screenHeight = wx.getSystemInfoSync().windowHeight
