@@ -230,7 +230,7 @@ export default class Bill extends wepy.page {
       wepy.$Api.walletBillMothose(a).then(
         res => {
           if (res.data.code == 200) {
-            console.log(res)
+            // console.log(res)
             this.bill_list = res.data.data;
             this.$apply();
           }

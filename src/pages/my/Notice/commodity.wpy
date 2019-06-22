@@ -134,7 +134,7 @@ page {
       </view>
       <view class="onlist" wx:for="{{item.messageList}}" wx:item="item" wx:key="{{item.messageList}}">
         <view class="nextimg">
-          <image src="{{imgurl+item.thumbnail_pic}}"></image>
+          <image src="{{imgurl+item.thumbnail_pic}}"/>
         </view>
         <view class="zright">
           <view class="right_title">{{item.goods_name}}</view>
@@ -190,7 +190,7 @@ export default class Commodity extends wepy.page {
     if (a) {
       wepy.$Api.goodsMessaged(a).then(
         res => {
-          console.log(res);
+          // console.log(res);
           this.po_List = res.data.data.list;
           this.$apply();
         },
@@ -199,7 +199,7 @@ export default class Commodity extends wepy.page {
       setInterval(function() {
         wepy.$Api.goodsMessaged(a).then(
         res => {
-          console.log(res);
+          // console.log(res);
           this.po_List = res.data.data.list;
           this.$apply();
         },

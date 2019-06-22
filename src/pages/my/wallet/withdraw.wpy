@@ -76,7 +76,7 @@ export default class Recharge extends wepy.page {
           money: b
         };
         if (a) {
-          console.log(a)
+          // console.log(a)
           // wepy.$Api.withDrawal(a).then(
           //   res => {
           //     console.log(res)

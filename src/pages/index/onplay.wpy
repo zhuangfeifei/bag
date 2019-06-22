@@ -44,7 +44,7 @@
         <view class="passwordList">
           <view class="balancePayment_password_list" wx:for="{{passwords}}" wx:key="{{index}}">●</view>
         </view>
-        <input bindinput="bindKeyInput" maxlength="6" password type="number" auto-focus />
+        <input id="inputs" bindinput="bindKeyInput" maxlength="6" password type="number" auto-focus />
       </view>
     </view>
     <view class="pamser" wx:if="{{cosde}}">
@@ -102,9 +102,9 @@ export default class Onplay extends wepy.page {
         let order = {
           unionId: this.userinfo.unionid, orderId: this.order.id, payType: 1, payPwd: '', yueAmount: 0, wxAmount:this.order.actual_price
         }
-        console.log(order)
+        // console.log(order)
         wepy.$Api.pay(order).then(res => { 
-            console.log(res.data)
+            // console.log(res.data)
             if (res.data.code == 200) {
               wx.requestPayment({
                 timeStamp: res.data.data.timestamp,
@@ -113,7 +113,7 @@ export default class Onplay extends wepy.page {
                 signType: 'MD5',
                 paySign: res.data.data.signature,
                 success:res=> { 
-                  console.log(res)
+                  // console.log(res)
                   wx.reLaunch({
                     url: '/pages/index/payment'
                   });
@@ -144,6 +144,7 @@ export default class Onplay extends wepy.page {
   watch = {
     password(value) {
       if (value.length == 6) {
+        this.isPay = false
         wepy.showLoading({
           title: '支付中...'
         });
@@ -155,14 +156,19 @@ export default class Onplay extends wepy.page {
           yueAmount: this.order.actual_price,
           wxAmount: 0
         };
-        console.log(order);
+        // console.log(order);
         wepy.$Api.pay(order).then(
           res => {
-            console.log(res.data);
+            // console.log(res.data);
+            this.password = ''
+            this.passwords = []
+            this.$apply();
             if (res.data.code == 200) {
               wx.reLaunch({
                 url: '/pages/index/payment'
               });
+            }else{
+              
             }
           },
           err => {
@@ -412,7 +418,7 @@ page {
     position: relative;
     .balancePayment_password_solid,
     .balancePayment_password_list {
-      width: 102rpx;
+      width: 102rpx; position: relative;
       height: 100%;
       border: 1px solid #999999;
       border-left: 0;
@@ -420,8 +426,7 @@ page {
     .balancePayment_password_solid:nth-child(1) {
       border-left: 1px solid #999999 !important;
     }
-    .passwordList,
-    input {
+    .passwordList{
       position: absolute;
       top: 0;
       left: 0;
@@ -430,10 +435,14 @@ page {
         border: 0 !important;
       }
     }
-    input {
-      width: 100%;
-      height: 100%;
-      opacity: 0;
+    #inputs {
+      width: 100%; color: rgba(0, 0, 0, 0);
+      height: 100%; z-index: -1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      opacity: 0!important; background: rgba(0, 0, 0, 0)
     }
   }
 }

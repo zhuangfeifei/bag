@@ -134,7 +134,7 @@ export default class Record extends wepy.page {
       wepy.$Api.signRecords(a).then(
         res => {
           if (res.data.data) {
-            console.log(res);
+            // console.log(res);
             this.currentList = res.data.data;
             this.$apply();
           }

@@ -103,7 +103,7 @@ export default class Announcement extends wepy.page {
   baciCrules(){
     wepy.$Api.basiCrules().then(
       res => {
-        console.log(res);
+        // console.log(res);
         let post_list = res.data.data.regulations;
         let a = res.data.data.equity;
         WxParse.wxParse('article', 'html', post_list, this, 5);
