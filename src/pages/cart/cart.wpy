@@ -573,7 +573,7 @@ export default class Cart extends wepy.page {
 <style lang='less'>
 .conterers{
   width: 100%;
-  overflow: d;
+  overflow:hidden;
 }
 .tap_back {
   width: 100%;
