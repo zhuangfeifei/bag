@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="conterers">
     <image src="{{imgUrl+'/my/loading.png'}}" class="om_loading" wx:if="{{isImg&&imgUrl}}" animation="{{animationRound}}" />
     <view class="tap_back" wx:if="{{post_list.length>0}}"></view>
     <view class="top_v" wx:if="{{clckcode==false&&post_list.length>0}}" @tap="management">管理</view>
@@ -571,6 +571,10 @@ export default class Cart extends wepy.page {
 </script>
 
 <style lang='less'>
+.conterers{
+  width: 100%;
+  overflow: d;
+}
 .tap_back {
   width: 100%;
   height: 226rpx;
