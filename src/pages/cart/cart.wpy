@@ -485,8 +485,6 @@ export default class Cart extends wepy.page {
     }, 500);
   }
   onLoad() {
-    this.cartlist();
-    this.userlike();
     this.post_st = true;
     this.imgurl = this.imgurls;
     this.selection = true;
@@ -499,12 +497,23 @@ export default class Cart extends wepy.page {
       limit: 100,
       current: this.current
     };
-    if (a) {
+    if (a && this.current == 1) {
       wepy.$Api.cartList(a).then(
         res => {
-          // console.log(res.data.data)
           if (res.data.data) {
             this.post_list = res.data.data;
+          }
+          this.$apply();
+        },
+        err => {}
+      );
+    } else {
+      wepy.$Api.cartList(a).then(
+        res => {
+          if (res.data.data) {
+            let post_list = this.post_list;
+            let newA = post_list.concat(res.data.data);
+            this.post_list = newA;
           }
           this.$apply();
         },
@@ -540,6 +549,7 @@ export default class Cart extends wepy.page {
     return -1;
   }
   onShow() {
+    // this.cartlist();
     this.cartlist();
     this.userlike();
     this.idx = -1;
@@ -571,9 +581,9 @@ export default class Cart extends wepy.page {
 </script>
 
 <style lang='less'>
-.conterers{
+.conterers {
   width: 100%;
-  overflow:hidden;
+  overflow: hidden;
 }
 .tap_back {
   width: 100%;
